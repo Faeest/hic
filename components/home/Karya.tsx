@@ -14,8 +14,11 @@ export function Karya({ id }: { id: string }) {
     <section id={id} className="relative scroll-mt-24 overflow-hidden bg-cream py-24 sm:py-32">
       <div
         aria-hidden
-        className="pointer-events-none absolute -right-40 bottom-0 h-[30rem] w-[30rem] rounded-full"
-        style={{ background: "radial-gradient(circle, rgba(251,150,6,0.14), transparent 70%)" }}
+        className="dot-grid pointer-events-none absolute inset-x-0 bottom-0 h-[18rem] opacity-40"
+        style={{
+          maskImage: "linear-gradient(180deg, transparent 0%, black 100%)",
+          WebkitMaskImage: "linear-gradient(180deg, transparent 0%, black 100%)",
+        }}
       />
       <div className="relative mx-auto max-w-7xl px-5 sm:px-8">
         <div className="flex flex-col gap-8 lg:flex-row lg:items-end lg:justify-between">
@@ -52,7 +55,7 @@ export function Karya({ id }: { id: string }) {
               />
               <div
                 aria-hidden
-                className="absolute inset-0 bg-[radial-gradient(80%_60%_at_80%_0%,transparent,rgba(0,0,0,0.28))]"
+                className="absolute inset-0 bg-[linear-gradient(180deg,transparent_35%,rgba(0,0,0,0.4)_100%)]"
               />
               <div className="relative z-10 flex items-start justify-between gap-4">
                 <div className="flex flex-col gap-2">
@@ -93,7 +96,7 @@ export function Karya({ id }: { id: string }) {
                 />
                 <div
                   aria-hidden
-                  className="absolute inset-0 bg-[radial-gradient(80%_60%_at_80%_0%,transparent,rgba(0,0,0,0.24))]"
+                  className="absolute inset-0 bg-[linear-gradient(180deg,transparent_35%,rgba(0,0,0,0.38)_100%)]"
                 />
                 <div className="relative z-10">
                   <span className="font-mono text-[11px] uppercase tracking-widest text-white/80">

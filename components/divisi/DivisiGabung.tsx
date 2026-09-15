@@ -19,11 +19,7 @@ export function DivisiGabung({ d }: { d: Divisi }) {
         >
           <div
             aria-hidden
-            className="absolute inset-0 bg-[radial-gradient(60%_100%_at_0%_0%,rgba(255,255,255,0.2),transparent_50%),radial-gradient(50%_80%_at_100%_100%,rgba(251,150,6,0.55),transparent_55%)]"
-          />
-          <div
-            aria-hidden
-            className="absolute inset-0 opacity-30 [background-size:24px_24px] [background-image:linear-gradient(rgba(255,255,255,0.14)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.14)_1px,transparent_1px)]"
+            className="absolute inset-0 opacity-40 [background-size:24px_24px] [background-image:linear-gradient(rgba(255,255,255,0.16)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.16)_1px,transparent_1px)]"
           />
 
           <div className="relative flex flex-col gap-8 lg:flex-row lg:items-end lg:justify-between">

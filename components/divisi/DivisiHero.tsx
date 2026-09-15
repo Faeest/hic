@@ -21,13 +21,11 @@ export function DivisiHero({ d }: { d: Divisi }) {
       />
       <div
         aria-hidden
-        className="pointer-events-none absolute -right-32 top-1/4 h-[26rem] w-[26rem] rounded-full"
-        style={{ background: `radial-gradient(circle, ${d.warna.terang}33, transparent 70%)` }}
-      />
-      <div
-        aria-hidden
-        className="pointer-events-none absolute -left-24 bottom-8 h-80 w-80 rounded-full"
-        style={{ background: `radial-gradient(circle, ${d.warna.utama}22, transparent 70%)` }}
+        className="dot-grid pointer-events-none absolute inset-x-0 top-0 h-56 opacity-50"
+        style={{
+          maskImage: "linear-gradient(180deg, black 0%, transparent 100%)",
+          WebkitMaskImage: "linear-gradient(180deg, black 0%, transparent 100%)",
+        }}
       />
 
       <div className="relative mx-auto w-full max-w-7xl px-5 pb-14 pt-32 sm:px-8 sm:pb-16">

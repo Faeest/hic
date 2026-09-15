@@ -23,7 +23,7 @@ function Avatar({ inisial, gradien, size = "lg" }: { inisial: string; gradien: s
           {inisial}
         </span>
       </div>
-      <div className="absolute inset-0 bg-[radial-gradient(120%_60%_at_50%_0%,rgba(255,255,255,0.35),transparent_60%)]" />
+      <div className="absolute inset-x-0 top-0 h-px bg-white/40" />
       <div className="absolute inset-0 opacity-40 [background-size:18px_18px] [background-image:linear-gradient(rgba(255,255,255,0.14)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.14)_1px,transparent_1px)]" />
     </div>
   );

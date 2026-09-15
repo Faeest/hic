@@ -21,11 +21,7 @@ export function Gabung({ id }: { id: string }) {
         <div className="relative overflow-hidden rounded-[2.5rem] bg-ember">
           <div
             aria-hidden
-            className="absolute inset-0 bg-[radial-gradient(60%_100%_at_0%_0%,rgba(251,150,6,0.5),transparent_50%),radial-gradient(50%_80%_at_100%_100%,rgba(251,150,6,0.45),transparent_55%)]"
-          />
-          <div
-            aria-hidden
-            className="absolute inset-0 opacity-30 [background-size:26px_26px] [background-image:linear-gradient(rgba(255,255,255,0.14)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.14)_1px,transparent_1px)]"
+            className="absolute inset-0 opacity-40 [background-size:26px_26px] [background-image:linear-gradient(rgba(255,255,255,0.16)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.16)_1px,transparent_1px)]"
           />
 
           <div className="relative px-6 py-16 sm:px-12 sm:py-24 lg:px-20">

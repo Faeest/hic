@@ -119,7 +119,11 @@ export function DivisiIndex({ id }: { id: string }) {
     <section id={id} className="relative scroll-mt-24 overflow-hidden bg-cream py-24 sm:py-32">
       <div
         aria-hidden
-        className="pointer-events-none absolute inset-x-0 top-0 h-40 bg-[radial-gradient(70%_100%_at_30%_0%,rgba(251,150,6,0.1),transparent)]"
+        className="dot-grid pointer-events-none absolute inset-x-0 top-0 h-40 opacity-40"
+        style={{
+          maskImage: "linear-gradient(180deg, black 0%, transparent 100%)",
+          WebkitMaskImage: "linear-gradient(180deg, black 0%, transparent 100%)",
+        }}
       />
       <div className="relative mx-auto max-w-7xl px-5 sm:px-8">
         <div className="flex flex-col gap-8 lg:flex-row lg:items-end lg:justify-between">

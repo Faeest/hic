@@ -11,8 +11,11 @@ export function MentorSection({ d }: { d: Divisi }) {
     <section className="relative overflow-hidden bg-cream py-24 sm:py-32" style={divisiVars(d)}>
       <div
         aria-hidden
-        className="pointer-events-none absolute -right-32 top-0 h-80 w-80 rounded-full"
-        style={{ background: `radial-gradient(circle, ${d.warna.terang}2e, transparent 70%)` }}
+        className="dot-grid pointer-events-none absolute inset-x-0 top-0 h-48 opacity-40"
+        style={{
+          maskImage: "linear-gradient(180deg, black 0%, transparent 100%)",
+          WebkitMaskImage: "linear-gradient(180deg, black 0%, transparent 100%)",
+        }}
       />
       <div className="relative mx-auto max-w-7xl px-5 sm:px-8">
         <Reveal>

@@ -50,7 +50,7 @@ export function DivisiKarya({ d }: { d: Divisi }) {
                 />
                 <div
                   aria-hidden
-                  className="absolute inset-0 bg-[radial-gradient(80%_60%_at_80%_0%,transparent,rgba(0,0,0,0.26))]"
+                  className="absolute inset-0 bg-[linear-gradient(180deg,transparent_35%,rgba(0,0,0,0.4)_100%)]"
                 />
                 <div className="relative z-10">
                   <div className="flex items-center justify-between gap-3">

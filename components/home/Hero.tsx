@@ -3,7 +3,6 @@
 import { motion } from "framer-motion";
 import { ArrowDownRight, ArrowUpRight } from "@phosphor-icons/react";
 import { HeroCanvas } from "./HeroCanvas";
-import { Parallax } from "@/components/ui/Parallax";
 import { club } from "@/data/club";
 
 const EASE = [0.16, 1, 0.3, 1] as const;
@@ -33,21 +32,11 @@ export function Hero() {
       className="relative flex min-h-[100dvh] flex-col overflow-hidden"
     >
       <div className="mesh-orange absolute inset-0" aria-hidden />
+      <div
+        aria-hidden
+        className="dot-grid pointer-events-none absolute inset-0 opacity-60"
+      />
       <HeroCanvas />
-
-      {/* soft glow blobs */}
-      <Parallax speed={0.14} className="pointer-events-none absolute -left-32 top-1/3 h-96 w-96">
-        <div
-          className="h-full w-full rounded-full"
-          style={{ background: "radial-gradient(circle, rgba(251,150,6,0.18), transparent 70%)" }}
-        />
-      </Parallax>
-      <Parallax speed={-0.1} className="pointer-events-none absolute -right-24 bottom-0 h-[28rem] w-[28rem]">
-        <div
-          className="h-full w-full rounded-full"
-          style={{ background: "radial-gradient(circle, rgba(212,83,17,0.16), transparent 70%)" }}
-        />
-      </Parallax>
 
       <div className="relative mx-auto flex w-full max-w-7xl flex-1 flex-col justify-center px-5 pb-16 pt-32 sm:px-8 lg:pt-36">
         <h1 className="font-display text-[13vw] font-semibold leading-[0.94] tracking-tight text-ink sm:text-[10vw] lg:text-[8.2rem]">
