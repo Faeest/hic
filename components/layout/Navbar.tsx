@@ -48,10 +48,24 @@ export function Navbar() {
     }
   };
 
-  const scrollToSection = (id: string) => {
+  const scrollToSection = (e: React.MouseEvent, id: string) => {
     navLocked.current = true;
     setActive(id);
     if (unlockTimer.current) clearTimeout(unlockTimer.current);
+
+    // On the homepage we scroll programmatically. This also fixes the case
+    // where the hash already equals the target (#beranda) so nothing happens.
+    if (pathname === "/") {
+      e.preventDefault();
+      const el = document.getElementById(id);
+      if (el) {
+        el.scrollIntoView({ behavior: "smooth", block: "start" });
+        history.replaceState(null, "", `#${id}`);
+      } else {
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      }
+    }
+
     // Fallback: release the spy after the smooth scroll settles.
     // `scrollend` is the real signal; the timer covers browsers without it.
     unlockTimer.current = setTimeout(unlockSpy, 1400);
@@ -118,7 +132,7 @@ export function Navbar() {
           >
             <Link
               href="/"
-              onClick={() => scrollToSection("beranda")}
+              onClick={(e) => scrollToSection(e, "beranda")}
               className="group flex items-center gap-2.5 font-display text-xl font-bold tracking-tight text-ink"
             >
               <span className="relative h-9 w-9 overflow-hidden rounded-[10px] transition-transform duration-300 group-hover:rotate-[8deg]">
@@ -161,7 +175,7 @@ export function Navbar() {
                 <Link
                   key={l.label}
                   href={l.href}
-                  onClick={() => scrollToSection(l.id)}
+                  onClick={(e) => scrollToSection(e, l.id)}
                   className={cn(
                     "relative rounded-full px-4.5 py-2 text-sm font-medium transition-colors duration-300",
                     activeLink ? "text-ember" : "text-ink-soft hover:text-ember"
@@ -246,9 +260,9 @@ export function Navbar() {
                   >
                     <Link
                       href={l.href}
-                      onClick={() => {
+                      onClick={(e) => {
                         setOpen(false);
-                        scrollToSection(l.id);
+                        scrollToSection(e, l.id);
                       }}
                       className={cn(
                         "group flex items-center justify-between border-b border-ink/10 py-4",

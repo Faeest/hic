@@ -46,7 +46,7 @@ export function Proker({ id }: { id: string }) {
             className="group relative block overflow-hidden rounded-[2rem] lg:col-span-2 lg:row-span-2"
           >
             <div
-              className="relative flex aspect-[4/3] flex-col justify-end overflow-hidden p-8 sm:aspect-[16/10] sm:p-10 lg:aspect-auto lg:min-h-[30rem]"
+              className="relative flex aspect-[4/3] flex-col justify-end overflow-hidden p-8 sm:aspect-[16/10] sm:p-10 lg:aspect-auto lg:h-full"
               style={{ background: featured.gradien }}
             >
               <div
@@ -66,7 +66,7 @@ export function Proker({ id }: { id: string }) {
                     {featured.judul}
                   </h3>
                 </div>
-                <span className="grid h-12 w-12 shrink-0 place-items-center rounded-full bg-white text-ink transition-transform duration-300 group-hover:rotate-45">
+                <span className="grid h-12 w-12 shrink-0 place-items-center rounded-full bg-white text-[#1c1512] transition-transform duration-300 group-hover:rotate-45">
                   <ArrowUpRight size={20} weight="bold" />
                 </span>
               </div>
