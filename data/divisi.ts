@@ -29,11 +29,11 @@ export const divisi: Divisi[] = [
   {
     slug: "web",
     nama: "Web",
-    namaPanjang: "Divisi Web Development",
+    namaPanjang: "Divisi Website Development",
     angka: "01",
     tagline: "Membangun hal yang bisa diakses siapa saja, dari mana saja.",
     deskripsi:
-      "Dari HTML pertama sampai deployment pertama — divisi web adalah gerbang masuk paling ramah bagi anggota baru. Anggota senior mengajar langsung lewat proyek nyata, bukan materi basi.",
+      "Dari HTML pertama sampai website yang benar-benar hidup di internet. Anggota senior mengajar langsung lewat praktik — bikin portofolio, lalu bikin website HIC sendiri.",
     akronim: "WEB",
     warna: {
       utama: "#d45311",
@@ -46,37 +46,36 @@ export const divisi: Divisi[] = [
     kurikulum: [
       {
         nomor: "01",
-        judul: "Dasar Web & Semantik",
+        judul: "Dasar Website Development",
         durasi: "4 pertemuan",
         deskripsi:
-          "HTML yang benar, CSS yang rasa, dan anatomi halaman yang sehat sebelum menulis satu baris JavaScript.",
+          "HTML dan CSS untuk membangun struktur dan desain dasar halaman web.",
       },
       {
         nomor: "02",
-        judul: "JavaScript & Interaksi",
+        judul: "JavaScript & Interaktivitas",
         durasi: "6 pertemuan",
         deskripsi:
-          "DOM, event, dan memanjakan pengguna dengan interaksi kecil yang membuat halaman terasa hidup.",
+          "JavaScript untuk menambah interaktivitas dan fungsi dinamis pada website.",
       },
       {
         nomor: "03",
-        judul: "React & Framework",
-        durasi: "8 pertemuan",
+        judul: "Front-End Development",
+        durasi: "6 pertemuan",
         deskripsi:
-          "Berpindah ke komponen, state, dan membangun antarmuka yang bisa tumbuh tanpa ambruk.",
+          "Framework populer seperti Bootstrap atau Tailwind CSS untuk mempercepat desain responsif.",
       },
       {
         nomor: "04",
-        judul: "Deploy & Produksi",
-        durasi: "4 pertemuan",
+        judul: "Praktik Proyek Website",
+        durasi: "6 pertemuan",
         deskripsi:
-          "Menerbangkan proyek ke internet sungguhan, belajar performance, dan membaca error tanpa panik.",
+          "Membuat website portofolio pribadi yang responsif dan interaktif, lalu membangun website sederhana untuk HIC.",
       },
     ],
     mentor: [
-      { nama: "Fajar Ramadhan", fokus: "React & Frontend" },
-      { nama: "Dimas Arya", fokus: "Backend & API" },
-      { nama: "Citra Ayu", fokus: "CSS & Animasi" },
+      { nama: "Satya Garda Prasetyo", fokus: "PJ Web Development" },
+      { nama: "Faiz Ramadhan", fokus: "Pemeliharaan Website" },
     ],
   },
   {
@@ -86,7 +85,7 @@ export const divisi: Divisi[] = [
     angka: "02",
     tagline: "Mengubah kerumitan menjadi antarmuka yang terasa mudah.",
     deskripsi:
-      "Desain bukan soal cantik. Di divisi ini kami belajar membaca orang: riset, hierarki, prototipe, sampai menguji apakah desain benar-benar dipahami — bukan sekadar disukai.",
+      "Desain bukan soal cantik. Di divisi ini kami belajar membaca orang — riset, hierarki, prototipe, sampai menguji apakah desain benar-benar dipahami.",
     akronim: "UIUX",
     warna: {
       utama: "#fb9606",
@@ -99,48 +98,47 @@ export const divisi: Divisi[] = [
     kurikulum: [
       {
         nomor: "01",
-        judul: "Riset & Empati",
-        durasi: "5 pertemuan",
+        judul: "Pengenalan UI/UX",
+        durasi: "4 pertemuan",
         deskripsi:
-          "Wawancara, persona, dan memahami masalah sebelum membuka tool desain apa pun.",
+          "Perbedaan UI dan UX, pentingnya desain antarmuka yang ramah pengguna, dan studi kasus aplikasi dengan desain baik vs buruk.",
       },
       {
         nomor: "02",
-        judul: "Hierarki & Komposisi",
+        judul: "Prinsip Dasar Desain UI",
         durasi: "5 pertemuan",
         deskripsi:
-          "Grid, tipografi, dan tata letak yang menuntun mata — pelajaran paling sering diremehkan, paling sering terlihat.",
+          "Layouting dengan grid system dan hierarki visual, ditambah color theory, typography, dan ikonografi.",
       },
       {
         nomor: "03",
-        judul: "Prototipe & Interaksi",
-        durasi: "6 pertemuan",
+        judul: "Consistency & Simplicity",
+        durasi: "4 pertemuan",
         deskripsi:
-          "Wireframe, prototype klik, dan micro-interaction yang membuat produk terasa hidup.",
+          "Prinsip konsistensi dan kesederhanaan dalam desain, dan membangun design system sederhana.",
       },
       {
         nomor: "04",
-        judul: "Uji & Iterasi",
-        durasi: "4 pertemuan",
+        judul: "Testing & Feedback",
+        durasi: "5 pertemuan",
         deskripsi:
-          "Usability testing sederhana, menangkap feedback, dan berani menghapus hal yang tidak bekerja.",
+          "Usability testing untuk mengevaluasi desain, mengumpulkan feedback untuk iterasi, dan praktik A/B testing.",
       },
     ],
     mentor: [
-      { nama: "Salsabila Putri", fokus: "Produk & Riset" },
+      { nama: "Muhammad Dimas Cahyo", fokus: "PJ UI/UX Design" },
       { nama: "Kevin Pratama", fokus: "Visual & Branding" },
-      { nama: "Alya Maharani", fokus: "Prototyping" },
     ],
   },
   {
-    slug: "iot",
-    nama: "IoT",
-    namaPanjang: "Divisi Internet of Things",
+    slug: "robotics",
+    nama: "Robotics",
+    namaPanjang: "Divisi Robotics",
     angka: "03",
-    tagline: "Menghidupkan benda mati dan membuatnya bercerita.",
+    tagline: "Mengubah benda mati menjadi robot yang punya fungsi.",
     deskripsi:
-      "Dari sensor yang membaca suhu sampai perangkat yang merespons sentuhan. Divisi IoT mengajarkan cara dunia fisik dan kode bertemu.",
-    akronim: "IOT",
+      "Dari dasar robotika sampai memprogram Arduino — divisi ini mengajarkan cara dunia fisik dan kode bertemu, lalu mewujudkannya lewat proyek robot sungguhan.",
+    akronim: "ROBO",
     warna: {
       utama: "#f67f1e",
       terang: "#ffab52",
@@ -152,37 +150,36 @@ export const divisi: Divisi[] = [
     kurikulum: [
       {
         nomor: "01",
-        judul: "Dasar Elektronika",
-        durasi: "5 pertemuan",
+        judul: "Pengenalan Robotika",
+        durasi: "4 pertemuan",
         deskripsi:
-          "Tegangan, arus, dan membaca diagram sebelum membiarkan asap keluar dari komponen.",
+          "Dasar-dasar dan fungsi tiap komponen robot, ditambah basic elektronik untuk memahami arus listrik.",
       },
       {
         nomor: "02",
-        judul: "Mikrokontroler",
+        judul: "Pemrograman Arduino",
         durasi: "6 pertemuan",
         deskripsi:
-          "Arduino & sensor dasar: cahaya, suhu, jarak — dan cara membuatnya merespons dunia nyata.",
+          "Bahasa pemrograman C++ untuk kontrol perangkat Arduino, dan pemrograman gerakan menggunakan Arduino IDE.",
       },
       {
         nomor: "03",
-        judul: "Jaringan & Cloud",
-        durasi: "6 pertemuan",
+        judul: "Simulasi dengan Software",
+        durasi: "4 pertemuan",
         deskripsi:
-          "Menghubungkan perangkat ke internet, mengirim data, dan membaca satu sama lain lewat protokol.",
+          "Simulasi perangkat Arduino dengan software seperti TinkerCAD atau Wokwi.",
       },
       {
         nomor: "04",
-        judul: "Proyek Akhir",
+        judul: "Proyek Robotik Sederhana",
         durasi: "8 pertemuan",
         deskripsi:
-          "Menggabungkan hardware dan software menjadi satu produk utuh yang bisa dipamerkan.",
+          "Merakit dan memprogram robot line follower, robot avoiding obstacles, dan arm robot sederhana untuk memindahkan objek.",
       },
     ],
     mentor: [
-      { nama: "Bagas Setiawan", fokus: "Mikrokontroler" },
-      { nama: "Rizky Adi", fokus: "Sensor & Aktuator" },
-      { nama: "Mei Lin", fokus: "Cloud & Jaringan" },
+      { nama: "Zulhan Arif Fasya", fokus: "PJ Robotics" },
+      { nama: "Fattih Kuwaka", fokus: "Inventaris & Hardware" },
     ],
   },
 ];

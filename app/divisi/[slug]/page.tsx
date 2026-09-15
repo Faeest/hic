@@ -5,7 +5,7 @@ import { club } from "@/data/club";
 import { DivisiHero } from "@/components/divisi/DivisiHero";
 import { Kurikulum } from "@/components/divisi/Kurikulum";
 import { MentorSection } from "@/components/divisi/MentorSection";
-import { DivisiKarya } from "@/components/divisi/DivisiKarya";
+import { DivisiProker } from "@/components/divisi/DivisiKarya";
 import { DivisiNav } from "@/components/divisi/DivisiNav";
 import { DivisiGabung } from "@/components/divisi/DivisiGabung";
 import { Navbar } from "@/components/layout/Navbar";
@@ -45,7 +45,7 @@ export default async function DivisiPage({
         <DivisiHero d={d} />
         <Kurikulum d={d} />
         <MentorSection d={d} />
-        <DivisiKarya d={d} />
+        <DivisiProker d={d} />
         <DivisiNav current={d} />
         <DivisiGabung d={d} />
       </main>

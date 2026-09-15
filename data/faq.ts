@@ -12,7 +12,7 @@ export const faq: FaqItem[] = [
   {
     pertanyaan: "Apakah harus punya dasar coding dulu?",
     jawaban:
-      "Tidak. Divisi Web dan IoT mulai dari nol; UI/UX bahkan tidak menyentuh kode di tahap awal. Satu-satunya syarat adalah mau datang, penasaran, dan nyaman bertanya.",
+      "Tidak. Divisi Web dan Robotics mulai dari nol; UI/UX bahkan tidak menyentuh kode di tahap awal. Satu-satunya syarat adalah mau datang, penasaran, dan nyaman bertanya.",
   },
   {
     pertanyaan: "Boleh ikut lebih dari satu divisi?",
@@ -32,6 +32,6 @@ export const faq: FaqItem[] = [
   {
     pertanyaan: "Apakah ada biaya atau iuran?",
     jawaban:
-      "Ada iuran keanggotaan ringan per semester yang dipakai untuk modul, komponen IoT, dan snack kelas. Bendahara kami jaga transparansinya — laporan kas terbuka untuk semua member.",
+      "Ada iuran keanggotaan ringan per semester yang dipakai untuk modul, komponen robotik, dan snack kelas. Bendahara kami jaga transparansinya — laporan kas terbuka untuk semua member.",
   },
 ];

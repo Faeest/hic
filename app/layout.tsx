@@ -27,12 +27,12 @@ const satoshi = localFont({
 export const metadata: Metadata = {
   title: "HIC — Hardware Interactive Club",
   description:
-    "UKM keilmuan tempat mahasiswa saling mengajar: Web, UI/UX, dan IoT. Belajar, berkarya, dan tumbuh bareng.",
-  keywords: ["HIC", "UKM", "Hardware Interactive Club", "web", "uiux", "iot", "kampus"],
+    "UKM keilmuan STIKI Malang tempat mahasiswa saling mengajar: Web, UI/UX, dan Robotics. Belajar, berkarya, dan tumbuh bareng.",
+  keywords: ["HIC", "UKM", "Hardware Interactive Club", "web", "uiux", "robotics", "STIKI Malang"],
   openGraph: {
     title: "HIC — Hardware Interactive Club",
     description:
-      "UKM keilmuan tempat mahasiswa saling mengajar: Web, UI/UX, dan IoT.",
+      "UKM keilmuan STIKI Malang tempat mahasiswa saling mengajar: Web, UI/UX, dan Robotics.",
     type: "website",
     locale: "id_ID",
   },

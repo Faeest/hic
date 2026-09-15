@@ -1,14 +1,14 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { ArrowUpRight } from "@phosphor-icons/react";
+import { ArrowUpRight, Wallet } from "@phosphor-icons/react";
 import Link from "next/link";
 import { SectionHead } from "@/components/ui/SectionHead";
 import { Reveal } from "@/components/ui/Reveal";
-import { karya } from "@/data/karya";
+import { proker } from "@/data/proker";
 
-export function Karya({ id }: { id: string }) {
-  const [featured, ...rest] = karya;
+export function Proker({ id }: { id: string }) {
+  const [featured, ...rest] = proker;
 
   return (
     <section id={id} className="relative scroll-mt-24 overflow-hidden bg-cream py-24 sm:py-32">
@@ -24,14 +24,14 @@ export function Karya({ id }: { id: string }) {
         <div className="flex flex-col gap-8 lg:flex-row lg:items-end lg:justify-between">
           <SectionHead
             index="IV"
-            label="Karya"
+            label="Program Kerja"
             title={
               <>
-                Dibuat bareng,{" "}
-                <span className="text-ember">bukan baru digoreskan</span>.
+                Agenda nyata,{" "}
+                <span className="text-ember">bukan sekadar rencana</span>.
               </>
             }
-            sub="Proyek nyata hasil mentoring lintas divisi — dari web, desain, sampai perangkat fisik."
+            sub="Program kerja yang berjalan sepanjang periode kepengurusan — dari diklat sampai kompetisi tingkat kota."
           />
         </div>
 
@@ -60,7 +60,7 @@ export function Karya({ id }: { id: string }) {
               <div className="relative z-10 flex items-start justify-between gap-4">
                 <div className="flex flex-col gap-2">
                   <span className="w-fit rounded-full bg-white/20 px-3.5 py-1.5 font-mono text-[11px] uppercase tracking-widest text-white backdrop-blur-sm">
-                    {featured.divisi} · {featured.tahun}
+                    {featured.kategori} · {featured.tahun}
                   </span>
                   <h3 className="max-w-md font-display text-3xl font-bold tracking-tight text-white sm:text-4xl lg:text-5xl">
                     {featured.judul}
@@ -73,13 +73,16 @@ export function Karya({ id }: { id: string }) {
               <p className="relative z-10 mt-4 max-w-lg text-base leading-relaxed text-white/90">
                 {featured.deskripsi}
               </p>
+              <p className="relative z-10 mt-4 font-mono text-[11px] uppercase tracking-widest text-white/70">
+                Perkiraan dana: {featured.dana}
+              </p>
             </div>
           </motion.a>
 
-          {rest.map((k, i) => (
+          {rest.map((p, i) => (
             <motion.a
-              key={k.judul}
-              href={`/divisi/${k.divisiSlug}`}
+              key={p.judul}
+              href={`/divisi/${p.divisiSlug}`}
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: false, margin: "-60px" }}
@@ -88,7 +91,7 @@ export function Karya({ id }: { id: string }) {
             >
               <div
                 className="relative flex aspect-[4/3] flex-col justify-end overflow-hidden p-7 sm:p-8"
-                style={{ background: k.gradien }}
+                style={{ background: p.gradien }}
               >
                 <div
                   aria-hidden
@@ -100,12 +103,16 @@ export function Karya({ id }: { id: string }) {
                 />
                 <div className="relative z-10">
                   <span className="font-mono text-[11px] uppercase tracking-widest text-white/80">
-                    {k.divisi} · {k.tahun}
+                    {p.kategori} · {p.tahun}
                   </span>
                   <h3 className="mt-2 font-display text-2xl font-bold tracking-tight text-white">
-                    {k.judul}
+                    {p.judul}
                   </h3>
-                  <p className="mt-2 text-sm leading-snug text-white/85">{k.deskripsi}</p>
+                  <p className="mt-2 text-sm leading-snug text-white/85">{p.deskripsi}</p>
+                  <p className="mt-3 flex items-center gap-1.5 font-mono text-[11px] uppercase tracking-widest text-white/70">
+                    <Wallet size={13} weight="duotone" />
+                    {p.dana}
+                  </p>
                 </div>
               </div>
             </motion.a>
@@ -118,7 +125,7 @@ export function Karya({ id }: { id: string }) {
             className="inline-flex items-center gap-2 font-medium text-ember transition-colors hover:text-flare"
           >
             Lihat kurikulum tiap divisi
-            <ArrowUpRight size={16} weight="bold" className="transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+            <ArrowUpRight size={16} weight="bold" />
           </Link>
         </Reveal>
       </div>

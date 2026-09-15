@@ -2,6 +2,7 @@
 
 import { motion, useScroll, useSpring, AnimatePresence } from "framer-motion";
 import Link from "next/link";
+import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { cn } from "@/lib/utils";
@@ -12,7 +13,8 @@ const links = [
   { href: "/#tentang", label: "Tentang", id: "tentang" },
   { href: "/#divisi", label: "Divisi", id: "divisi" },
   { href: "/#pengurus", label: "Pengurus", id: "pengurus" },
-  { href: "/#karya", label: "Karya", id: "karya" },
+  { href: "/#proker", label: "Program", id: "proker" },
+  { href: "/#galeri", label: "Galeri", id: "galeri" },
   { href: "/#faq", label: "FAQ", id: "faq" },
 ];
 
@@ -117,15 +119,28 @@ export function Navbar() {
             <Link
               href="/"
               onClick={() => scrollToSection("beranda")}
-              className="group flex items-center gap-2.5 font-display text-2xl font-bold tracking-tight text-ink"
+              className="group flex items-center gap-2.5 font-display text-xl font-bold tracking-tight text-ink"
             >
-              <span className="grid h-9 w-9 place-items-center rounded-[10px] bg-ember text-sm font-bold text-white shadow-[0_8px_20px_-8px_rgba(212,83,17,0.7)] transition-transform duration-300 group-hover:rotate-[8deg]">
-                H
+              <span className="relative h-9 w-9 overflow-hidden rounded-[10px] transition-transform duration-300 group-hover:rotate-[8deg]">
+                <Image
+                  src="/variant_logo-hic/Logogram ORANGE BLACK.png"
+                  alt="Logo HIC"
+                  fill
+                  sizes="36px"
+                  className="object-contain object-center dark:hidden"
+                />
+                <Image
+                  src="/variant_logo-hic/Logogram ORANGE WHITE.png"
+                  alt="Logo HIC"
+                  fill
+                  sizes="36px"
+                  className="hidden object-contain object-center dark:block"
+                />
               </span>
-              <span>
+              <span className="flex items-baseline gap-1.5">
                 HIC
-                <span className="ml-1.5 hidden font-sans text-[11px] font-medium tracking-wider text-ink-soft sm:inline">
-                  Hardware Interactive Club
+                <span className="hidden font-sans text-[11px] font-medium tracking-wide text-ink-soft sm:inline">
+                  STIKI Malang
                 </span>
               </span>
             </Link>

@@ -6,56 +6,65 @@ export type Pengurus = {
   gradien: string;
 };
 
+export const pembina: Pengurus = {
+  nama: "Hilman Nuril Hadi, S.Kom., M.Kom",
+  jabatan: "Dosen Pembina",
+  deskripsi:
+    "Dosen pembina HIC yang menaungi dan mengarahkan jalannya organisasi.",
+  inisial: "HN",
+  gradien: "linear-gradient(135deg, #d45311 0%, #f67f1e 60%, #fb9606 100%)",
+};
+
 export const pengurusInti: Pengurus[] = [
   {
-    nama: "Aurora Maheswari",
+    nama: "Muhammad Ilham Wiradisastra",
     jabatan: "Ketua Umum",
     deskripsi:
-      "Merangkai arah organisasi dan menjaga ritme belajar tetap hangat di setiap divisi.",
-    inisial: "AM",
+      "Memimpin arah organisasi dan menjaga ritme belajar tetap hangat di setiap divisi.",
+    inisial: "MI",
     gradien:
       "linear-gradient(135deg, #d45311 0%, #fb9606 70%, #ffbe6b 100%)",
   },
   {
-    nama: "Raka Pradipta",
+    nama: "Maria Dealova Indah Natara",
     jabatan: "Sekretaris",
     deskripsi:
       "Penjaga catatan, jadwal kelas, dan alur dokumen organisasi.",
-    inisial: "RP",
+    inisial: "MD",
     gradien:
-      "linear-gradient(135deg, #f67f1e 0%, #fb9606 100%)",
+      "linear-gradient(135deg, #fb9606 0%, #ffd79c 80%)",
   },
   {
-    nama: "Nabila Zahra",
+    nama: "Norbertus Bimantya Abadi",
     jabatan: "Bendahara",
     deskripsi:
-      "Mengelola kas, kebutuhan modul, dan memastikan tiap kelas punya cukup kopi.",
-    inisial: "NZ",
+      "Mengelola kas, kebutuhan modul, dan memastikan tiap kelas berjalan.",
+    inisial: "NB",
     gradien:
-      "linear-gradient(135deg, #fb9606 0%, #ffbe6b 80%)",
+      "linear-gradient(135deg, #f67f1e 0%, #fb9606 100%)",
   },
 ];
 
 export const koordinatorDivisi: Pengurus[] = [
   {
-    nama: "Fajar Ramadhan",
-    jabatan: "Koordinator Divisi Web",
+    nama: "Satya Garda Prasetyo",
+    jabatan: "PJ Divisi Web",
     deskripsi: "Memandu kurikulum dan mentoring untuk jalur web development.",
-    inisial: "FR",
+    inisial: "SG",
     gradien: "linear-gradient(135deg, #d45311, #f67f1e)",
   },
   {
-    nama: "Salsabila Putri",
-    jabatan: "Koordinator Divisi UI/UX",
+    nama: "Muhammad Dimas Cahyo",
+    jabatan: "PJ Divisi UI/UX",
     deskripsi: "Menjaga kualitas riset, desain, dan evaluasi antarmuka.",
-    inisial: "SP",
+    inisial: "MD",
     gradien: "linear-gradient(135deg, #fb9606, #ffbe6b)",
   },
   {
-    nama: "Bagas Setiawan",
-    jabatan: "Koordinator Divisi IoT",
-    deskripsi: "Merawat hardware, eksperimen sensor, dan proyek fisik.",
-    inisial: "BS",
+    nama: "Zulhan Arif Fasya",
+    jabatan: "PJ Divisi Robotics",
+    deskripsi: "Merawat eksperimen robotik dan proyek perangkat fisik.",
+    inisial: "ZA",
     gradien: "linear-gradient(135deg, #f67f1e, #d45311)",
   },
 ];

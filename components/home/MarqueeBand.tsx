@@ -8,7 +8,7 @@ export function MarqueeBand() {
           "Hardware Interactive Club",
           "Web Development",
           "UI/UX Design",
-          "Internet of Things",
+          "Robotics",
           "Peer Mentoring",
         ]}
         stretch

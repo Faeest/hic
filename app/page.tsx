@@ -3,7 +3,8 @@ import { MarqueeBand } from "@/components/home/MarqueeBand";
 import { Tentang } from "@/components/home/Tentang";
 import { DivisiIndex } from "@/components/home/DivisiIndex";
 import { Pengurus } from "@/components/home/Pengurus";
-import { Karya } from "@/components/home/Karya";
+import { Proker } from "@/components/home/Proker";
+import { Galeri } from "@/components/home/Galeri";
 import { Faq } from "@/components/home/Faq";
 import { Gabung } from "@/components/home/Gabung";
 import { Navbar } from "@/components/layout/Navbar";
@@ -19,7 +20,8 @@ export default function Home() {
         <Tentang id="tentang" />
         <DivisiIndex id="divisi" />
         <Pengurus id="pengurus" />
-        <Karya id="karya" />
+        <Proker id="proker" />
+        <Galeri id="galeri" />
         <Faq id="faq" />
         <Gabung id="gabung" />
       </main>

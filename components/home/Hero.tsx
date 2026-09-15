@@ -55,7 +55,7 @@ export function Hero() {
         >
           Ruang belajar keilmuan di mana mahasiswa menjadi{" "}
           <span className="font-semibold text-ember">mentor bagi satu sama lain</span> —
-          melalui kelas kecil untuk Web, UI/UX, dan IoT.
+          melalui kelas kecil untuk Web, UI/UX, dan Robotics.
         </motion.p>
 
         <motion.div

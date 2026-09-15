@@ -7,7 +7,7 @@ import { divisiVars } from "@/lib/utils";
 import { getDivisi, type Divisi } from "@/data/divisi";
 
 export function DivisiNav({ current }: { current: Divisi }) {
-  const all = ["web", "uiux", "iot"] as const;
+  const all = ["web", "uiux", "robotics"] as const;
   const next = all[(all.indexOf(current.slug as (typeof all)[number]) + 1) % all.length];
   const nextD = getDivisi(next);
   if (!nextD) return null;

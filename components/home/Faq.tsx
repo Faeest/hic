@@ -14,7 +14,7 @@ export function Faq({ id }: { id: string }) {
     <section id={id} className="relative scroll-mt-24 bg-paper py-24 sm:py-32">
       <div className="mx-auto max-w-4xl px-5 sm:px-8">
         <SectionHead
-          index="V"
+          index="VI"
           label="FAQ"
           title={
             <>

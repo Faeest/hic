@@ -1,16 +1,16 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { ArrowUpRight } from "@phosphor-icons/react";
+import { ArrowUpRight, Wallet } from "@phosphor-icons/react";
 import { Reveal } from "@/components/ui/Reveal";
 import { divisiVars } from "@/lib/utils";
-import { getKarya } from "@/data/karya";
+import { getProker } from "@/data/proker";
 import type { Divisi } from "@/data/divisi";
 
-export function DivisiKarya({ d }: { d: Divisi }) {
-  const karya = getKarya(d.slug);
+export function DivisiProker({ d }: { d: Divisi }) {
+  const items = getProker(d.slug);
 
-  if (karya.length === 0) return null;
+  if (items.length === 0) return null;
 
   return (
     <section className="relative bg-paper py-24 sm:py-32" style={divisiVars(d)}>
@@ -21,19 +21,19 @@ export function DivisiKarya({ d }: { d: Divisi }) {
               <p className="flex items-baseline gap-3 text-sm">
                 <span className="font-mono text-[var(--div-main)]">{d.angka}</span>
                 <span className="h-px w-6 self-center bg-ink/15" aria-hidden />
-                <span className="font-medium text-ink-soft">Contoh karya</span>
+                <span className="font-medium text-ink-soft">Program kerja divisi</span>
               </p>
               <h2 className="mt-3 font-display text-4xl font-semibold tracking-tight text-ink sm:text-5xl">
-                Bukti dari meja belajar.
+                Agenda yang menyentuh {d.nama}.
               </h2>
             </div>
           </div>
         </Reveal>
 
         <div className="mt-14 grid gap-5 md:grid-cols-2 lg:grid-cols-3">
-          {karya.map((k, i) => (
+          {items.map((p, i) => (
             <motion.article
-              key={k.judul}
+              key={p.judul}
               initial={{ opacity: 0, y: 24 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: false, margin: "-50px" }}
@@ -42,7 +42,7 @@ export function DivisiKarya({ d }: { d: Divisi }) {
             >
               <div
                 className="relative flex aspect-[4/3] flex-col justify-end overflow-hidden p-6 sm:p-7"
-                style={{ background: k.gradien }}
+                style={{ background: p.gradien }}
               >
                 <div
                   aria-hidden
@@ -55,20 +55,21 @@ export function DivisiKarya({ d }: { d: Divisi }) {
                 <div className="relative z-10">
                   <div className="flex items-center justify-between gap-3">
                     <span className="font-mono text-[11px] uppercase tracking-widest text-white/80">
-                      {k.tahun}
+                      {p.kategori} · {p.tahun}
                     </span>
                     <span className="grid h-9 w-9 place-items-center rounded-full bg-white/20 text-white backdrop-blur-sm transition-all duration-300 group-hover:rotate-45">
                       <ArrowUpRight size={16} weight="bold" />
                     </span>
                   </div>
                   <h3 className="mt-3 font-display text-2xl font-bold tracking-tight text-white">
-                    {k.judul}
+                    {p.judul}
                   </h3>
                   <p className="mt-2 text-sm leading-snug text-white/85">
-                    {k.deskripsi}
+                    {p.deskripsi}
                   </p>
-                  <p className="mt-4 font-mono text-[11px] uppercase tracking-widest text-white/60">
-                    {k.tim.join(" · ")}
+                  <p className="mt-4 flex items-center gap-1.5 font-mono text-[11px] uppercase tracking-widest text-white/70">
+                    <Wallet size={13} weight="duotone" />
+                    {p.dana}
                   </p>
                 </div>
               </div>

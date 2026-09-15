@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { ArrowUpRight } from "@phosphor-icons/react";
 import { club, sosial } from "@/data/club";
 import { divisi } from "@/data/divisi";
@@ -40,12 +41,25 @@ export function Footer() {
             <div className="max-w-sm">
               <Link
                 href="/"
-                className="inline-flex items-center gap-2.5 font-display text-3xl font-bold tracking-tight text-ink"
+                className="inline-flex items-center gap-2.5 font-display text-2xl font-bold tracking-tight text-ink"
               >
-                <span className="grid h-10 w-10 place-items-center rounded-xl bg-ember text-base font-bold text-white">
-                  H
+                <span className="relative h-10 w-10 overflow-hidden rounded-xl">
+                  <Image
+                    src="/variant_logo-hic/Logogram ORANGE BLACK.png"
+                    alt="Logo HIC"
+                    fill
+                    sizes="40px"
+                    className="object-contain object-center dark:hidden"
+                  />
+                  <Image
+                    src="/variant_logo-hic/Logogram ORANGE WHITE.png"
+                    alt="Logo HIC"
+                    fill
+                    sizes="40px"
+                    className="hidden object-contain object-center dark:block"
+                  />
                 </span>
-                HIC
+                {club.namaPanjang}
               </Link>
               <p className="mt-5 text-base leading-relaxed text-ink-soft">
                 {club.tagline}
@@ -74,8 +88,10 @@ export function Footer() {
                 {[
                   { href: "/#beranda", label: "Beranda" },
                   { href: "/#tentang", label: "Tentang" },
+                  { href: "/#divisi", label: "Divisi" },
                   { href: "/#pengurus", label: "Pengurus" },
-                  { href: "/#karya", label: "Karya" },
+                  { href: "/#proker", label: "Program" },
+                  { href: "/#galeri", label: "Galeri" },
                   { href: "/#faq", label: "FAQ" },
                 ].map((l) => (
                   <li key={l.label}>

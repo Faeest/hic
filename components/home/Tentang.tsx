@@ -1,6 +1,6 @@
 "use client";
 
-import { Highlighter } from "@phosphor-icons/react";
+import { Target, FlagCheckered } from "@phosphor-icons/react";
 import { Reveal } from "@/components/ui/Reveal";
 import { SectionHead } from "@/components/ui/SectionHead";
 import { club } from "@/data/club";
@@ -20,7 +20,7 @@ export function Tentang({ id }: { id: string }) {
                   <span className="text-ember">baru saja belajar</span>.
                 </>
               }
-              sub={club.about.intro}
+              sub="HIC adalah UKM keilmuan di STIKI Malang yang tumbuh dari satu premis sederhana: yang paling paham soal belajar adalah yang baru saja belajar."
             />
             <Reveal delay={0.2} className="mt-8">
               <ul className="flex flex-wrap gap-2.5">
@@ -29,6 +29,7 @@ export function Tentang({ id }: { id: string }) {
                   "Kelas kecil",
                   "Lintas jurusan",
                   "Proyek nyata",
+                  "Est. 1996",
                 ].map((tag) => (
                   <li
                     key={tag}
@@ -42,38 +43,78 @@ export function Tentang({ id }: { id: string }) {
           </div>
 
           <div className="flex flex-col gap-8">
-            {club.about.body.map((p, i) => (
-              <Reveal key={i} delay={i * 0.1}>
-                <p className="text-lg leading-relaxed text-ink-soft sm:text-xl">
-                  {p}
-                </p>
-              </Reveal>
-            ))}
+            <Reveal>
+              <p className="text-lg leading-relaxed text-ink-soft sm:text-xl">
+                Bukan klub olahraga, bukan juga lembaga sosial. Kami adalah
+                kumpulan mahasiswa lintas jurusan yang percaya bahwa ilmu
+                teknologi paling baik diserap ketika diajarkan oleh teman
+                sebaya — hangat, kontekstual, dan tanpa sekat.
+              </p>
+            </Reveal>
 
-            <Reveal delay={0.25}>
-              <div className="relative overflow-hidden rounded-[2rem] border border-ink/10 bg-peach p-8 sm:p-10 dark:border-white/10">
-                <div className="absolute -right-16 -top-16 h-56 w-56 rounded-full bg-flare/10 blur-2xl" aria-hidden />
-                <div className="relative flex flex-col gap-5 sm:flex-row sm:items-center sm:justify-between">
-                  <div className="flex items-start gap-4">
-                    <span className="grid h-12 w-12 shrink-0 place-items-center rounded-2xl bg-ember/10 text-ember">
-                      <Highlighter size={22} weight="duotone" />
-                    </span>
-                    <div>
-                      <h3 className="font-display text-xl font-semibold text-ink">
-                        Filosofi kami
-                      </h3>
-                      <p className="mt-1.5 max-w-md text-base leading-relaxed text-ink-soft">
-                        Siapa pun boleh mengajar. Tugas anggota senior adalah
-                        menjaga api rasa ingin tahu tetap menyala.
-                      </p>
-                    </div>
+            {/* Visi */}
+            <Reveal delay={0.1}>
+              <div className="glass-panel relative overflow-hidden rounded-[2rem] p-8 sm:p-10">
+                <div className="relative flex gap-5">
+                  <span className="grid h-12 w-12 shrink-0 place-items-center rounded-2xl bg-ember text-white">
+                    <Target size={22} weight="duotone" />
+                  </span>
+                  <div>
+                    <h3 className="font-display text-xl font-semibold text-ink">
+                      Visi
+                    </h3>
+                    <p className="mt-3 text-base leading-relaxed text-ink-soft sm:text-lg">
+                      {club.visi[0]}
+                    </p>
                   </div>
-                  <p className="shrink-0 font-mono text-sm text-ink-faint">
-                    est. 2018 ·{" "}
-                    <span className="text-ember">{club.statistik[1].angka} anggota</span>
-                  </p>
                 </div>
               </div>
+            </Reveal>
+
+            {/* 7 Pilar Misi */}
+            <Reveal delay={0.18}>
+              <div className="flex flex-col gap-3">
+                <div className="flex items-center gap-3">
+                  <span className="grid h-11 w-11 shrink-0 place-items-center rounded-2xl bg-peach text-ember">
+                    <FlagCheckered size={22} weight="duotone" />
+                  </span>
+                  <div>
+                    <h3 className="font-display text-xl font-semibold text-ink">
+                      7 Pilar Misi
+                    </h3>
+                    <p className="text-sm text-ink-soft">
+                      Arah kerja kepengurusan periode 2025–2026
+                    </p>
+                  </div>
+                </div>
+                <div className="mt-2 grid gap-2.5 sm:grid-cols-2">
+                  {club.pilarMisi.map((p, i) => (
+                    <div
+                      key={p.nama}
+                      className="flex items-start gap-3 rounded-2xl border border-ink/10 bg-cream p-4 transition-colors duration-300 hover:border-ember/40 dark:border-white/10 dark:bg-white/[0.03]"
+                    >
+                      <span className="font-mono text-sm text-ember">
+                        {String(i + 1).padStart(2, "0")}
+                      </span>
+                      <div className="min-w-0">
+                        <h4 className="font-display text-sm font-semibold text-ink">
+                          {p.nama}
+                        </h4>
+                        <p className="mt-0.5 text-xs leading-snug text-ink-soft">
+                          {p.deskripsi}
+                        </p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </Reveal>
+
+            <Reveal delay={0.25}>
+              <p className="font-mono text-sm text-ink-faint">
+                est. 1996 ·{" "}
+                <span className="text-ember">{club.namaLengkap}</span>
+              </p>
             </Reveal>
           </div>
         </div>
