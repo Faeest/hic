@@ -1,26 +1,181 @@
 @import "tailwindcss";
+@import "@fontsource-variable/jetbrains-mono";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
+@custom-variant dark (&:where(.dark, .dark *));
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --color-paper: var(--paper);
+  --color-cream: var(--cream);
+  --color-peach: var(--peach);
+  --color-peel: var(--peel);
+
+  --color-ember: #d45311;
+  --color-flare: #fb9606;
+  --color-mango: #ffbe6b;
+  --color-tangerine: #f67f1e;
+
+  --color-ink: var(--ink);
+  --color-ink-soft: var(--ink-soft);
+  --color-ink-faint: var(--ink-faint);
+
+  --font-display: var(--font-clash);
+  --font-sans: var(--font-satoshi);
+  --font-mono: var(--font-jetbrains);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+:root {
+  --paper: #ffffff;
+  --cream: #fdf9f4;
+  --peach: #fff3e6;
+  --peel: #ffe7cc;
+
+  --ink: #1c1512;
+  --ink-soft: #5d5045;
+  --ink-faint: #a08d7c;
+
+  --glass-bg: rgba(255, 255, 255, 0.55);
+  --glass-border: rgba(212, 83, 17, 0.08);
+  --glass-highlight: rgba(255, 255, 255, 0.9);
+
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+  --radius-glass: 1.75rem;
+}
+
+.dark {
+  --paper: #12100d;
+  --cream: #181512;
+  --peach: #241b12;
+  --peel: #2c2013;
+
+  --ink: #f4ede6;
+  --ink-soft: #b8a99a;
+  --ink-faint: #7d6f62;
+
+  --glass-bg: rgba(24, 21, 18, 0.6);
+  --glass-border: rgba(251, 150, 6, 0.12);
+  --glass-highlight: rgba(255, 255, 255, 0.06);
+}
+
+html {
+  scroll-behavior: smooth;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+  transition:
+    background-color 0.4s ease,
+    color 0.4s ease;
+}
+
+::selection {
+  background: var(--color-ember);
+  color: white;
+}
+
+/* Glassmorphism panel — frosted refract, adapts to dark */
+.glass-panel {
+  position: relative;
+  background: var(--glass-bg);
+  -webkit-backdrop-filter: blur(18px);
+  backdrop-filter: blur(18px);
+  border: 1px solid var(--glass-border);
+  box-shadow:
+    inset 0 1px 0 var(--glass-highlight),
+    0 24px 60px -30px rgba(212, 83, 17, 0.18);
+}
+
+/* Orange mesh gradient — the signature background */
+.mesh-orange {
+  background:
+    radial-gradient(52% 42% at 18% 12%, rgba(251, 150, 6, 0.16) 0%, transparent 100%),
+    radial-gradient(46% 40% at 86% 8%, rgba(212, 83, 17, 0.14) 0%, transparent 100%),
+    radial-gradient(60% 55% at 50% 95%, rgba(251, 150, 6, 0.12) 0%, transparent 100%),
+    linear-gradient(180deg, #fffdf9 0%, var(--paper) 100%);
+}
+
+.dark .mesh-orange {
+  background:
+    radial-gradient(52% 42% at 18% 12%, rgba(251, 150, 6, 0.1) 0%, transparent 100%),
+    radial-gradient(46% 40% at 86% 8%, rgba(212, 83, 17, 0.08) 0%, transparent 100%),
+    radial-gradient(60% 55% at 50% 95%, rgba(251, 150, 6, 0.05) 0%, transparent 100%),
+    linear-gradient(180deg, var(--cream) 0%, var(--paper) 100%);
+}
+
+.marquee-mask {
+  -webkit-mask-image: linear-gradient(
+    90deg,
+    transparent,
+    black 12%,
+    black 88%,
+    transparent
+  );
+  mask-image: linear-gradient(90deg, transparent, black 12%, black 88%, transparent);
+}
+
+/* Paper grain — craft.do style, pure SVG noise */
+.grain::before {
+  content: "";
+  pointer-events: none;
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  opacity: 0.05;
+  mix-blend-mode: soft-light;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+@keyframes marquee {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+@keyframes marquee-reverse {
+  from {
+    transform: translateX(-50%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+
+@keyframes float-y {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-16px);
+  }
+}
+
+/* Refined scrollbar for the rail pattern */
+::-webkit-scrollbar {
+  width: 10px;
+}
+::-webkit-scrollbar-track {
+  background: var(--cream);
+}
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(var(--color-mango), var(--color-ember));
+  border-radius: 999px;
+  border: 2px solid var(--cream);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
 }
