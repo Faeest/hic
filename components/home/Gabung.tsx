@@ -91,7 +91,7 @@ export function Gabung({ id }: { id: string }) {
 
       {/* Opini strip */}
       <Reveal className="mx-auto mt-8 max-w-7xl px-5 sm:px-8">
-        <div className="glass-panel flex flex-col items-center justify-between gap-6 rounded-[2rem] px-8 py-10 text-center sm:flex-row sm:text-left">
+        <div className="glass-panel shadow-none! flex flex-col items-center justify-between gap-6 rounded-[2rem] px-8 py-10 text-center sm:flex-row sm:text-left">
           <div>
             <p className="font-display text-xl font-semibold text-ink sm:text-2xl">
               “Di sini saya belajar React dari teman sekamar, bukan dari dosen.”
@@ -107,12 +107,12 @@ export function Gabung({ id }: { id: string }) {
       </Reveal>
 
       {/* Marquee band — single seamless row */}
-      <div className="mt-16 -rotate-[0.6deg] scale-[1.02] border-y border-white/10 bg-flare py-5 sm:py-7">
+      <div className="my-42 -rotate-[0.6deg] scale-[1.02] border-y border-white/10 bg-flare py-6 sm:py-8">
         <Marquee
           items={marqueeWords}
-          squeeze
+          stretch
           speed={44}
-          itemClassName="font-display text-3xl font-semibold tracking-tight text-white sm:text-5xl"
+          itemClassName="font-display text-5xl font-bold tracking-tight text-white sm:text-7xl"
         />
       </div>
     </section>

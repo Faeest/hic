@@ -77,7 +77,7 @@ export function Hero() {
           </a>
           <a
             href="#tentang"
-            className="group inline-flex items-center gap-2.5 rounded-full glass-panel px-7 py-4 text-base font-medium text-ink transition-all duration-300 hover:text-ember"
+            className="group inline-flex items-center gap-2.5 rounded-full glass-panel shadow-ember px-7 py-4 text-base font-medium text-ink transition-all duration-300 hover:text-ember"
           >
             Tentang HIC
             <ArrowUpRight
@@ -93,12 +93,12 @@ export function Hero() {
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.9, delay: 1.2, ease: EASE }}
-          className="mt-16 grid grid-cols-2 gap-px overflow-hidden rounded-3xl glass-panel sm:grid-cols-4"
+          className="my-16 grid grid-cols-2 gap-px overflow-hidden rounded-3xl glass-panel sm:grid-cols-4"
         >
           {club.statistik.map((s) => (
             <div
               key={s.label}
-              className="flex flex-col gap-1.5 bg-white/40 px-6 py-6 backdrop-blur-sm sm:px-8 dark:bg-white/5"
+              className="flex flex-col gap-1.5 px-6 py-6 sm:px-8"
             >
               <span className="font-display text-3xl font-semibold text-ember sm:text-4xl">
                 {s.angka}

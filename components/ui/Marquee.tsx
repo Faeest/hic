@@ -8,8 +8,8 @@ export function Marquee({
   reverse = false,
   className,
   itemClassName,
-  separator = "✦",
-  squeeze = false,
+  separator = "|",
+  stretch = false,
   speed = 55,
 }: {
   items: string[];
@@ -17,7 +17,7 @@ export function Marquee({
   className?: string;
   itemClassName?: string;
   separator?: string;
-  squeeze?: boolean;
+  stretch?: boolean;
   speed?: number;
 }) {
   const [duration, setDuration] = useState(20);
@@ -35,7 +35,7 @@ export function Marquee({
   return (
     <div
       ref={ref}
-      className={cn("overflow-hidden py-4 select-none", className)}
+      className={cn("overflow-hidden select-none", className)}
       style={{
         WebkitMaskImage:
           "linear-gradient(90deg, transparent, black 12%, black 88%, transparent)",
@@ -58,11 +58,10 @@ export function Marquee({
             aria-hidden={i >= items.length}
             className={cn(
               "flex items-center whitespace-nowrap",
-              squeeze && "tracking-[-0.04em]",
               itemClassName
             )}
           >
-            <span className={cn(squeeze && "inline-block scale-x-90")}>{item}</span>
+            <span className={cn(stretch && "inline-block translate-y-[6%] scale-y-[1.22] leading-[0.95]")}>{item}</span>
             <span className="mx-8" aria-hidden>
               {separator}
             </span>

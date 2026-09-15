@@ -3,7 +3,7 @@
 import { motion, useScroll, useSpring, AnimatePresence } from "framer-motion";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { cn } from "@/lib/utils";
 import { ThemeToggle } from "@/components/ui/ThemeToggle";
 
@@ -22,6 +22,8 @@ export function Navbar() {
   );
   const [open, setOpen] = useState(false);
   const [active, setActive] = useState<string | null>(null);
+  const navLocked = useRef(false);
+  const unlockTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const pathname = usePathname();
   const { scrollYProgress } = useScroll();
   const progress = useSpring(scrollYProgress, {
@@ -36,6 +38,23 @@ export function Navbar() {
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
+  const unlockSpy = () => {
+    navLocked.current = false;
+    if (unlockTimer.current) {
+      clearTimeout(unlockTimer.current);
+      unlockTimer.current = null;
+    }
+  };
+
+  const scrollToSection = (id: string) => {
+    navLocked.current = true;
+    setActive(id);
+    if (unlockTimer.current) clearTimeout(unlockTimer.current);
+    // Fallback: release the spy after the smooth scroll settles.
+    // `scrollend` is the real signal; the timer covers browsers without it.
+    unlockTimer.current = setTimeout(unlockSpy, 1400);
+  };
+
   // Scroll-spy: only meaningful on the homepage where the sections exist
   useEffect(() => {
     if (pathname !== "/") return;
@@ -47,6 +66,7 @@ export function Navbar() {
 
     const observer = new IntersectionObserver(
       (entries) => {
+        if (navLocked.current) return;
         for (const entry of entries) {
           if (entry.isIntersecting) setActive(entry.target.id);
         }
@@ -54,7 +74,14 @@ export function Navbar() {
       { rootMargin: "-45% 0px -45% 0px", threshold: 0 }
     );
     sections.forEach((s) => observer.observe(s));
-    return () => observer.disconnect();
+
+    const onScrollEnd = () => unlockSpy();
+    window.addEventListener("scrollend", onScrollEnd);
+    return () => {
+      observer.disconnect();
+      window.removeEventListener("scrollend", onScrollEnd);
+      if (unlockTimer.current) clearTimeout(unlockTimer.current);
+    };
   }, [pathname]);
 
   const isActive = (id: string) =>
@@ -89,7 +116,7 @@ export function Navbar() {
           >
             <Link
               href="/"
-              onClick={() => setActive("beranda")}
+              onClick={() => scrollToSection("beranda")}
               className="group flex items-center gap-2.5 font-display text-2xl font-bold tracking-tight text-ink"
             >
               <span className="grid h-9 w-9 place-items-center rounded-[10px] bg-ember text-sm font-bold text-white shadow-[0_8px_20px_-8px_rgba(212,83,17,0.7)] transition-transform duration-300 group-hover:rotate-[8deg]">
@@ -110,7 +137,7 @@ export function Navbar() {
             transition={{ duration: 0.7, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
             className={cn(
               "hidden items-center gap-1 rounded-full p-1 transition-all duration-500 lg:flex",
-              scrolled ? "glass-panel" : ""
+              scrolled ? "glass-panel bg-grey/90!" : ""
             )}
           >
             {links.map((l) => {
@@ -119,7 +146,7 @@ export function Navbar() {
                 <Link
                   key={l.label}
                   href={l.href}
-                  onClick={() => setActive(l.id)}
+                  onClick={() => scrollToSection(l.id)}
                   className={cn(
                     "relative rounded-full px-4.5 py-2 text-sm font-medium transition-colors duration-300",
                     activeLink ? "text-ember" : "text-ink-soft hover:text-ember"
@@ -206,7 +233,7 @@ export function Navbar() {
                       href={l.href}
                       onClick={() => {
                         setOpen(false);
-                        setActive(l.id);
+                        scrollToSection(l.id);
                       }}
                       className={cn(
                         "group flex items-center justify-between border-b border-ink/10 py-4",
