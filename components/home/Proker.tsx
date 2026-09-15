@@ -7,6 +7,9 @@ import { SectionHead } from "@/components/ui/SectionHead";
 import { Reveal } from "@/components/ui/Reveal";
 import { proker } from "@/data/proker";
 
+const dots =
+  "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20'%3E%3Ccircle cx='2' cy='2' r='1.4' fill='%23ffffff' fill-opacity='0.28'/%3E%3C/svg%3E\")";
+
 export function Proker({ id }: { id: string }) {
   const [featured, ...rest] = proker;
 
@@ -21,19 +24,12 @@ export function Proker({ id }: { id: string }) {
         }}
       />
       <div className="relative mx-auto max-w-7xl px-5 sm:px-8">
-        <div className="flex flex-col gap-8 lg:flex-row lg:items-end lg:justify-between">
-          <SectionHead
-            index="IV"
-            label="Program Kerja"
-            title={
-              <>
-                Agenda nyata,{" "}
-                <span className="text-ember">bukan sekadar rencana</span>.
-              </>
-            }
-            sub="Program kerja yang berjalan sepanjang periode kepengurusan — dari diklat sampai kompetisi tingkat kota."
-          />
-        </div>
+        <SectionHead
+          index="IV"
+          label="Program Kerja"
+          title="Agenda nyata, bukan sekadar rencana."
+          accent="bukan sekadar rencana"
+        />
 
         <div className="mt-16 grid gap-5 lg:grid-cols-3">
           {/* Featured large card */}
@@ -47,15 +43,12 @@ export function Proker({ id }: { id: string }) {
           >
             <div
               className="relative flex aspect-[4/3] flex-col justify-end overflow-hidden p-8 sm:aspect-[16/10] sm:p-10 lg:aspect-auto lg:h-full"
-              style={{ background: featured.gradien }}
+              style={{ background: featured.warna }}
             >
               <div
                 aria-hidden
-                className="absolute inset-0 opacity-50 [background-size:22px_22px] [background-image:linear-gradient(rgba(255,255,255,0.18)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.18)_1px,transparent_1px)]"
-              />
-              <div
-                aria-hidden
-                className="absolute inset-0 bg-[linear-gradient(180deg,transparent_35%,rgba(0,0,0,0.4)_100%)]"
+                className="absolute inset-0"
+                style={{ backgroundImage: dots, backgroundSize: "20px 20px" }}
               />
               <div className="relative z-10 flex items-start justify-between gap-4">
                 <div className="flex flex-col gap-2">
@@ -91,15 +84,12 @@ export function Proker({ id }: { id: string }) {
             >
               <div
                 className="relative flex aspect-[4/3] flex-col justify-end overflow-hidden p-7 sm:p-8"
-                style={{ background: p.gradien }}
+                style={{ background: p.warna }}
               >
                 <div
                   aria-hidden
-                  className="absolute inset-0 opacity-40 [background-size:20px_20px] [background-image:linear-gradient(rgba(255,255,255,0.16)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.16)_1px,transparent_1px)]"
-                />
-                <div
-                  aria-hidden
-                  className="absolute inset-0 bg-[linear-gradient(180deg,transparent_35%,rgba(0,0,0,0.38)_100%)]"
+                  className="absolute inset-0"
+                  style={{ backgroundImage: dots, backgroundSize: "20px 20px" }}
                 />
                 <div className="relative z-10">
                   <span className="font-mono text-[11px] uppercase tracking-widest text-white/80">

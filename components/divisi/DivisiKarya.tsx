@@ -42,15 +42,16 @@ export function DivisiProker({ d }: { d: Divisi }) {
             >
               <div
                 className="relative flex aspect-[4/3] flex-col justify-end overflow-hidden p-6 sm:p-7"
-                style={{ background: p.gradien }}
+                style={{ background: p.warna }}
               >
                 <div
                   aria-hidden
-                  className="absolute inset-0 opacity-40 [background-size:20px_20px] [background-image:linear-gradient(rgba(255,255,255,0.16)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.16)_1px,transparent_1px)]"
-                />
-                <div
-                  aria-hidden
-                  className="absolute inset-0 bg-[linear-gradient(180deg,transparent_35%,rgba(0,0,0,0.4)_100%)]"
+                  className="absolute inset-0"
+                  style={{
+                    backgroundImage:
+                      "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20'%3E%3Ccircle cx='2' cy='2' r='1.4' fill='%23ffffff' fill-opacity='0.28'/%3E%3C/svg%3E\")",
+                    backgroundSize: "20px 20px",
+                  }}
                 />
                 <div className="relative z-10">
                   <div className="flex items-center justify-between gap-3">

@@ -14,13 +14,8 @@ export function Tentang({ id }: { id: string }) {
             <SectionHead
               index="I"
               label="Tentang HIC"
-              title={
-                <>
-                  Belajar dari yang{" "}
-                  <span className="text-ember">baru saja belajar</span>.
-                </>
-              }
-              sub="HIC adalah UKM keilmuan di STIKI Malang yang tumbuh dari satu premis sederhana: yang paling paham soal belajar adalah yang baru saja belajar."
+              title="Belajar dari yang baru saja belajar."
+              accent="baru saja belajar"
             />
             <Reveal delay={0.2} className="mt-8">
               <ul className="flex flex-wrap gap-2.5">

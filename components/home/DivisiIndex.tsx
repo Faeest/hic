@@ -130,13 +130,8 @@ export function DivisiIndex({ id }: { id: string }) {
           <SectionHead
             index="II"
             label="Divisi"
-            title={
-              <>
-                Tiga jalur, satu{" "}
-                <span className="text-ember">cara belajar</span>.
-              </>
-            }
-            sub="Setiap divisi punya kurikulum bertahap yang dipandu mentor dari anggota senior."
+            title="Tiga jalur, satu cara belajar."
+            accent="cara belajar"
           />
         </div>
 

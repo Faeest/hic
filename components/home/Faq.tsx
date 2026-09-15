@@ -16,13 +16,8 @@ export function Faq({ id }: { id: string }) {
         <SectionHead
           index="VI"
           label="FAQ"
-          title={
-            <>
-              Sering ditanya,{" "}
-              <span className="text-ember">jawabannya di sini</span>.
-            </>
-          }
-          sub="Masih ragu? Ketuk pertanyaan di bawah atau langsung tanya kami lewat kontak di footer."
+          title="Sering ditanya, jawabannya di sini."
+          accent="jawabannya di sini"
           align="center"
         />
 

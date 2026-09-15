@@ -135,21 +135,23 @@ export function Navbar() {
               onClick={(e) => scrollToSection(e, "beranda")}
               className="group flex items-center gap-2.5 font-display text-xl font-bold tracking-tight text-ink"
             >
-              <span className="relative h-9 w-9 overflow-hidden rounded-[10px] transition-transform duration-300 group-hover:rotate-[8deg]">
-                <Image
-                  src="/variant_logo-hic/Logogram ORANGE BLACK.png"
-                  alt="Logo HIC"
-                  fill
-                  sizes="36px"
-                  className="object-contain object-center dark:hidden"
-                />
-                <Image
-                  src="/variant_logo-hic/Logogram ORANGE WHITE.png"
-                  alt="Logo HIC"
-                  fill
-                  sizes="36px"
-                  className="hidden object-contain object-center dark:block"
-                />
+              <span className="relative grid h-9 w-9 shrink-0 place-items-center overflow-hidden rounded-[10px] border border-ink/10 bg-white p-1.5 shadow-[0_2px_10px_-4px_rgba(28,21,18,0.25)] transition-transform duration-300 group-hover:rotate-[8deg] dark:border-white/15 dark:bg-[#1b1815]">
+                <span className="relative h-full w-full">
+                  <Image
+                    src="/variant_logo-hic/Logogram ORANGE BLACK.png"
+                    alt="Logo HIC"
+                    fill
+                    sizes="36px"
+                    className="object-contain object-center dark:hidden"
+                  />
+                  <Image
+                    src="/variant_logo-hic/Logogram ORANGE WHITE.png"
+                    alt="Logo HIC"
+                    fill
+                    sizes="36px"
+                    className="hidden object-contain object-center dark:block"
+                  />
+                </span>
               </span>
               <span className="flex items-baseline gap-1.5">
                 HIC

@@ -36,13 +36,8 @@ export function Pengurus({ id }: { id: string }) {
         <SectionHead
           index="III"
           label="Pengurus"
-          title={
-            <>
-              Orang-orang di balik{" "}
-              <span className="text-ember">kursi</span>.
-            </>
-          }
-          sub="Struktur inti HIC ramping: pembina mendampingi, tiga kursi utama memimpin, dan penanggung jawab divisi menjaga ritme belajar."
+          title="Orang-orang di balik kursi."
+          accent="kursi"
         />
 
         {/* Dosen Pembina */}

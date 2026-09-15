@@ -5,7 +5,7 @@ export type Proker = {
   tahun: string;
   deskripsi: string;
   dana: string;
-  gradien: string;
+  warna: string;
 };
 
 export const proker: Proker[] = [
@@ -17,7 +17,7 @@ export const proker: Proker[] = [
     deskripsi:
       "Agenda wajib penerimaan dan pengenalan HIC untuk calon anggota. Fokus pada pematerian awal materi umum tentang hardware komputer.",
     dana: "Rp 500.000",
-    gradien: "linear-gradient(135deg, #d45311 0%, #f67f1e 60%, #ffbe6b 100%)",
+    warna: "#d45311",
   },
   {
     judul: "Orientasi Jurusan (ORJU)",
@@ -27,7 +27,7 @@ export const proker: Proker[] = [
     deskripsi:
       "Pematerian awal setiap bidang kejuruan agar calon anggota memahami jurusan yang ada di HIC.",
     dana: "Rp 500.000",
-    gradien: "linear-gradient(135deg, #fb9606 0%, #ffd79c 100%)",
+    warna: "#f07d05",
   },
   {
     judul: "HIC Hardware Hackathon",
@@ -37,7 +37,7 @@ export const proker: Proker[] = [
     deskripsi:
       "Wadah kompetisi inovasi teknologi tingkat kota untuk menguji kreativitas dan problem-solving. Terbuka untuk siswa-siswi SMA/K se-Malang Raya.",
     dana: "Rp 2.000.000 – Rp 4.000.000",
-    gradien: "linear-gradient(135deg, #f67f1e 0%, #d45311 100%)",
+    warna: "#e26310",
   },
   {
     judul: "Workshop & Seminar HIC",
@@ -47,7 +47,7 @@ export const proker: Proker[] = [
     deskripsi:
       "Pematerian melalui workshop atau seminar bertema menarik, baik internal maupun eksternal kampus.",
     dana: "Rp 1.500.000 – Rp 2.000.000",
-    gradien: "linear-gradient(135deg, #e35d18 0%, #fb9606 100%)",
+    warna: "#cf4f13",
   },
   {
     judul: "Goes to School & Goes to Campus",
@@ -57,7 +57,7 @@ export const proker: Proker[] = [
     deskripsi:
       "Menjadi sumber pengetahuan serta promosi kampus bagi siswa-siswi SMA/K, baik secara mandiri maupun lewat PMB.",
     dana: "Menyesuaikan",
-    gradien: "linear-gradient(135deg, #f67f1e 0%, #ffab52 80%)",
+    warna: "#f68a28",
   },
   {
     judul: "Pembekalan Ilmu Kejuruan",
@@ -67,7 +67,7 @@ export const proker: Proker[] = [
     deskripsi:
       "Pertemuan berkala berisi pematerian bidang peminatan masing-masing, dengan target 1 goals per 2 minggu untuk menjaga keaktifan.",
     dana: "Kas Internal",
-    gradien: "linear-gradient(135deg, #e06a14 0%, #fb9606 70%)",
+    warna: "#d95f0f",
   },
 ];
 

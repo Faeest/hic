@@ -22,13 +22,8 @@ export function Galeri({ id }: { id: string }) {
         <SectionHead
           index="V"
           label="Galeri Kegiatan"
-          title={
-            <>
-              Momen-momen di{" "}
-              <span className="text-ember">sekret & ruang kelas</span>.
-            </>
-          }
-          sub="Jepretan dari diklat, orientasi, seminar, dan hari-hari biasa di HIC."
+          title="Momen-momen di sekret & ruang kelas."
+          accent="sekret & ruang kelas"
         />
 
         <div className="mt-16 grid auto-rows-[10rem] grid-cols-2 gap-4 sm:auto-rows-[13rem] sm:gap-5 lg:auto-rows-[15rem] lg:grid-cols-4">
