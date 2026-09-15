@@ -39,3 +39,7 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# large reference docs (keep locally, not in the repo)
+docs/*.pdf
+docs/*.docx
