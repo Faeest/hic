@@ -1,34 +1,56 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { useRef } from "react";
+import { motion, useScroll, useTransform, type MotionValue } from "framer-motion";
 import { ArrowDownRight, ArrowUpRight } from "@phosphor-icons/react";
 import { HeroCanvas } from "./HeroCanvas";
 import { club } from "@/data/club";
 
 const EASE = [0.16, 1, 0.3, 1] as const;
 
-function Word({ children, i }: { children: string; i: number }) {
+function Word({
+  children,
+  i,
+  progress,
+}: {
+  children: string;
+  i: number;
+  progress: MotionValue<number>;
+}) {
+  const y = useTransform(progress, [0, 1], [0, 36 + i * 44]);
   return (
-    <span className="inline-block overflow-hidden align-bottom">
-      <motion.span
-        className="inline-block"
-        initial={{ y: "110%" }}
-        animate={{ y: 0 }}
-        transition={{ duration: 0.9, delay: 0.35 + i * 0.08, ease: EASE }}
-      >
-        {children}
-        {"\u00A0"}
-      </motion.span>
-    </span>
+    <motion.span style={{ y }} className="inline-block align-bottom">
+      <span className="inline-block overflow-hidden align-bottom">
+        <motion.span
+          className="inline-block"
+          initial={{ y: "110%" }}
+          animate={{ y: 0 }}
+          transition={{ duration: 0.9, delay: 0.35 + i * 0.08, ease: EASE }}
+        >
+          {children}
+          {"\u00A0"}
+        </motion.span>
+      </span>
+    </motion.span>
   );
 }
 
 export function Hero() {
   const headline = ["Hardware", "Interactive", "Club"];
+  const secRef = useRef<HTMLElement>(null);
+  const { scrollYProgress } = useScroll({
+    target: secRef,
+    offset: ["start start", "end start"],
+  });
+  const contentOpacity = useTransform(scrollYProgress, [0, 0.75], [1, 0]);
+  const subY = useTransform(scrollYProgress, [0, 1], [0, 64]);
+  const ctaY = useTransform(scrollYProgress, [0, 1], [0, 100]);
+  const statsY = useTransform(scrollYProgress, [0, 1], [0, 150]);
 
   return (
     <section
       id="beranda"
+      ref={secRef}
       className="relative flex min-h-[100dvh] flex-col overflow-hidden"
     >
       <div className="mesh-orange absolute inset-0" aria-hidden />
@@ -38,32 +60,38 @@ export function Hero() {
       />
       <HeroCanvas />
 
-      <div className="relative mx-auto flex w-full max-w-7xl flex-1 flex-col justify-center px-5 pb-16 pt-32 sm:px-8 lg:pt-36">
+      <motion.div
+        style={{ opacity: contentOpacity }}
+        className="relative mx-auto flex w-full max-w-7xl flex-1 flex-col justify-center px-5 pb-16 pt-32 sm:px-8 lg:pt-36"
+      >
         <h1 className="font-display text-[13vw] font-semibold leading-[0.94] tracking-tight text-ink sm:text-[10vw] lg:text-[8.2rem]">
           {headline.map((w, i) => (
-            <Word key={w} i={i}>
+            <Word key={w} i={i} progress={scrollYProgress}>
               {w}
             </Word>
           ))}
         </h1>
 
-        <motion.p
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.9, ease: EASE }}
-          className="mt-8 max-w-xl text-lg leading-relaxed text-ink-soft sm:text-xl"
-        >
-          Ruang belajar keilmuan di mana mahasiswa menjadi{" "}
-          <span className="font-semibold text-ember">mentor bagi satu sama lain</span> —
-          melalui kelas kecil untuk Web, UI/UX, dan Robotics.
-        </motion.p>
+        <motion.div style={{ y: subY }}>
+          <motion.p
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.9, ease: EASE }}
+            className="mt-8 max-w-xl text-lg leading-relaxed text-ink-soft sm:text-xl"
+          >
+            Ruang belajar keilmuan di mana mahasiswa menjadi{" "}
+            <span className="font-semibold text-ember">mentor bagi satu sama lain</span> —
+            melalui kelas kecil untuk Web, UI/UX, dan Robotics.
+          </motion.p>
+        </motion.div>
 
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 1.05, ease: EASE }}
-          className="mt-10 flex flex-wrap items-center gap-4"
-        >
+        <motion.div style={{ y: ctaY }}>
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 1.05, ease: EASE }}
+            className="mt-10 flex flex-wrap items-center gap-4"
+          >
           <a
             href="#divisi"
             className="group inline-flex items-center gap-2.5 rounded-full bg-ember px-7 py-4 text-base font-medium text-white shadow-[0_16px_40px_-16px_rgba(212,83,17,0.7)] transition-all duration-300 hover:bg-flare"
@@ -87,14 +115,16 @@ export function Hero() {
             />
           </a>
         </motion.div>
+        </motion.div>
 
         {/* stats strip */}
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.9, delay: 1.2, ease: EASE }}
-          className="my-16 grid grid-cols-2 gap-px overflow-hidden rounded-full glass-panel shadow-none! sm:grid-cols-4"
-        >
+        <motion.div style={{ y: statsY }}>
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.9, delay: 1.2, ease: EASE }}
+            className="my-16 grid grid-cols-2 gap-px overflow-hidden rounded-full glass-panel shadow-none! sm:grid-cols-4"
+          >
           {club.statistik.map((s) => (
             <div
               key={s.label}
@@ -108,8 +138,9 @@ export function Hero() {
               </span>
             </div>
           ))}
+          </motion.div>
         </motion.div>
-      </div>
+      </motion.div>
     </section>
   );
 }

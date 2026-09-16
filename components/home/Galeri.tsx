@@ -1,7 +1,8 @@
 "use client";
 
+import { useRef } from "react";
 import Image from "next/image";
-import { motion } from "framer-motion";
+import { motion, useScroll, useTransform } from "framer-motion";
 import { SectionHead } from "@/components/ui/SectionHead";
 import { Reveal } from "@/components/ui/Reveal";
 import { galeri } from "@/data/galeri";
@@ -14,6 +15,49 @@ const spanClasses = [
   "",
   "",
 ];
+
+function GaleriFigure({
+  f,
+  i,
+}: {
+  f: (typeof galeri)[number];
+  i: number;
+}) {
+  const figRef = useRef<HTMLElement>(null);
+  const { scrollYProgress } = useScroll({
+    target: figRef,
+    offset: ["start end", "end start"],
+  });
+  const imgY = useTransform(scrollYProgress, [0, 1], ["-10%", "10%"]);
+  return (
+    <motion.figure
+      ref={figRef}
+      initial={{ opacity: 0, y: 30 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: false, margin: "-60px" }}
+      transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1], delay: i * 0.06 }}
+      className={cn(
+        "group relative h-full w-full overflow-hidden rounded-3xl",
+        spanClasses[i] ?? ""
+      )}
+    >
+      <motion.div aria-hidden style={{ y: imgY }} className="absolute inset-x-0 -top-[12%] h-[124%]">
+        <Image
+          src={f.src}
+          alt={f.judul}
+          fill
+          sizes="(min-width: 1024px) 25vw, (min-width: 640px) 33vw, 50vw"
+          className="object-cover transition-transform duration-[1.2s] ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:scale-[1.05]"
+        />
+      </motion.div>
+      <div className="absolute inset-0 bg-[linear-gradient(180deg,transparent_50%,rgba(0,0,0,0.55)_100%)]" aria-hidden />
+      <figcaption className="absolute inset-x-0 bottom-0 z-10 p-6">
+        <p className="font-display text-xl font-semibold text-white">{f.judul}</p>
+        <p className="mt-1 text-sm leading-snug text-white/80">{f.keterangan}</p>
+      </figcaption>
+    </motion.figure>
+  );
+}
 
 export function Galeri({ id }: { id: string }) {
   return (
@@ -28,30 +72,7 @@ export function Galeri({ id }: { id: string }) {
 
         <div className="mt-16 grid auto-rows-[10rem] grid-cols-2 gap-4 sm:auto-rows-[13rem] sm:gap-5 lg:auto-rows-[15rem] lg:grid-cols-4">
           {galeri.map((f, i) => (
-            <motion.figure
-              key={f.src}
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: false, margin: "-60px" }}
-              transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1], delay: i * 0.06 }}
-              className={cn(
-                "group relative h-full w-full overflow-hidden rounded-3xl",
-                spanClasses[i] ?? ""
-              )}
-            >
-              <Image
-                src={f.src}
-                alt={f.judul}
-                fill
-                sizes="(min-width: 1024px) 25vw, (min-width: 640px) 33vw, 50vw"
-                className="object-cover transition-transform duration-[1.2s] ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:scale-[1.05]"
-              />
-              <div className="absolute inset-0 bg-[linear-gradient(180deg,transparent_50%,rgba(0,0,0,0.55)_100%)]" aria-hidden />
-              <figcaption className="absolute inset-x-0 bottom-0 z-10 p-6">
-                <p className="font-display text-xl font-semibold text-white">{f.judul}</p>
-                <p className="mt-1 text-sm leading-snug text-white/80">{f.keterangan}</p>
-              </figcaption>
-            </motion.figure>
+            <GaleriFigure key={f.src} f={f} i={i} />
           ))}
         </div>
 

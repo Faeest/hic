@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import localFont from "next/font/local";
+import { SmoothScroll } from "@/components/ui/SmoothScroll";
 import "./globals.css";
 
 const clash = localFont({
@@ -27,12 +28,12 @@ const satoshi = localFont({
 export const metadata: Metadata = {
   title: "HIC — Hardware Interactive Club",
   description:
-    "UKM keilmuan STIKI Malang tempat mahasiswa saling mengajar: Web, UI/UX, dan Robotics. Belajar, berkarya, dan tumbuh bareng.",
-  keywords: ["HIC", "UKM", "Hardware Interactive Club", "web", "uiux", "robotics", "STIKI Malang"],
+    "UKM keilmuan UBHINUS tempat mahasiswa saling mengajar: Web, UI/UX, dan Robotics. Belajar, berkarya, dan tumbuh bareng.",
+  keywords: ["HIC", "UKM", "Hardware Interactive Club", "web", "uiux", "robotics", "UBHINUS"],
   openGraph: {
     title: "HIC — Hardware Interactive Club",
     description:
-      "UKM keilmuan STIKI Malang tempat mahasiswa saling mengajar: Web, UI/UX, dan Robotics.",
+        "UKM keilmuan UBHINUS tempat mahasiswa saling mengajar: Web, UI/UX, dan Robotics.",
     type: "website",
     locale: "id_ID",
   },
@@ -49,7 +50,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         />
       </head>
       <body className="min-h-dvh flex flex-col bg-paper text-ink transition-colors duration-400">
-        {children}
+        <SmoothScroll>{children}</SmoothScroll>
       </body>
     </html>
   );

@@ -2,6 +2,7 @@
 
 import { motion, type Variants } from "framer-motion";
 import { cn } from "@/lib/utils";
+import { useScrollDirection } from "@/lib/useScrollDirection";
 
 const EASE = [0.16, 1, 0.3, 1] as const;
 
@@ -13,7 +14,7 @@ const container: Variants = {
 };
 
 const word: Variants = {
-  hidden: { y: "115%" },
+  hidden: (dir: number) => ({ y: dir >= 0 ? "115%" : "-115%" }),
   show: {
     y: "0%",
     transition: { duration: 0.85, ease: EASE },
@@ -29,6 +30,7 @@ function AnimatedTitle({
   accent?: string;
   align: "left" | "center";
 }) {
+  const dir = useScrollDirection();
   const words = text.split(" ").filter(Boolean);
 
   let accentStart = -1;
@@ -44,6 +46,7 @@ function AnimatedTitle({
   return (
     <motion.h2
       variants={container}
+      custom={dir}
       initial="hidden"
       whileInView="show"
       viewport={{ once: false, margin: "-80px" }}

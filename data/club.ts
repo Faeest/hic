@@ -11,7 +11,7 @@ export type PilarMisi = {
 export const club = {
   nama: "HIC",
   namaPanjang: "Hardware Interactive Club",
-  namaLengkap: "HIC — STIKI Malang",
+  namaLengkap: "HIC — UBHINUS",
   tagline: "Ruang belajar keilmuan, di mana mahasiswa menjadi mentor satu sama lain.",
   visi: [
     "Mewujudkan HIC sebagai organisasi yang berintegritas, transparan, dan inklusif dalam mengembangkan kompetensi kejuruan dan kapasitas intelektual anggota, serta berkontribusi secara bertahap dalam ekosistem kemahasiswaan.",
@@ -47,7 +47,7 @@ export const club = {
     },
   ] satisfies PilarMisi[],
   statistik: [
-    { angka: "1996", label: "Berdiri di STIKI Malang" },
+    { angka: "1996", label: "Berdiri di UBHINUS" },
     { angka: "25–26", label: "Periode kepengurusan" },
     { angka: "3", label: "Divisi keilmuan" },
     { angka: "7", label: "Pilar misi" },

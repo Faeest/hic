@@ -3,6 +3,7 @@
 import { motion, type Variants } from "framer-motion";
 import type { ReactNode } from "react";
 import { cn } from "@/lib/utils";
+import { useScrollDirection } from "@/lib/useScrollDirection";
 
 const variants: Variants = {
   hidden: { opacity: 0, y: 28 },
@@ -20,8 +21,9 @@ export function Reveal({
   delay?: number;
   y?: number;
 }) {
+  const dir = useScrollDirection();
   const v: Variants = {
-    hidden: { opacity: 0, y },
+    hidden: (d: number) => ({ opacity: 0, y: d >= 0 ? y : -y }),
     show: {
       opacity: 1,
       y: 0,
@@ -31,6 +33,7 @@ export function Reveal({
   return (
     <motion.div
       variants={v}
+      custom={dir}
       initial="hidden"
       whileInView="show"
       viewport={{ once: false, margin: "-80px" }}

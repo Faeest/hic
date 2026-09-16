@@ -1,6 +1,7 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { useRef } from "react";
+import { motion, useScroll, useTransform } from "framer-motion";
 import { ArrowUpRight, ChatCircleDots } from "@phosphor-icons/react";
 import { Reveal } from "@/components/ui/Reveal";
 import { Marquee } from "@/components/ui/Marquee";
@@ -15,14 +16,34 @@ const marqueeWords = [
 ];
 
 export function Gabung({ id }: { id: string }) {
+  const cardRef = useRef<HTMLDivElement>(null);
+  const { scrollYProgress } = useScroll({
+    target: cardRef,
+    offset: ["start end", "end start"],
+  });
+  const blobY = useTransform(scrollYProgress, [0, 1], [90, -90]);
   return (
     <section id={id} className="relative scroll-mt-24 bg-paper py-24 sm:py-32">
       <div className="mx-auto max-w-7xl px-5 sm:px-8">
-        <div className="relative overflow-hidden rounded-[2.5rem] bg-ember">
+        <div ref={cardRef} className="relative overflow-hidden rounded-[2.5rem] bg-ember">
           <div
             aria-hidden
             className="absolute inset-0 opacity-40 [background-size:26px_26px] [background-image:linear-gradient(rgba(255,255,255,0.16)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.16)_1px,transparent_1px)]"
           />
+          {/* Growing shape — springs in on in-view, drifts with scroll */}
+          <motion.div
+            aria-hidden
+            style={{ y: blobY }}
+            className="pointer-events-none absolute -right-24 -top-24 h-96 w-96 sm:-right-32 sm:-top-32 sm:h-[30rem] sm:w-[30rem]"
+          >
+            <motion.div
+              initial={{ scale: 0 }}
+              whileInView={{ scale: 1 }}
+              viewport={{ once: true, margin: "-80px" }}
+              transition={{ type: "spring", stiffness: 48, damping: 16 }}
+              className="h-full w-full rounded-full bg-mango"
+            />
+          </motion.div>
 
           <div className="relative px-6 py-16 sm:px-12 sm:py-24 lg:px-20">
             <motion.div

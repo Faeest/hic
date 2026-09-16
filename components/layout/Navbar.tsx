@@ -7,6 +7,7 @@ import { usePathname } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { cn } from "@/lib/utils";
 import { ThemeToggle } from "@/components/ui/ThemeToggle";
+import { useLenis } from "lenis/react";
 
 const links = [
   { href: "/#beranda", label: "Beranda", id: "beranda" },
@@ -27,6 +28,7 @@ export function Navbar() {
   const navLocked = useRef(false);
   const unlockTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const pathname = usePathname();
+  const lenis = useLenis();
   const { scrollYProgress } = useScroll();
   const progress = useSpring(scrollYProgress, {
     stiffness: 120,
@@ -59,7 +61,8 @@ export function Navbar() {
       e.preventDefault();
       const el = document.getElementById(id);
       if (el) {
-        el.scrollIntoView({ behavior: "smooth", block: "start" });
+        if (lenis) lenis.scrollTo(el, { offset: -96, duration: 1.4 });
+        else el.scrollIntoView({ behavior: "smooth", block: "start" });
         history.replaceState(null, "", `#${id}`);
       } else {
         window.scrollTo({ top: 0, behavior: "smooth" });
