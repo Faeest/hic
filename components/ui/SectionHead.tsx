@@ -1,9 +1,24 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { motion, type Variants } from "framer-motion";
 import { cn } from "@/lib/utils";
 
 const EASE = [0.16, 1, 0.3, 1] as const;
+
+const container: Variants = {
+  hidden: {},
+  show: {
+    transition: { staggerChildren: 0.06, delayChildren: 0.05 },
+  },
+};
+
+const word: Variants = {
+  hidden: { y: "115%" },
+  show: {
+    y: "0%",
+    transition: { duration: 0.85, ease: EASE },
+  },
+};
 
 function AnimatedTitle({
   text,
@@ -27,7 +42,11 @@ function AnimatedTitle({
   }
 
   return (
-    <h2
+    <motion.h2
+      variants={container}
+      initial="hidden"
+      whileInView="show"
+      viewport={{ once: false, margin: "-80px" }}
       className={cn(
         "font-display text-5xl font-semibold leading-[1.0] tracking-tight text-ink sm:text-6xl lg:text-7xl xl:text-[5.5rem]",
         align === "center" ? "max-w-[20ch]" : "max-w-[18ch]"
@@ -39,11 +58,8 @@ function AnimatedTitle({
         return (
           <span key={i} className="inline-block overflow-hidden align-bottom">
             <motion.span
+              variants={word}
               className={cn("inline-block", isAccent && "text-ember")}
-              initial={{ y: "112%" }}
-              whileInView={{ y: 0 }}
-              viewport={{ once: false, margin: "-80px" }}
-              transition={{ duration: 0.85, ease: EASE, delay: 0.05 + i * 0.05 }}
             >
               {w}
               {"\u00A0"}
@@ -51,7 +67,7 @@ function AnimatedTitle({
           </span>
         );
       })}
-    </h2>
+    </motion.h2>
   );
 }
 
