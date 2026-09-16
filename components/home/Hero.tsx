@@ -93,7 +93,7 @@ export function Hero() {
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.9, delay: 1.2, ease: EASE }}
-          className="my-16 grid grid-cols-2 gap-px overflow-hidden rounded-3xl glass-panel sm:grid-cols-4"
+          className="my-16 grid grid-cols-2 gap-px overflow-hidden rounded-full glass-panel shadow-none! sm:grid-cols-4"
         >
           {club.statistik.map((s) => (
             <div

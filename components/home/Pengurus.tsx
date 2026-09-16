@@ -126,7 +126,7 @@ export function Pengurus({ id }: { id: string }) {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: false, margin: "-60px" }}
               transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1], delay: i * 0.08 }}
-              className="group flex items-center gap-5 rounded-3xl border border-ink/10 bg-cream p-5 transition-colors duration-300 hover:border-ember/40 hover:bg-peach"
+              className="group flex items-center gap-5 rounded-4xl border border-ink/10 bg-cream p-5 transition-colors duration-300 hover:border-ember/40 hover:bg-peach"
             >
               <div className="w-20 shrink-0">
                 <Avatar inisial={k.inisial} gradien={k.gradien} size="sm" />
