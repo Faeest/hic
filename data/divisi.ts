@@ -138,7 +138,7 @@ export const divisi: Divisi[] = [
     tagline: "Mengubah benda mati menjadi robot yang punya fungsi.",
     deskripsi:
       "Dari dasar robotika sampai memprogram Arduino — divisi ini mengajarkan cara dunia fisik dan kode bertemu, lalu mewujudkannya lewat proyek robot sungguhan.",
-    akronim: "ROBO",
+    akronim: "ROB",
     warna: {
       utama: "#f67f1e",
       terang: "#ffab52",

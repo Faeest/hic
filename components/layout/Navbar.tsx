@@ -153,7 +153,7 @@ export function Navbar() {
                   />
                 </span>
               </span>
-              <span className="flex items-baseline gap-1.5">
+              <span className="flex items-baseline gap-1.5 rounded-[10px] border border-ink/10 bg-white px-2.5 py-1 shadow-[0_2px_10px_-4px_rgba(28,21,18,0.25)] dark:border-white/15 dark:bg-[#1b1815]">
                 HIC
                 <span className="hidden font-sans text-[11px] font-medium tracking-wide text-ink-soft sm:inline">
                   STIKI Malang

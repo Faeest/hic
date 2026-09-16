@@ -12,7 +12,7 @@ export const pembina: Pengurus = {
   deskripsi:
     "Dosen pembina HIC yang menaungi dan mengarahkan jalannya organisasi.",
   inisial: "HN",
-  gradien: "linear-gradient(135deg, #d45311 0%, #f67f1e 60%, #fb9606 100%)",
+  gradien: "#d45311",
 };
 
 export const pengurusInti: Pengurus[] = [
@@ -22,8 +22,7 @@ export const pengurusInti: Pengurus[] = [
     deskripsi:
       "Memimpin arah organisasi dan menjaga ritme belajar tetap hangat di setiap divisi.",
     inisial: "MI",
-    gradien:
-      "linear-gradient(135deg, #d45311 0%, #fb9606 70%, #ffbe6b 100%)",
+    gradien: "#d45311",
   },
   {
     nama: "Maria Dealova Indah Natara",
@@ -31,8 +30,7 @@ export const pengurusInti: Pengurus[] = [
     deskripsi:
       "Penjaga catatan, jadwal kelas, dan alur dokumen organisasi.",
     inisial: "MD",
-    gradien:
-      "linear-gradient(135deg, #fb9606 0%, #ffd79c 80%)",
+    gradien: "#fb9606",
   },
   {
     nama: "Norbertus Bimantya Abadi",
@@ -40,8 +38,7 @@ export const pengurusInti: Pengurus[] = [
     deskripsi:
       "Mengelola kas, kebutuhan modul, dan memastikan tiap kelas berjalan.",
     inisial: "NB",
-    gradien:
-      "linear-gradient(135deg, #f67f1e 0%, #fb9606 100%)",
+    gradien: "#f67f1e",
   },
 ];
 
@@ -51,20 +48,20 @@ export const koordinatorDivisi: Pengurus[] = [
     jabatan: "PJ Divisi Web",
     deskripsi: "Memandu kurikulum dan mentoring untuk jalur web development.",
     inisial: "SG",
-    gradien: "linear-gradient(135deg, #d45311, #f67f1e)",
+    gradien: "#d45311",
   },
   {
     nama: "Muhammad Dimas Cahyo",
     jabatan: "PJ Divisi UI/UX",
     deskripsi: "Menjaga kualitas riset, desain, dan evaluasi antarmuka.",
     inisial: "MD",
-    gradien: "linear-gradient(135deg, #fb9606, #ffbe6b)",
+    gradien: "#fb9606",
   },
   {
     nama: "Zulhan Arif Fasya",
     jabatan: "PJ Divisi Robotics",
     deskripsi: "Merawat eksperimen robotik dan proyek perangkat fisik.",
     inisial: "ZA",
-    gradien: "linear-gradient(135deg, #f67f1e, #d45311)",
+    gradien: "#f67f1e",
   },
 ];
