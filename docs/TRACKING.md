@@ -48,8 +48,20 @@
 - [x] Real logo variants in navbar/footer/favicon
 - [ ] Swap any remaining placeholder copy if needed
 
+## Phase 8 — CMS / flexible content
+- [x] Types centralized in `lib/types.ts`; loader in `lib/content.ts`
+- [x] All content moved to `content/*.json` (site, home blocks, divisi, pengurus, proker, galeri, faq)
+- [x] `data/*.ts` reduced to re-export shims (no component import churn)
+- [x] Hardcoded copy lifted into content: Hero, marquee, all SectionHead titles, footer, nav, SEO
+- [x] Homepage driven by reorderable/addable/removable blocks (`components/home/BlockRenderer.tsx`)
+- [x] Divisi add/remove supported; `DivisiNav` derives next from list order
+- [x] Sveltia CMS at `/admin` (`public/admin/`), image uploads to `public/uploads/`
+- [x] `next.config.ts` rewrite so `/admin` serves the CMS
+- [x] `docs/CMS.md` editor + setup guide
+
 ## Milestones
 - [x] [Milestone] Homepage complete
 - [x] [Milestone] All 3 divisi pages complete
 - [x] [Milestone] Real content integrated
+- [x] [Milestone] Content editable via CMS (no code)
 - [ ] [Milestone] Deployed live

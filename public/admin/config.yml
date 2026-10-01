@@ -1,0 +1,374 @@
+# Sveltia CMS config — HIC
+# Docs: https://sveltiacms.app/en/docs
+#
+# Editors sign in with GitHub and commit content changes straight to the repo.
+# Vercel rebuilds the site on every commit to `master` (~1 min).
+
+backend:
+  name: github
+  repo: Faeest/hic
+  branch: master
+  # Deploy the sveltia-cms-auth Cloudflare Worker and put its URL here.
+  # See docs/CMS.md. Until then, local editing works via `npx @sveltia/cms`.
+  base_url: https://hic-cms-auth.<your-worker>.workers.dev
+
+# Where uploaded images land, and the URL they get in the site.
+media_folder: public/uploads
+public_folder: /uploads
+
+locale: id
+
+collections:
+  # ---------------------------------------------------------------------------
+  # Identity + global copy
+  # ---------------------------------------------------------------------------
+  - name: site
+    label: "Identitas & Global"
+    files:
+      - name: site
+        label: "Identitas Situs"
+        file: content/site.json
+        fields:
+          - { name: nama, label: "Nama singkat", widget: string }
+          - { name: namaPanjang, label: "Nama panjang", widget: string }
+          - { name: namaLengkap, label: "Nama lengkap", widget: string }
+          - { name: tagline, label: "Tagline", widget: text }
+          - name: logo
+            label: "Logo"
+            widget: object
+            fields:
+              - { name: light, label: "Logo (mode terang)", widget: image }
+              - { name: dark, label: "Logo (mode gelap)", widget: image }
+          - name: visi
+            label: "Visi"
+            widget: list
+            field: { name: item, label: "Poin visi", widget: text }
+          - name: pilarMisi
+            label: "Pilar Misi"
+            widget: list
+            fields:
+              - { name: nama, label: "Nama pilar", widget: string }
+              - { name: deskripsi, label: "Deskripsi", widget: text }
+          - name: statistik
+            label: "Statistik (hero & CTA)"
+            widget: list
+            fields:
+              - { name: angka, label: "Angka", widget: string }
+              - { name: label, label: "Label", widget: string }
+          - name: kontak
+            label: "Kontak"
+            widget: object
+            fields:
+              - { name: email, label: "Email", widget: string }
+              - { name: instagram, label: "Instagram", widget: string }
+              - { name: lokasi, label: "Lokasi", widget: text }
+          - name: sosial
+            label: "Media sosial"
+            widget: list
+            fields:
+              - { name: label, label: "Label", widget: string }
+              - { name: url, label: "URL", widget: string }
+          - name: nav
+            label: "Menu navigasi"
+            widget: list
+            fields:
+              - { name: label, label: "Label", widget: string }
+              - { name: href, label: "URL", widget: string }
+              - { name: id, label: "ID section (anchor)", widget: string }
+          - name: footer
+            label: "Footer"
+            widget: object
+            fields:
+              - { name: ctaEyebrow, label: "CTA kecil", widget: string }
+              - { name: ctaTitle, label: "CTA judul", widget: string }
+              - { name: ctaLabel, label: "CTA tombol", widget: string }
+              - { name: navigasiTitle, label: "Judul kolom navigasi", widget: string }
+              - { name: kontakTitle, label: "Judul kolom kontak", widget: string }
+              - { name: sosialTitle, label: "Judul kolom sosial", widget: string }
+              - name: nav
+                label: "Link footer"
+                widget: list
+                fields:
+                  - { name: label, label: "Label", widget: string }
+                  - { name: href, label: "URL", widget: string }
+              - { name: note, label: "Catatan kaki", widget: string }
+          - name: seo
+            label: "SEO / Metadata"
+            widget: object
+            fields:
+              - { name: title, label: "Title", widget: string }
+              - { name: description, label: "Description", widget: text }
+              - name: keywords
+                label: "Keywords"
+                widget: list
+                field: { name: item, label: "Keyword", widget: string }
+              - { name: ogTitle, label: "OG title", widget: string }
+              - { name: ogDescription, label: "OG description", widget: text }
+              - { name: locale, label: "Locale", widget: string }
+
+  # ---------------------------------------------------------------------------
+  # Homepage — reorderable blocks
+  # ---------------------------------------------------------------------------
+  - name: home
+    label: "Beranda"
+    files:
+      - name: home
+        label: "Section Beranda"
+        file: content/pages/home.json
+        fields:
+          - name: blocks
+            label: "Section (bisa diurutkan / ditambah / dihapus)"
+            label_singular: "Section"
+            widget: list
+            types:
+              - name: hero
+                label: "Hero"
+                fields:
+                  - { name: type, widget: hidden, default: hero }
+                  - { name: id, label: "ID anchor", widget: string, default: beranda }
+                  - { name: headline, label: "Judul (per kata)", widget: list, field: { name: item, label: "Kata", widget: string } }
+                  - { name: subcopy, label: "Subjudul", widget: text }
+                  - { name: subcopyHighlight, label: "Frasa disorot", widget: string, required: false }
+                  - name: ctas
+                    label: "Tombol"
+                    widget: list
+                    fields:
+                      - { name: label, label: "Label", widget: string }
+                      - { name: href, label: "URL", widget: string }
+                      - { name: style, label: "Gaya", widget: select, options: [primary, secondary] }
+              - name: marquee
+                label: "Marquee"
+                fields:
+                  - { name: type, widget: hidden, default: marquee }
+                  - { name: words, label: "Kata berjalan", widget: list, field: { name: item, label: "Kata", widget: string } }
+                  - { name: speed, label: "Kecepatan", widget: number, required: false, default: 48 }
+              - name: tentang
+                label: "Tentang"
+                fields:
+                  - { name: type, widget: hidden, default: tentang }
+                  - { name: id, label: "ID anchor", widget: string, default: tentang }
+                  - { name: index, label: "Angka romawi", widget: string, required: false }
+                  - { name: label, label: "Label kecil", widget: string }
+                  - { name: title, label: "Judul", widget: string }
+                  - { name: accent, label: "Frasa disorot", widget: string, required: false }
+                  - { name: tags, label: "Tag", widget: list, field: { name: item, label: "Tag", widget: string } }
+                  - { name: paragraphs, label: "Paragraf", widget: list, field: { name: item, label: "Paragraf", widget: text } }
+                  - { name: visiTitle, label: "Judul kartu visi", widget: string }
+                  - { name: pilarTitle, label: "Judul pilar misi", widget: string }
+                  - { name: pilarSubtitle, label: "Subjudul pilar misi", widget: string }
+              - name: divisiIndex
+                label: "Index Divisi"
+                fields:
+                  - { name: type, widget: hidden, default: divisiIndex }
+                  - { name: id, label: "ID anchor", widget: string, default: divisi }
+                  - { name: index, label: "Angka romawi", widget: string, required: false }
+                  - { name: label, label: "Label kecil", widget: string }
+                  - { name: title, label: "Judul", widget: string }
+                  - { name: accent, label: "Frasa disorot", widget: string, required: false }
+              - name: pengurus
+                label: "Pengurus"
+                fields:
+                  - { name: type, widget: hidden, default: pengurus }
+                  - { name: id, label: "ID anchor", widget: string, default: pengurus }
+                  - { name: index, label: "Angka romawi", widget: string, required: false }
+                  - { name: label, label: "Label kecil", widget: string }
+                  - { name: title, label: "Judul", widget: string }
+                  - { name: accent, label: "Frasa disorot", widget: string, required: false }
+              - name: proker
+                label: "Program Kerja"
+                fields:
+                  - { name: type, widget: hidden, default: proker }
+                  - { name: id, label: "ID anchor", widget: string, default: proker }
+                  - { name: index, label: "Angka romawi", widget: string, required: false }
+                  - { name: label, label: "Label kecil", widget: string }
+                  - { name: title, label: "Judul", widget: string }
+                  - { name: accent, label: "Frasa disorot", widget: string, required: false }
+                  - { name: linkLabel, label: "Label tautan", widget: string }
+                  - { name: linkHref, label: "URL tautan", widget: string }
+              - name: galeri
+                label: "Galeri"
+                fields:
+                  - { name: type, widget: hidden, default: galeri }
+                  - { name: id, label: "ID anchor", widget: string, default: galeri }
+                  - { name: index, label: "Angka romawi", widget: string, required: false }
+                  - { name: label, label: "Label kecil", widget: string }
+                  - { name: title, label: "Judul", widget: string }
+                  - { name: accent, label: "Frasa disorot", widget: string, required: false }
+                  - { name: noteSuffix, label: "Catatan kaki", widget: string }
+              - name: faq
+                label: "FAQ"
+                fields:
+                  - { name: type, widget: hidden, default: faq }
+                  - { name: id, label: "ID anchor", widget: string, default: faq }
+                  - { name: index, label: "Angka romawi", widget: string, required: false }
+                  - { name: label, label: "Label kecil", widget: string }
+                  - { name: title, label: "Judul", widget: string }
+                  - { name: accent, label: "Frasa disorot", widget: string, required: false }
+              - name: gabung
+                label: "Gabung / CTA"
+                fields:
+                  - { name: type, widget: hidden, default: gabung }
+                  - { name: id, label: "ID anchor", widget: string, default: gabung }
+                  - { name: index, label: "Angka romawi", widget: string, required: false }
+                  - { name: label, label: "Label kecil", widget: string }
+                  - { name: title, label: "Judul", widget: string }
+                  - { name: body, label: "Isi", widget: text }
+                  - name: ctas
+                    label: "Tombol"
+                    widget: list
+                    fields:
+                      - { name: label, label: "Label", widget: string }
+                      - { name: href, label: "URL", widget: string }
+                      - { name: style, label: "Gaya", widget: select, options: [primary, secondary] }
+                  - { name: marqueeWords, label: "Kata marquee", widget: list, field: { name: item, label: "Kata", widget: string } }
+                  - { name: marqueeSpeed, label: "Kecepatan marquee", widget: number, required: false, default: 44 }
+                  - name: testimonial
+                    label: "Testimoni"
+                    widget: object
+                    fields:
+                      - { name: quote, label: "Kutipan", widget: text }
+                      - { name: author, label: "Nama", widget: string }
+                      - { name: role, label: "Keterangan", widget: string }
+                      - { name: caption, label: "Label kecil", widget: string }
+
+  # ---------------------------------------------------------------------------
+  # Divisi — add / remove / reorder here
+  # ---------------------------------------------------------------------------
+  - name: divisi
+    label: "Divisi"
+    files:
+      - name: divisi
+        label: "Daftar Divisi"
+        file: content/divisi.json
+        fields:
+          - name: list
+            label: "Divisi"
+            label_singular: "Divisi"
+            widget: list
+            summary: "{{fields.nama}} ({{fields.slug}})"
+            fields:
+              - { name: slug, label: "Slug (URL)", widget: string }
+              - { name: nama, label: "Nama", widget: string }
+              - { name: namaPanjang, label: "Nama panjang", widget: string }
+              - { name: angka, label: "Nomor (01, 02, …)", widget: string }
+              - { name: akronim, label: "Akronim", widget: string }
+              - { name: tagline, label: "Tagline", widget: text }
+              - { name: deskripsi, label: "Deskripsi", widget: text }
+              - name: warna
+                label: "Warna"
+                widget: object
+                fields:
+                  - { name: utama, label: "Utama", widget: color, allowInput: true }
+                  - { name: terang, label: "Terang", widget: color, allowInput: true }
+                  - { name: latar, label: "Latar (terang)", widget: color, allowInput: true }
+                  - { name: latarDark, label: "Latar (gelap)", widget: color, allowInput: true }
+                  - { name: border, label: "Border (terang)", widget: string }
+                  - { name: borderDark, label: "Border (gelap)", widget: string }
+              - name: kurikulum
+                label: "Kurikulum"
+                widget: list
+                fields:
+                  - { name: nomor, label: "Nomor", widget: string }
+                  - { name: judul, label: "Judul", widget: string }
+                  - { name: durasi, label: "Durasi", widget: string }
+                  - { name: deskripsi, label: "Deskripsi", widget: text }
+              - name: mentor
+                label: "Mentor"
+                widget: list
+                fields:
+                  - { name: nama, label: "Nama", widget: string }
+                  - { name: fokus, label: "Fokus", widget: string }
+
+  # ---------------------------------------------------------------------------
+  # Pengurus
+  # ---------------------------------------------------------------------------
+  - name: pengurus
+    label: "Pengurus"
+    files:
+      - name: pengurus
+        label: "Kepengurusan"
+        file: content/pengurus.json
+        fields:
+          - { name: periode, label: "Periode", widget: string }
+          - { name: pjLabel, label: "Label PJ divisi", widget: string }
+          - name: pembina
+            label: "Dosen Pembina"
+            widget: object
+            fields: &pengurusFields
+              - { name: nama, label: "Nama", widget: string }
+              - { name: jabatan, label: "Jabatan", widget: string }
+              - { name: deskripsi, label: "Deskripsi", widget: text }
+              - { name: inisial, label: "Inisial", widget: string }
+              - { name: gradien, label: "Warna avatar", widget: color, allowInput: true }
+          - name: inti
+            label: "BPH (Pengurus Inti)"
+            widget: list
+            fields: *pengurusFields
+          - name: koordinator
+            label: "Koordinator Divisi"
+            widget: list
+            fields: *pengurusFields
+
+  # ---------------------------------------------------------------------------
+  # Program kerja
+  # ---------------------------------------------------------------------------
+  - name: proker
+    label: "Program Kerja"
+    files:
+      - name: proker
+        label: "Daftar Program Kerja"
+        file: content/proker.json
+        fields:
+          - name: list
+            label: "Program kerja"
+            label_singular: "Program"
+            widget: list
+            summary: "{{fields.judul}}"
+            fields:
+              - { name: judul, label: "Judul", widget: string }
+              - { name: kategori, label: "Kategori", widget: string }
+              - { name: divisiSlug, label: "Divisi (slug)", widget: string }
+              - { name: tahun, label: "Sifat", widget: string }
+              - { name: deskripsi, label: "Deskripsi", widget: text }
+              - { name: dana, label: "Perkiraan dana", widget: string }
+              - { name: warna, label: "Warna kartu", widget: color, allowInput: true }
+
+  # ---------------------------------------------------------------------------
+  # Galeri
+  # ---------------------------------------------------------------------------
+  - name: galeri
+    label: "Galeri"
+    files:
+      - name: galeri
+        label: "Foto Kegiatan"
+        file: content/galeri.json
+        fields:
+          - name: list
+            label: "Foto"
+            label_singular: "Foto"
+            widget: list
+            summary: "{{fields.judul}}"
+            fields:
+              - { name: src, label: "Gambar", widget: image }
+              - { name: judul, label: "Judul", widget: string }
+              - { name: keterangan, label: "Keterangan", widget: text }
+              - { name: span, label: "Ukuran", widget: select, required: false, options: [{ label: "Normal", value: "" }, { label: "Lebar", value: wide }] }
+
+  # ---------------------------------------------------------------------------
+  # FAQ
+  # ---------------------------------------------------------------------------
+  - name: faq
+    label: "FAQ"
+    files:
+      - name: faq
+        label: "Pertanyaan Umum"
+        file: content/faq.json
+        fields:
+          - name: list
+            label: "Pertanyaan"
+            label_singular: "Pertanyaan"
+            widget: list
+            summary: "{{fields.pertanyaan}}"
+            fields:
+              - { name: pertanyaan, label: "Pertanyaan", widget: string }
+              - { name: jawaban, label: "Jawaban", widget: text }

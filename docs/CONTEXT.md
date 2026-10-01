@@ -28,13 +28,22 @@ Founded 26 August 1996, based at Jl. Raya Tidar 100, Malang.
   main_di_sekre
 - Real logo variants in `public/variant_logo-hic/` (used in navbar/footer/favicon)
 
-## Data layer (all swappable)
-- data/club.ts — identity, visi, pilarMisi (7), statistik, kontak
-- data/divisi.ts — 3 divisi + real curricula + mentors
-- data/pengurus.ts — pembina, pengurusInti (BPH), koordinatorDivisi (PJ)
-- data/proker.ts — program kerja (DITKOM, ORJU, Hackathon, Seminar, GTS/GTC)
-- data/galeri.ts — event photos
-- data/faq.ts — FAQ items
+## Data layer (all swappable, CMS-editable)
+Content now lives in `content/*.json` (edited via Sveltia CMS at `/admin`, see `docs/CMS.md`):
+- content/site.json — identity, logo, visi, pilarMisi (7), statistik, kontak, sosial, nav, footer, SEO
+- content/pages/home.json — homepage blocks (reorderable/addable: hero, marquee, tentang, divisiIndex, pengurus, proker, galeri, faq, gabung)
+- content/divisi.json — divisi list + curricula + mentors
+- content/pengurus.json — pembina, inti (BPH), koordinator (PJ)
+- content/proker.json — program kerja
+- content/galeri.json — event photos
+- content/faq.json — FAQ items
+- lib/types.ts — all content types; lib/content.ts — loaders
+- data/*.ts — thin re-export shims kept for backwards-compatible imports
+
+## CMS
+- Sveltia CMS (git-based, free, no DB) at `/admin`; commits JSON to `main`, Vercel rebuilds
+- Image uploads → `public/uploads/`
+- Auth via GitHub OAuth + `sveltia-cms-auth` Cloudflare Worker (see docs/CMS.md)
 
 ## Stack
 - Next.js (App Router) + TypeScript, deploy on Vercel
@@ -45,7 +54,7 @@ Founded 26 August 1996, based at Jl. Raya Tidar 100, Malang.
 - Fonts (self-hosted via Fontshare): Clash Display (headers), Satoshi (body),
   JetBrains Mono (labels)
 - Icons: @phosphor-icons/react, strokeWidth 1.5
-- No DB, no auth
+- No DB, no auth (CMS is git-based; GitHub OAuth only for `/admin`)
 
 ## Visual language — "Colorful glassmorphism × brutalist-modern"
 - LIGHT theme: white base (#ffffff) + warm tints (#fdf9f4, #fff6ec)
