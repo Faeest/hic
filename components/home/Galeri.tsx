@@ -7,14 +7,10 @@ import { SectionHead } from "@/components/ui/SectionHead";
 import { Reveal } from "@/components/ui/Reveal";
 import { galeri } from "@/data/galeri";
 import { cn } from "@/lib/utils";
+import type { GaleriBlock } from "@/lib/types";
 
-const spanClasses = [
-  "col-span-2 row-span-2 lg:col-span-2",
-  "",
-  "",
-  "",
-  "",
-];
+const spanClass = (span?: "wide" | "tall") =>
+  span === "wide" ? "col-span-2 row-span-2 lg:col-span-2" : "";
 
 function GaleriFigure({
   f,
@@ -38,7 +34,7 @@ function GaleriFigure({
       transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1], delay: i * 0.06 }}
       className={cn(
         "group relative h-full w-full overflow-hidden rounded-3xl",
-        spanClasses[i] ?? ""
+        spanClass(f.span)
       )}
     >
       <motion.div aria-hidden style={{ y: imgY }} className="absolute inset-x-0 -top-[12%] h-[124%]">
@@ -59,15 +55,15 @@ function GaleriFigure({
   );
 }
 
-export function Galeri({ id }: { id: string }) {
+export function Galeri({ block }: { block: GaleriBlock }) {
   return (
-    <section id={id} className="relative scroll-mt-24 bg-paper py-24 sm:py-32">
+    <section id={block.id} className="relative scroll-mt-24 bg-paper py-24 sm:py-32">
       <div className="mx-auto max-w-7xl px-5 sm:px-8">
         <SectionHead
-          index="V"
-          label="Galeri Kegiatan"
-          title="Momen-momen di sekret & ruang kelas."
-          accent="sekret & ruang kelas"
+          index={block.index}
+          label={block.label}
+          title={block.title}
+          accent={block.accent}
         />
 
         <div className="mt-16 grid auto-rows-[10rem] grid-cols-2 gap-4 sm:auto-rows-[13rem] sm:gap-5 lg:auto-rows-[15rem] lg:grid-cols-4">
@@ -78,7 +74,7 @@ export function Galeri({ id }: { id: string }) {
 
         <Reveal className="mt-10">
           <p className="text-center font-mono text-xs uppercase tracking-widest text-ink-faint">
-            5 momen · sepanjang periode kepengurusan
+            {galeri.length} momen · {block.noteSuffix}
           </p>
         </Reveal>
       </div>

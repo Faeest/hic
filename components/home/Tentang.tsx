@@ -4,28 +4,23 @@ import { Target, FlagCheckered } from "@phosphor-icons/react";
 import { Reveal } from "@/components/ui/Reveal";
 import { SectionHead } from "@/components/ui/SectionHead";
 import { club } from "@/data/club";
+import type { TentangBlock } from "@/lib/types";
 
-export function Tentang({ id }: { id: string }) {
+export function Tentang({ block }: { block: TentangBlock }) {
   return (
-    <section id={id} className="relative scroll-mt-24 bg-paper py-24 sm:py-32">
+    <section id={block.id} className="relative scroll-mt-24 bg-paper py-24 sm:py-32">
       <div className="mx-auto max-w-7xl px-5 sm:px-8">
         <div className="grid gap-16 lg:grid-cols-[1fr_1.2fr] lg:gap-20">
           <div className="lg:sticky lg:top-28 lg:self-start">
             <SectionHead
-              index="I"
-              label="Tentang HIC"
-              title="Belajar dari yang baru saja belajar."
-              accent="baru saja belajar"
+              index={block.index}
+              label={block.label}
+              title={block.title}
+              accent={block.accent}
             />
             <Reveal delay={0.2} className="mt-8">
               <ul className="flex flex-wrap gap-2.5">
-                {[
-                  "Peer mentoring",
-                  "Kelas kecil",
-                  "Lintas jurusan",
-                  "Proyek nyata",
-                  "Est. 1996",
-                ].map((tag) => (
+                {block.tags.map((tag) => (
                   <li
                     key={tag}
                     className="rounded-full border border-ember/20 bg-peach px-4 py-2 text-sm font-medium text-ember"
@@ -38,14 +33,13 @@ export function Tentang({ id }: { id: string }) {
           </div>
 
           <div className="flex flex-col gap-8">
-            <Reveal>
-              <p className="text-lg leading-relaxed text-ink-soft sm:text-xl">
-                Bukan klub olahraga, bukan juga lembaga sosial. Kami adalah
-                kumpulan mahasiswa lintas jurusan yang percaya bahwa ilmu
-                teknologi paling baik diserap ketika diajarkan oleh teman
-                sebaya — hangat, kontekstual, dan tanpa sekat.
-              </p>
-            </Reveal>
+            {block.paragraphs.map((p, i) => (
+              <Reveal key={i}>
+                <p className="text-lg leading-relaxed text-ink-soft sm:text-xl">
+                  {p}
+                </p>
+              </Reveal>
+            ))}
 
             {/* Visi */}
             <Reveal delay={0.1}>
@@ -56,7 +50,7 @@ export function Tentang({ id }: { id: string }) {
                   </span>
                   <div>
                     <h3 className="font-display text-xl font-semibold text-ink">
-                      Visi
+                      {block.visiTitle}
                     </h3>
                     <p className="mt-3 text-base leading-relaxed text-ink-soft sm:text-lg">
                       {club.visi[0]}
@@ -75,10 +69,10 @@ export function Tentang({ id }: { id: string }) {
                   </span>
                   <div>
                     <h3 className="font-display text-xl font-semibold text-ink">
-                      7 Pilar Misi
+                      {block.pilarTitle}
                     </h3>
                     <p className="text-sm text-ink-soft">
-                      Arah kerja kepengurusan periode 2025–2026
+                      {block.pilarSubtitle}
                     </p>
                   </div>
                 </div>

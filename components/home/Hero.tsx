@@ -5,6 +5,7 @@ import { motion, useScroll, useTransform, type MotionValue } from "framer-motion
 import { ArrowDownRight, ArrowUpRight } from "@phosphor-icons/react";
 import { HeroCanvas } from "./HeroCanvas";
 import { club } from "@/data/club";
+import type { HeroBlock } from "@/lib/types";
 
 const EASE = [0.16, 1, 0.3, 1] as const;
 
@@ -35,8 +36,21 @@ function Word({
   );
 }
 
-export function Hero() {
-  const headline = ["Hardware", "Interactive", "Club"];
+function renderHighlight(text: string, highlight?: string) {
+  if (!highlight) return text;
+  const idx = text.indexOf(highlight);
+  if (idx < 0) return text;
+  return (
+    <>
+      {text.slice(0, idx)}
+      <span className="font-semibold text-ember">{highlight}</span>
+      {text.slice(idx + highlight.length)}
+    </>
+  );
+}
+
+export function Hero({ block }: { block: HeroBlock }) {
+  const headline = block.headline;
   const secRef = useRef<HTMLElement>(null);
   const { scrollYProgress } = useScroll({
     target: secRef,
@@ -49,7 +63,7 @@ export function Hero() {
 
   return (
     <section
-      id="beranda"
+      id={block.id}
       ref={secRef}
       className="relative flex min-h-[100dvh] flex-col overflow-hidden"
     >
@@ -79,9 +93,7 @@ export function Hero() {
             transition={{ duration: 0.8, delay: 0.9, ease: EASE }}
             className="mt-8 max-w-xl text-lg leading-relaxed text-ink-soft sm:text-xl"
           >
-            Ruang belajar keilmuan di mana mahasiswa menjadi{" "}
-            <span className="font-semibold text-ember">mentor bagi satu sama lain</span> —
-            melalui kelas kecil untuk Web, UI/UX, dan Robotics.
+            {renderHighlight(block.subcopy, block.subcopyHighlight)}
           </motion.p>
         </motion.div>
 
@@ -92,28 +104,32 @@ export function Hero() {
             transition={{ duration: 0.8, delay: 1.05, ease: EASE }}
             className="mt-10 flex flex-wrap items-center gap-4"
           >
-          <a
-            href="#divisi"
-            className="group inline-flex items-center gap-2.5 rounded-full bg-ember px-7 py-4 text-base font-medium text-white shadow-[0_16px_40px_-16px_rgba(212,83,17,0.7)] transition-all duration-300 hover:bg-flare"
-          >
-            Jelajahi Divisi
-            <ArrowDownRight
-              size={18}
-              weight="bold"
-              className="transition-transform duration-300 group-hover:translate-x-1 group-hover:translate-y-1"
-            />
-          </a>
-          <a
-            href="#tentang"
-            className="group inline-flex items-center gap-2.5 rounded-full glass-panel shadow-ember px-7 py-4 text-base font-medium text-ink transition-all duration-300 hover:text-ember"
-          >
-            Tentang HIC
-            <ArrowUpRight
-              size={18}
-              weight="bold"
-              className="transition-transform duration-300 group-hover:-translate-y-1 group-hover:translate-x-1"
-            />
-          </a>
+          {block.ctas.map((cta, i) => {
+            const primary = cta.style === "primary";
+            const Icon = i === 0 ? ArrowDownRight : ArrowUpRight;
+            return (
+              <a
+                key={cta.label}
+                href={cta.href}
+                className={
+                  primary
+                    ? "group inline-flex items-center gap-2.5 rounded-full bg-ember px-7 py-4 text-base font-medium text-white shadow-[0_16px_40px_-16px_rgba(212,83,17,0.7)] transition-all duration-300 hover:bg-flare"
+                    : "group inline-flex items-center gap-2.5 rounded-full glass-panel shadow-ember px-7 py-4 text-base font-medium text-ink transition-all duration-300 hover:text-ember"
+                }
+              >
+                {cta.label}
+                <Icon
+                  size={18}
+                  weight="bold"
+                  className={
+                    i === 0
+                      ? "transition-transform duration-300 group-hover:translate-x-1 group-hover:translate-y-1"
+                      : "transition-transform duration-300 group-hover:-translate-y-1 group-hover:translate-x-1"
+                  }
+                />
+              </a>
+            );
+          })}
         </motion.div>
         </motion.div>
 

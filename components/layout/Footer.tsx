@@ -4,9 +4,11 @@ import Link from "next/link";
 import Image from "next/image";
 import { ArrowUpRight } from "@phosphor-icons/react";
 import { club, sosial } from "@/data/club";
+import { site } from "@/lib/content";
 import { divisi } from "@/data/divisi";
 
 export function Footer() {
+  const f = site.footer;
   return (
     <footer className="relative overflow-hidden border-t border-ink/10 bg-cream dark:bg-[#14120f]">
       {/* Mini CTA band */}
@@ -15,17 +17,17 @@ export function Footer() {
           <div>
             <p className="flex items-baseline gap-3 text-sm">
               <span className="h-px w-6 self-center bg-ink/15" aria-hidden />
-              <span className="font-medium text-ink-faint">Punya prinsip belajar yang sama?</span>
+              <span className="font-medium text-ink-faint">{f.ctaEyebrow}</span>
             </p>
             <p className="mt-2 max-w-md font-display text-2xl font-semibold tracking-tight text-ink sm:text-3xl">
-              Mari tumbuh bareng di HIC.
+              {f.ctaTitle}
             </p>
           </div>
           <Link
             href="/#gabung"
             className="group inline-flex shrink-0 items-center gap-2.5 rounded-full bg-ember px-6 py-3.5 text-sm font-medium text-white transition-colors duration-300 hover:bg-flare"
           >
-            Gabung HIC
+            {f.ctaLabel}
             <ArrowUpRight
               size={16}
               weight="bold"
@@ -45,14 +47,14 @@ export function Footer() {
               >
                 <span className="relative h-10 w-10 overflow-hidden rounded-xl">
                   <Image
-                    src="/variant_logo-hic/Logogram ORANGE BLACK.png"
+                    src={site.logo.light}
                     alt="Logo HIC"
                     fill
                     sizes="40px"
                     className="object-contain object-center dark:hidden"
                   />
                   <Image
-                    src="/variant_logo-hic/Logogram ORANGE WHITE.png"
+                    src={site.logo.dark}
                     alt="Logo HIC"
                     fill
                     sizes="40px"
@@ -85,15 +87,7 @@ export function Footer() {
             <div>
               <h3 className="text-sm font-medium text-ink-faint">Navigasi</h3>
               <ul className="mt-4 space-y-3">
-                {[
-                  { href: "/#beranda", label: "Beranda" },
-                  { href: "/#tentang", label: "Tentang" },
-                  { href: "/#divisi", label: "Divisi" },
-                  { href: "/#pengurus", label: "Pengurus" },
-                  { href: "/#proker", label: "Program" },
-                  { href: "/#galeri", label: "Galeri" },
-                  { href: "/#faq", label: "FAQ" },
-                ].map((l) => (
+                {f.nav.map((l) => (
                   <li key={l.label}>
                     <Link
                       href={l.href}
@@ -141,7 +135,7 @@ export function Footer() {
                 </a>
               ))}
             </div>
-            <p className="font-mono text-xs text-ink-faint">est. 2018</p>
+            <p className="font-mono text-xs text-ink-faint">{f.note}</p>
           </div>
         </div>
       </div>

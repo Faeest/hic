@@ -6,16 +6,9 @@ import { ArrowUpRight, ChatCircleDots } from "@phosphor-icons/react";
 import { Reveal } from "@/components/ui/Reveal";
 import { Marquee } from "@/components/ui/Marquee";
 import { club } from "@/data/club";
+import type { GabungBlock } from "@/lib/types";
 
-const marqueeWords = [
-  "Belajar",
-  "Berkarya",
-  "Bertumbuh",
-  "Mengajar",
-  "Bereksperimen",
-];
-
-export function Gabung({ id }: { id: string }) {
+export function Gabung({ block }: { block: GabungBlock }) {
   const cardRef = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({
     target: cardRef,
@@ -23,7 +16,7 @@ export function Gabung({ id }: { id: string }) {
   });
   const blobY = useTransform(scrollYProgress, [0, 1], [90, -90]);
   return (
-    <section id={id} className="relative scroll-mt-24 bg-paper py-24 sm:py-32">
+    <section id={block.id} className="relative scroll-mt-24 bg-paper py-24 sm:py-32">
       <div className="mx-auto max-w-7xl px-5 sm:px-8">
         <div ref={cardRef} className="relative overflow-hidden rounded-[2.5rem] bg-ember">
           <div
@@ -53,17 +46,15 @@ export function Gabung({ id }: { id: string }) {
               transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
             >
               <p className="flex items-baseline gap-3 text-sm text-white/70">
-                <span className="font-mono">VI</span>
+                {block.index && <span className="font-mono">{block.index}</span>}
                 <span className="h-px w-6 self-center bg-white/40" aria-hidden />
-                <span className="font-medium">Tertarik gabung?</span>
+                <span className="font-medium">{block.label}</span>
               </p>
               <h2 className="mt-4 max-w-3xl font-display text-[2.6rem] font-semibold leading-[1.02] tracking-tight text-white sm:text-6xl lg:text-7xl">
-                Mulai dari langkah kecil yang penasaran.
+                {block.title}
               </h2>
               <p className="mt-6 max-w-xl text-lg leading-relaxed text-white/80">
-                Tidak perlu jadi jagoan lebih dulu — di HIC semua orang sedang
-                belajar. Datanglah ke sekret, ikut kelas perdana, dan lihat
-                sendiri dari dekat.
+                {block.body}
               </p>
             </motion.div>
 
@@ -74,24 +65,36 @@ export function Gabung({ id }: { id: string }) {
               transition={{ duration: 0.7, delay: 0.15, ease: [0.16, 1, 0.3, 1] }}
               className="mt-10 flex flex-wrap items-center gap-4"
             >
-              <a
-                href={`mailto:${club.kontak.email}`}
-                className="group inline-flex items-center gap-2.5 rounded-full bg-white px-8 py-4 text-base font-semibold text-ember transition-transform duration-300 hover:scale-[1.03]"
-              >
-                Hubungi kami
-                <ArrowUpRight
-                  size={18}
-                  weight="bold"
-                  className="transition-transform duration-300 group-hover:-translate-y-0.5 group-hover:translate-x-0.5"
-                />
-              </a>
-              <a
-                href={`mailto:${club.kontak.email}?subject=Pendaftaran%20anggota%20HIC`}
-                className="inline-flex items-center gap-2.5 rounded-full border border-white/40 px-8 py-4 text-base font-medium text-white transition-colors duration-300 hover:border-white hover:bg-white/10"
-              >
-                <ChatCircleDots size={18} weight="duotone" />
-                Kirim formulir minat
-              </a>
+              {block.ctas.map((cta) => {
+                const primary = cta.style === "primary";
+                return (
+                  <a
+                    key={cta.label}
+                    href={cta.href}
+                    className={
+                      primary
+                        ? "group inline-flex items-center gap-2.5 rounded-full bg-white px-8 py-4 text-base font-semibold text-ember transition-transform duration-300 hover:scale-[1.03]"
+                        : "inline-flex items-center gap-2.5 rounded-full border border-white/40 px-8 py-4 text-base font-medium text-white transition-colors duration-300 hover:border-white hover:bg-white/10"
+                    }
+                  >
+                    {primary ? (
+                      <>
+                        {cta.label}
+                        <ArrowUpRight
+                          size={18}
+                          weight="bold"
+                          className="transition-transform duration-300 group-hover:-translate-y-0.5 group-hover:translate-x-0.5"
+                        />
+                      </>
+                    ) : (
+                      <>
+                        <ChatCircleDots size={18} weight="duotone" />
+                        {cta.label}
+                      </>
+                    )}
+                  </a>
+                );
+              })}
             </motion.div>
 
             <div className="mt-14 flex flex-wrap items-center gap-x-10 gap-y-3 border-t border-white/20 pt-8">
@@ -115,14 +118,14 @@ export function Gabung({ id }: { id: string }) {
         <div className="glass-panel shadow-none! flex flex-col items-center justify-between gap-6 rounded-[2rem] px-8 py-10 text-center sm:flex-row sm:text-left">
           <div>
             <p className="font-display text-xl font-semibold text-ink sm:text-2xl">
-              “Di sini saya belajar React dari teman sekamar, bukan dari dosen.”
+              {block.testimonial.quote}
             </p>
             <p className="mt-2 text-sm uppercase tracking-wider text-ink-faint">
-              Dimas Arya · Alumnus Divisi Web
+              {block.testimonial.author} · {block.testimonial.role}
             </p>
           </div>
           <div className="shrink-0">
-            <p className="text-sm text-ink-faint">Testimoni anggota</p>
+            <p className="text-sm text-ink-faint">{block.testimonial.caption}</p>
           </div>
         </div>
       </Reveal>
@@ -130,9 +133,9 @@ export function Gabung({ id }: { id: string }) {
       {/* Marquee band — single seamless row */}
       <div className="my-42 -rotate-[0.6deg] scale-[1.02] border-y border-white/10 bg-flare py-6 sm:py-8">
         <Marquee
-          items={marqueeWords}
+          items={block.marqueeWords}
           stretch
-          speed={44}
+          speed={block.marqueeSpeed ?? 44}
           itemClassName="font-display text-5xl font-bold tracking-tight text-white sm:text-7xl"
         />
       </div>

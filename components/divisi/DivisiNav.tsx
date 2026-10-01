@@ -4,13 +4,14 @@ import { motion } from "framer-motion";
 import { ArrowUpRight } from "@phosphor-icons/react";
 import Link from "next/link";
 import { divisiVars } from "@/lib/utils";
-import { getDivisi, type Divisi } from "@/data/divisi";
+import { getDivisi, getDivisiList, type Divisi } from "@/data/divisi";
 
 export function DivisiNav({ current }: { current: Divisi }) {
-  const all = ["web", "uiux", "robotics"] as const;
-  const next = all[(all.indexOf(current.slug as (typeof all)[number]) + 1) % all.length];
-  const nextD = getDivisi(next);
-  if (!nextD) return null;
+  const all = getDivisiList();
+  const idx = all.findIndex((d) => d.slug === current.slug);
+  const next = all[(idx + 1) % all.length];
+  const nextD = next && next.slug !== current.slug ? next : getDivisi(current.slug);
+  if (!nextD || all.length < 2) return null;
 
   return (
     <section className="relative overflow-hidden bg-cream" style={divisiVars(nextD)}>

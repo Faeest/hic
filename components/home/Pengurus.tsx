@@ -4,6 +4,8 @@ import { motion } from "framer-motion";
 import { Reveal } from "@/components/ui/Reveal";
 import { SectionHead } from "@/components/ui/SectionHead";
 import { pengurusInti, koordinatorDivisi, pembina } from "@/data/pengurus";
+import { pengurus as pengurusContent } from "@/lib/content";
+import type { PengurusBlock } from "@/lib/types";
 
 function Avatar({ inisial, gradien, size = "lg" }: { inisial: string; gradien: string; size?: "sm" | "lg" }) {
   return (
@@ -29,15 +31,15 @@ function Avatar({ inisial, gradien, size = "lg" }: { inisial: string; gradien: s
   );
 }
 
-export function Pengurus({ id }: { id: string }) {
+export function Pengurus({ block }: { block: PengurusBlock }) {
   return (
-    <section id={id} className="relative scroll-mt-24 bg-paper py-24 sm:py-32">
+    <section id={block.id} className="relative scroll-mt-24 bg-paper py-24 sm:py-32">
       <div className="mx-auto max-w-7xl px-5 sm:px-8">
         <SectionHead
-          index="III"
-          label="Pengurus"
-          title="Orang-orang di balik kursi."
-          accent="kursi"
+          index={block.index}
+          label={block.label}
+          title={block.title}
+          accent={block.accent}
         />
 
         {/* Dosen Pembina */}
@@ -63,7 +65,7 @@ export function Pengurus({ id }: { id: string }) {
                 {pembina.deskripsi}
               </p>
             </div>
-            <span className="shrink-0 font-mono text-sm text-ink-faint">Periode 2025–2026</span>
+            <span className="shrink-0 font-mono text-sm text-ink-faint">Periode {pengurusContent.periode}</span>
           </div>
         </motion.div>
 
@@ -115,7 +117,7 @@ export function Pengurus({ id }: { id: string }) {
         <Reveal className="mt-20">
           <div className="mb-8 flex items-baseline gap-3">
             <span className="h-px w-6 self-center bg-ink/15" aria-hidden />
-            <span className="text-sm font-medium text-ink-faint">Penanggung Jawab Divisi</span>
+            <span className="text-sm font-medium text-ink-faint">{pengurusContent.pjLabel}</span>
           </div>
         </Reveal>
         <div className="grid gap-6 sm:grid-cols-3">

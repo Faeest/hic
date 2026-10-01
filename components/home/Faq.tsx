@@ -6,8 +6,9 @@ import { Plus } from "@phosphor-icons/react";
 import { SectionHead } from "@/components/ui/SectionHead";
 import { faq } from "@/data/faq";
 import { cn } from "@/lib/utils";
+import type { FaqBlock } from "@/lib/types";
 
-export function Faq({ id }: { id: string }) {
+export function Faq({ block }: { block: FaqBlock }) {
   const [open, setOpen] = useState<number | null>(0);
   const wrapRef = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({
@@ -17,7 +18,7 @@ export function Faq({ id }: { id: string }) {
   const blobY = useTransform(scrollYProgress, [0, 1], [50, -50]);
 
   return (
-    <section id={id} className="relative scroll-mt-24 overflow-hidden bg-paper py-24 sm:py-32">
+    <section id={block.id} className="relative scroll-mt-24 overflow-hidden bg-paper py-24 sm:py-32">
       <div ref={wrapRef} className="relative mx-auto max-w-4xl px-5 sm:px-8">
         {/* Growing shape — soft sun blooming behind the headline */}
         <div
@@ -35,10 +36,10 @@ export function Faq({ id }: { id: string }) {
           </motion.div>
         </div>
         <SectionHead
-          index="VI"
-          label="FAQ"
-          title="Sering ditanya, jawabannya di sini."
-          accent="jawabannya di sini"
+          index={block.index}
+          label={block.label}
+          title={block.title}
+          accent={block.accent}
           align="center"
           className="relative"
         />

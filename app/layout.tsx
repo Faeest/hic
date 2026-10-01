@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import localFont from "next/font/local";
 import { SmoothScroll } from "@/components/ui/SmoothScroll";
+import { site } from "@/lib/content";
 import "./globals.css";
 
 const clash = localFont({
@@ -26,16 +27,14 @@ const satoshi = localFont({
 });
 
 export const metadata: Metadata = {
-  title: "HIC — Hardware Interactive Club",
-  description:
-    "UKM keilmuan UBHINUS tempat mahasiswa saling mengajar: Web, UI/UX, dan Robotics. Belajar, berkarya, dan tumbuh bareng.",
-  keywords: ["HIC", "UKM", "Hardware Interactive Club", "web", "uiux", "robotics", "UBHINUS"],
+  title: site.seo.title,
+  description: site.seo.description,
+  keywords: site.seo.keywords,
   openGraph: {
-    title: "HIC — Hardware Interactive Club",
-    description:
-        "UKM keilmuan UBHINUS tempat mahasiswa saling mengajar: Web, UI/UX, dan Robotics.",
+    title: site.seo.ogTitle,
+    description: site.seo.ogDescription,
     type: "website",
-    locale: "id_ID",
+    locale: site.seo.locale,
   },
 };
 

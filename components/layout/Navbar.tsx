@@ -8,16 +8,9 @@ import { useEffect, useRef, useState } from "react";
 import { cn } from "@/lib/utils";
 import { ThemeToggle } from "@/components/ui/ThemeToggle";
 import { useLenis } from "lenis/react";
+import { site } from "@/lib/content";
 
-const links = [
-  { href: "/#beranda", label: "Beranda", id: "beranda" },
-  { href: "/#tentang", label: "Tentang", id: "tentang" },
-  { href: "/#divisi", label: "Divisi", id: "divisi" },
-  { href: "/#pengurus", label: "Pengurus", id: "pengurus" },
-  { href: "/#proker", label: "Program", id: "proker" },
-  { href: "/#galeri", label: "Galeri", id: "galeri" },
-  { href: "/#faq", label: "FAQ", id: "faq" },
-];
+const links = site.nav;
 
 export function Navbar() {
   const [scrolled, setScrolled] = useState(() =>
@@ -141,14 +134,14 @@ export function Navbar() {
               <span className="relative grid h-13 w-13 p-3 shrink-0 place-items-center overflow-hidden rounded-full border border-ink/10 bg-white p-1.5 shadow-[0_2px_10px_-4px_rgba(28,21,18,0.25)] transition-transform duration-300 group-hover:rotate-[8deg] dark:border-white/15 dark:bg-[#1b1815] glass-panel">
                 <span className="relative h-full w-full">
                   <Image
-                    src="/variant_logo-hic/Logogram ORANGE BLACK.png"
+                    src={site.logo.light}
                     alt="Logo HIC"
                     fill
                     sizes="36px"
                     className="object-contain object-center dark:hidden"
                   />
                   <Image
-                    src="/variant_logo-hic/Logogram ORANGE WHITE.png"
+                    src={site.logo.dark}
                     alt="Logo HIC"
                     fill
                     sizes="36px"
@@ -157,7 +150,7 @@ export function Navbar() {
                 </span>
               </span>
               <span className="flex items-baseline gap-1.5 rounded-full border border-ink/10 bg-white px-3.5 py-2 shadow-[0_2px_10px_-4px_rgba(28,21,18,0.25)] dark:border-white/15 dark:bg-[#1b1815] glass-panel">
-                HIC
+                {site.nama}
                 <span className="hidden font-sans text-[11px] font-medium tracking-wide text-ink-soft sm:inline">
                   UBHINUS
                 </span>
@@ -304,7 +297,7 @@ export function Navbar() {
                 Gabung HIC
               </Link>
               <span className="font-mono text-xs uppercase tracking-widest text-ink-faint">
-                UC • 2018
+                {site.nama}
               </span>
             </motion.div>
           </motion.div>

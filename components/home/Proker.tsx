@@ -6,15 +6,16 @@ import Link from "next/link";
 import { SectionHead } from "@/components/ui/SectionHead";
 import { Reveal } from "@/components/ui/Reveal";
 import { proker } from "@/data/proker";
+import type { ProkerBlock } from "@/lib/types";
 
 const dots =
   "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20'%3E%3Ccircle cx='2' cy='2' r='1.4' fill='%23ffffff' fill-opacity='0.28'/%3E%3C/svg%3E\")";
 
-export function Proker({ id }: { id: string }) {
+export function Proker({ block }: { block: ProkerBlock }) {
   const [featured, ...rest] = proker;
 
   return (
-    <section id={id} className="relative scroll-mt-24 overflow-hidden bg-cream py-24 sm:py-32">
+    <section id={block.id} className="relative scroll-mt-24 overflow-hidden bg-cream py-24 sm:py-32">
       <div
         aria-hidden
         className="dot-grid pointer-events-none absolute inset-x-0 bottom-0 h-[18rem] opacity-40"
@@ -25,10 +26,10 @@ export function Proker({ id }: { id: string }) {
       />
       <div className="relative mx-auto max-w-7xl px-5 sm:px-8">
         <SectionHead
-          index="IV"
-          label="Program Kerja"
-          title="Agenda nyata, bukan sekadar rencana."
-          accent="bukan sekadar rencana"
+          index={block.index}
+          label={block.label}
+          title={block.title}
+          accent={block.accent}
         />
 
         <div className="mt-16 grid gap-5 lg:grid-cols-3">
@@ -111,10 +112,10 @@ export function Proker({ id }: { id: string }) {
 
         <Reveal className="mt-12 text-center">
           <Link
-            href="#divisi"
+            href={block.linkHref}
             className="inline-flex items-center gap-2 font-medium text-ember transition-colors hover:text-flare"
           >
-            Lihat kurikulum tiap divisi
+            {block.linkLabel}
             <ArrowUpRight size={16} weight="bold" />
           </Link>
         </Reveal>
