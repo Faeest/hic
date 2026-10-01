@@ -1,0 +1,104 @@
+{
+  "blocks": [
+    {
+      "type": "hero",
+      "id": "beranda",
+      "headline": ["Hardware", "Interactive", "Club"],
+      "subcopy": "Ruang belajar keilmuan di mana mahasiswa menjadi mentor bagi satu sama lain — melalui kelas kecil untuk Web, UI/UX, dan Robotics.",
+      "subcopyHighlight": "mentor bagi satu sama lain",
+      "ctas": [
+        { "label": "Jelajahi Divisi", "href": "#divisi", "style": "primary" },
+        { "label": "Tentang HIC", "href": "#tentang", "style": "secondary" }
+      ]
+    },
+    {
+      "type": "marquee",
+      "words": [
+        "Hardware Interactive Club",
+        "Web Development",
+        "UI/UX Design",
+        "Robotics",
+        "Peer Mentoring"
+      ],
+      "speed": 48
+    },
+    {
+      "type": "tentang",
+      "id": "tentang",
+      "index": "I",
+      "label": "Tentang HIC",
+      "title": "Belajar dari yang baru saja belajar.",
+      "accent": "baru saja belajar",
+      "tags": ["Peer mentoring", "Kelas kecil", "Lintas jurusan", "Proyek nyata", "Est. 1996"],
+      "paragraphs": [
+        "Bukan klub olahraga, bukan juga lembaga sosial. Kami adalah kumpulan mahasiswa lintas jurusan yang percaya bahwa ilmu teknologi paling baik diserap ketika diajarkan oleh teman sebaya — hangat, kontekstual, dan tanpa sekat."
+      ],
+      "visiTitle": "Visi",
+      "pilarTitle": "7 Pilar Misi",
+      "pilarSubtitle": "Arah kerja kepengurusan periode 2025–2026"
+    },
+    {
+      "type": "divisiIndex",
+      "id": "divisi",
+      "index": "II",
+      "label": "Divisi",
+      "title": "Tiga jalur, satu cara belajar.",
+      "accent": "cara belajar"
+    },
+    {
+      "type": "pengurus",
+      "id": "pengurus",
+      "index": "III",
+      "label": "Pengurus",
+      "title": "Orang-orang di balik kursi.",
+      "accent": "kursi"
+    },
+    {
+      "type": "proker",
+      "id": "proker",
+      "index": "IV",
+      "label": "Program Kerja",
+      "title": "Agenda nyata, bukan sekadar rencana.",
+      "accent": "bukan sekadar rencana",
+      "linkLabel": "Lihat kurikulum tiap divisi",
+      "linkHref": "#divisi"
+    },
+    {
+      "type": "galeri",
+      "id": "galeri",
+      "index": "V",
+      "label": "Galeri Kegiatan",
+      "title": "Momen-momen di sekret & ruang kelas.",
+      "accent": "sekret & ruang kelas",
+      "noteSuffix": "sepanjang periode kepengurusan"
+    },
+    {
+      "type": "faq",
+      "id": "faq",
+      "index": "VI",
+      "label": "FAQ",
+      "title": "Sering ditanya, jawabannya di sini.",
+      "accent": "jawabannya di sini"
+    },
+    {
+      "type": "gabung",
+      "id": "gabung",
+      "index": "VI",
+      "label": "Tertarik gabung?",
+      "title": "Mulai dari langkah kecil yang penasaran.",
+      "body": "Tidak perlu jadi jagoan lebih dulu — di HIC semua orang sedang belajar. Datanglah ke sekret, ikut kelas perdana, dan lihat sendiri dari dekat.",
+      "ctas": [
+        { "label": "Hubungi kami", "href": "mailto:hic.stiki@gmail.com", "style": "primary" },
+        { "label": "Kirim formulir minat", "href": "mailto:hic.stiki@gmail.com?subject=Pendaftaran%20anggota%20HIC", "style": "secondary" }
+      ],
+      "marqueeWords": ["Belajar", "Berkarya", "Bertumbuh", "Mengajar", "Bereksperimen"],
+      "marqueeSpeed": 44,
+      "testimonial": {
+        "quote": "“Di sini saya belajar React dari teman sekamar, bukan dari dosen.”",
+        "author": "Dimas Arya",
+        "role": "Alumnus Divisi Web",
+        "caption": "Testimoni anggota"
+      }
+    }
+  ]
+}

@@ -1,67 +1,7 @@
-export type Pengurus = {
-  nama: string;
-  jabatan: string;
-  deskripsi: string;
-  inisial: string;
-  gradien: string;
-};
+// Shim: content now lives in content/pengurus.json, edited via the CMS at /admin.
+export type { Pengurus, PengurusContent } from "@/lib/types";
+import { pengurus } from "@/lib/content";
 
-export const pembina: Pengurus = {
-  nama: "Hilman Nuril Hadi, S.Kom., M.Kom",
-  jabatan: "Dosen Pembina",
-  deskripsi:
-    "Dosen pembina HIC yang menaungi dan mengarahkan jalannya organisasi.",
-  inisial: "HN",
-  gradien: "#d45311",
-};
-
-export const pengurusInti: Pengurus[] = [
-  {
-    nama: "Muhammad Ilham Wiradisastra",
-    jabatan: "Ketua Umum",
-    deskripsi:
-      "Memimpin arah organisasi dan menjaga ritme belajar tetap hangat di setiap divisi.",
-    inisial: "MI",
-    gradien: "#d45311",
-  },
-  {
-    nama: "Maria Dealova Indah Natara",
-    jabatan: "Sekretaris",
-    deskripsi:
-      "Penjaga catatan, jadwal kelas, dan alur dokumen organisasi.",
-    inisial: "MD",
-    gradien: "#fb9606",
-  },
-  {
-    nama: "Norbertus Bimantya Abadi",
-    jabatan: "Bendahara",
-    deskripsi:
-      "Mengelola kas, kebutuhan modul, dan memastikan tiap kelas berjalan.",
-    inisial: "NB",
-    gradien: "#f67f1e",
-  },
-];
-
-export const koordinatorDivisi: Pengurus[] = [
-  {
-    nama: "Satya Garda Prasetyo",
-    jabatan: "PJ Divisi Web",
-    deskripsi: "Memandu kurikulum dan mentoring untuk jalur web development.",
-    inisial: "SG",
-    gradien: "#d45311",
-  },
-  {
-    nama: "Muhammad Dimas Cahyo",
-    jabatan: "PJ Divisi UI/UX",
-    deskripsi: "Menjaga kualitas riset, desain, dan evaluasi antarmuka.",
-    inisial: "MD",
-    gradien: "#fb9606",
-  },
-  {
-    nama: "Zulhan Arif Fasya",
-    jabatan: "PJ Divisi Robotics",
-    deskripsi: "Merawat eksperimen robotik dan proyek perangkat fisik.",
-    inisial: "ZA",
-    gradien: "#f67f1e",
-  },
-];
+export const pembina = pengurus.pembina;
+export const pengurusInti = pengurus.inti;
+export const koordinatorDivisi = pengurus.koordinator;

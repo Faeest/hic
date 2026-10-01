@@ -1,0 +1,94 @@
+{
+  "nama": "HIC",
+  "namaPanjang": "Hardware Interactive Club",
+  "namaLengkap": "HIC — UBHINUS",
+  "tagline": "Ruang belajar keilmuan, di mana mahasiswa menjadi mentor satu sama lain.",
+  "logo": {
+    "light": "/variant_logo-hic/Logogram ORANGE BLACK.png",
+    "dark": "/variant_logo-hic/Logogram ORANGE WHITE.png"
+  },
+  "visi": [
+    "Mewujudkan HIC sebagai organisasi yang berintegritas, transparan, dan inklusif dalam mengembangkan kompetensi kejuruan dan kapasitas intelektual anggota, serta berkontribusi secara bertahap dalam ekosistem kemahasiswaan."
+  ],
+  "pilarMisi": [
+    {
+      "nama": "Tata Kelola",
+      "deskripsi": "Sistem yang transparan, akuntabel, dan terorganisir."
+    },
+    {
+      "nama": "Kultur Organisasi",
+      "deskripsi": "Diskusi terbuka dan musyawarah sebagai evaluasi objektif."
+    },
+    {
+      "nama": "Kurikulum & Kompetensi",
+      "deskripsi": "Hard skills dan wawasan intelektual anggota secara terarah."
+    },
+    {
+      "nama": "Kolaborasi Strategis",
+      "deskripsi": "Kemitraan dengan BEM dan pihak luar untuk memperluas dampak."
+    },
+    {
+      "nama": "Fasilitas & Infrastruktur",
+      "deskripsi": "Penataan aset, pemeliharaan rutin, dan pengadaan tepat guna."
+    },
+    {
+      "nama": "Integritas & Profesionalitas",
+      "deskripsi": "Disiplin, jujur, dan profesional dalam tanggung jawab."
+    },
+    {
+      "nama": "Regenerasi Berkelanjutan",
+      "deskripsi": "Kaderisasi dan pembinaan yang terencana."
+    }
+  ],
+  "statistik": [
+    { "angka": "1996", "label": "Berdiri di UBHINUS" },
+    { "angka": "25–26", "label": "Periode kepengurusan" },
+    { "angka": "3", "label": "Divisi keilmuan" },
+    { "angka": "7", "label": "Pilar misi" }
+  ],
+  "kontak": {
+    "email": "hic.stiki@gmail.com",
+    "instagram": "@hic_stiki",
+    "lokasi": "Sekret UKM HIC, Jl. Raya Tidar 100, Malang"
+  },
+  "sosial": [
+    { "label": "Instagram", "url": "https://instagram.com/hic_stiki" },
+    { "label": "GitHub", "url": "https://github.com" },
+    { "label": "YouTube", "url": "https://youtube.com" }
+  ],
+  "nav": [
+    { "href": "/#beranda", "label": "Beranda", "id": "beranda" },
+    { "href": "/#tentang", "label": "Tentang", "id": "tentang" },
+    { "href": "/#divisi", "label": "Divisi", "id": "divisi" },
+    { "href": "/#pengurus", "label": "Pengurus", "id": "pengurus" },
+    { "href": "/#proker", "label": "Program", "id": "proker" },
+    { "href": "/#galeri", "label": "Galeri", "id": "galeri" },
+    { "href": "/#faq", "label": "FAQ", "id": "faq" }
+  ],
+  "footer": {
+    "ctaEyebrow": "Punya prinsip belajar yang sama?",
+    "ctaTitle": "Mari tumbuh bareng di HIC.",
+    "ctaLabel": "Gabung HIC",
+    "navigasiTitle": "Navigasi",
+    "kontakTitle": "Kontak",
+    "sosialTitle": "Sosial",
+    "nav": [
+      { "href": "/#beranda", "label": "Beranda" },
+      { "href": "/#tentang", "label": "Tentang" },
+      { "href": "/#divisi", "label": "Divisi" },
+      { "href": "/#pengurus", "label": "Pengurus" },
+      { "href": "/#proker", "label": "Program" },
+      { "href": "/#galeri", "label": "Galeri" },
+      { "href": "/#faq", "label": "FAQ" }
+    ],
+    "note": "est. 1996"
+  },
+  "seo": {
+    "title": "HIC — Hardware Interactive Club",
+    "description": "UKM keilmuan UBHINUS tempat mahasiswa saling mengajar: Web, UI/UX, dan Robotics. Belajar, berkarya, dan tumbuh bareng.",
+    "keywords": ["HIC", "UKM", "Hardware Interactive Club", "web", "uiux", "robotics", "UBHINUS"],
+    "ogTitle": "HIC — Hardware Interactive Club",
+    "ogDescription": "UKM keilmuan UBHINUS tempat mahasiswa saling mengajar: Web, UI/UX, dan Robotics.",
+    "locale": "id_ID"
+  }
+}

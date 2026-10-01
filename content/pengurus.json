@@ -1,0 +1,57 @@
+{
+  "periode": "2025–2026",
+  "pjLabel": "Penanggung Jawab Divisi",
+  "pembina": {
+    "nama": "Hilman Nuril Hadi, S.Kom., M.Kom",
+    "jabatan": "Dosen Pembina",
+    "deskripsi": "Dosen pembina HIC yang menaungi dan mengarahkan jalannya organisasi.",
+    "inisial": "HN",
+    "gradien": "#d45311"
+  },
+  "inti": [
+    {
+      "nama": "Muhammad Ilham Wiradisastra",
+      "jabatan": "Ketua Umum",
+      "deskripsi": "Memimpin arah organisasi dan menjaga ritme belajar tetap hangat di setiap divisi.",
+      "inisial": "MI",
+      "gradien": "#d45311"
+    },
+    {
+      "nama": "Maria Dealova Indah Natara",
+      "jabatan": "Sekretaris",
+      "deskripsi": "Penjaga catatan, jadwal kelas, dan alur dokumen organisasi.",
+      "inisial": "MD",
+      "gradien": "#fb9606"
+    },
+    {
+      "nama": "Norbertus Bimantya Abadi",
+      "jabatan": "Bendahara",
+      "deskripsi": "Mengelola kas, kebutuhan modul, dan memastikan tiap kelas berjalan.",
+      "inisial": "NB",
+      "gradien": "#f67f1e"
+    }
+  ],
+  "koordinator": [
+    {
+      "nama": "Satya Garda Prasetyo",
+      "jabatan": "PJ Divisi Web",
+      "deskripsi": "Memandu kurikulum dan mentoring untuk jalur web development.",
+      "inisial": "SG",
+      "gradien": "#d45311"
+    },
+    {
+      "nama": "Muhammad Dimas Cahyo",
+      "jabatan": "PJ Divisi UI/UX",
+      "deskripsi": "Menjaga kualitas riset, desain, dan evaluasi antarmuka.",
+      "inisial": "MD",
+      "gradien": "#fb9606"
+    },
+    {
+      "nama": "Zulhan Arif Fasya",
+      "jabatan": "PJ Divisi Robotics",
+      "deskripsi": "Merawat eksperimen robotik dan proyek perangkat fisik.",
+      "inisial": "ZA",
+      "gradien": "#f67f1e"
+    }
+  ]
+}
