@@ -3,7 +3,7 @@
 Branch: `feat/supabase-cms`
 Plan: `C:\Users\faees\.opencode\plan\hic-supabase-cms-plan.md`
 
-## Status: Phase 0–2 COMPLETE, blocked on applying migration
+## Status: Phase 0–2 COMPLETE & VERIFIED. Migration applied. Ready for Phase 3.
 
 ### ✅ Done
 - **Phase 0** deps: `@supabase/supabase-js`, `@supabase/ssr`, `react-markdown`,
@@ -11,22 +11,32 @@ Plan: `C:\Users\faees\.opencode\plan\hic-supabase-cms-plan.md`
 - **Phase 1**:
   - `supabase/migrations/0001_init.sql` — 10 tables, RLS, `updated_at` triggers,
     `media` bucket + storage policies. Idempotent.
-  - `scripts/seed.ts` — idempotent, deterministic UUIDv5 from natural keys.
-    VERIFIED: connects, resolves imports, reports tables missing (expected).
+  - Migration **APPLIED** via Supabase MCP as `hic_init_schema` (20261004024954).
+  - `scripts/seed.ts` — idempotent, deterministic UUIDv5. Ran twice, no duplicates.
 - **Phase 2**:
-  - `lib/types.ts` — canonical app + row types, `Database` type (complete shape).
-  - `lib/supabase/{env,client,server,admin}.ts`
+  - `lib/types.ts`, `lib/supabase/{env,client,server,admin}.ts`
   - `lib/content/{seed,util,site,divisi,pengurus,proker,galeri,faq,posts}.ts`
-    All readers fall back to `data/*.ts` seed on error/empty.
-  - `data/*.ts` now re-export types from `lib/types.ts` (single source of truth).
-- `npx tsc --noEmit` → **clean (exit 0)**.
+  - `data/*.ts` re-export types from `lib/types.ts`.
+- `npx tsc --noEmit` → clean.
 
-### ⏭️ NEXT (after opencode restart loads Supabase MCP)
-1. Apply `supabase/migrations/0001_init.sql` via MCP (`apply_migration` or
-   `execute_sql`), project_ref `zluqwvumzzrursptfrod`.
-2. Run seed: `npm run seed`.
-3. Verify with anon key that RLS allows reads (not just service role).
-4. Proceed to **Phase 3** (rewire public site to props) — the big one.
+### ✅ Verification results
+- 10 tables created, all RLS-enabled. Policy counts correct (3 each, 2 for
+  site_settings/sections). `media` bucket public + storage policies present.
+- Seeded: site_settings 1, sections 7, divisi 3, kurikulum 12, mentor 6,
+  pengurus 7, proker 6, galeri 5, faq 6, posts 0.
+- **Idempotency proven**: re-ran seed, counts unchanged.
+- **RLS proven with anon key**: reads published ✓; INSERT denied (42501) ✓;
+  UPDATE/DELETE affect 0 rows ✓; unpublished rows hidden ✓.
+- **Content layer proven end-to-end** via a temporary Next.js route (19/19
+  checks passed), then removed. Zero fallback warnings, zero errors.
+- Security advisor: my `set_updated_at` warning fixed (search_path + revoke).
+
+### ⏭️ NEXT — Phase 3 (rewire public site to props)
+- `app/page.tsx` → async Server Component fetching all content, passing props.
+- Update components: Hero, MarqueeBand, Tentang, DivisiIndex, Pengurus, Proker,
+  Galeri, Faq, Gabung, Navbar, Footer, + divisi components.
+- Fix "est. 2018" → 1996 (Footer.tsx:144, Navbar.tsx:307).
+
 
 ### ⚠️ Notes
 - **Rotate the secret key** before launch (it was shared in plain chat).

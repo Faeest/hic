@@ -6,16 +6,21 @@
 
 -- ---------------------------------------------------------------------------
 -- Helper: keep updated_at fresh
+-- Hardened: fixed search_path, SECURITY INVOKER, not callable via RPC.
 -- ---------------------------------------------------------------------------
 create or replace function public.set_updated_at()
 returns trigger
 language plpgsql
+security invoker
+set search_path = ''
 as $$
 begin
   new.updated_at = now();
   return new;
 end;
 $$;
+
+revoke execute on function public.set_updated_at() from anon, authenticated, public;
 
 -- ---------------------------------------------------------------------------
 -- site_settings — singleton row (id = 1) for site-wide copy
