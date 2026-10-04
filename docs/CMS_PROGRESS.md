@@ -3,40 +3,41 @@
 Branch: `feat/supabase-cms`
 Plan: `C:\Users\faees\.opencode\plan\hic-supabase-cms-plan.md`
 
-## Status: Phase 6 COMPLETE & VERIFIED. Ready for Phase 7 (deploy).
+## Status: ALL PHASES COMPLETE ✅ — live at https://hic.faeest.my.id
 
-### ✅ Phase 6 done
-- `lib/actions/posts.ts` — create/update/delete with slug auto-generation,
-  tag parsing, first-publish `published_at` handling (assertAdmin guarded).
-- `lib/content/admin-posts.ts` — admin reads (incl. drafts).
-- `components/blog/Markdown.tsx` — shared Markdown renderer (react-markdown +
-  remark-gfm) styled with Tailwind, used by admin preview AND public post page.
-- `components/admin/PostEditor.tsx` — title/slug/excerpt/cover/tags/published +
-  Markdown textarea with **live preview** toggle.
-- `components/admin/PostListActions.tsx` — view/edit/delete.
-- Admin pages: `/admin/posts` (list), `/admin/posts/new`, `/admin/posts/[id]`.
-- Public pages: `/blog` (list, static) + `/blog/[slug]` (SSG, per-post
-  `generateMetadata`/OG).
-- Navbar (desktop + mobile) and Footer now link to `/blog`.
+### ✅ Phase 7 done (DEPLOYED)
+- `/home/lerraf/hic.env` on VPS (mode 600, outside app dir): holds the two
+  public Supabase vars. The **secret key never touches the server** — nothing
+  at runtime imports the service-role client (seed-only).
+- `deploy/hic.service`: systemd unit with `EnvironmentFile=/home/lerraf/hic.env`.
+  Installed on the server (old unit backed up as
+  `hic.service.bak-20261004`); `daemon-reload` done.
+- `deploy.sh`: checks the server env file first; copies it to `.env.local`
+  for the Supabase-backed build; EXIT-trap **rollback** restores `APP.old`
+  and restarts the service on any failure.
+- Staged verification BEFORE touching prod: built + ran the release in
+  `/tmp/hic-stage` on the VPS (Node v26) — identical route table, auth gate
+  307, DB content present — then cleaned up (incl. a `pkill -f` self-match
+  lesson: always use the `[3]199` bracket trick).
+- **Production deploy: `DEPLOY_EXIT:0`** — 22/22 static pages built on the
+  server from Supabase; health check 200; cleanup complete.
 
-### ✅ Phase 6 verification
-- `tsc` + `eslint` clean. `npm run build` EXIT 0 (22 routes).
-- `/blog` static; `/blog/[slug]` SSG with the post prerendered via
-  `generateStaticParams`.
-- Public blog list shows the post + tags; post page renders Markdown correctly
-  (`<h2>`, `<strong>`, `<blockquote>`, `<ul>`, `<code>`), and the **visible DOM
-  contains no raw Markdown** (`##` / `**` only exist in the RSC payload).
-- Admin `/admin/posts`, `/admin/posts/new`, `/admin/posts/[id]` all render 200
-  with a session; unauth `/admin/posts` → 307 to login.
-- A real post is live at `/blog/selamat-datang-di-blog-hic`.
+### ✅ Live verification (https://hic.faeest.my.id)
+- `/` `/blog` `/blog/selamat-datang-di-blog-hic` `/divisi/robotics` → 200
+- `/admin` → 307 (gate works through the public URL)
+- All DB content present (tagline, tags, proker, est. 1996, kursi title,
+  pengurus); `2018` absent.
+- `hic.service` active; no `hic.old` / `hic.failed` leftovers.
 
-### ⏭️ NEXT — Phase 7 (deploy)
-- VPS: systemd `EnvironmentFile` for Supabase env; run `npm run seed` once.
-- `deploy.sh` unchanged (git archive) — env must live on the server.
-- Point campus subdomain at the VPS.
+### ⚠️ Remaining follow-ups (not code)
+- Change the admin password (`12345678` is weak) — do in Supabase Auth.
+- **Rotate `SUPABASE_SECRET_KEY`** (shared in plain chat).
+- Consider bumping `next@16.3.5` → `16.3.8` (critical RCE advisory).
+- Point the campus subdomain at the VPS when ready (A record → 103.169.186.163).
 
 ### Phase map
-0 ✅ · 1 ✅ · 2 ✅ · 3 ✅ · 4 ✅ · 5 ✅ · 6 ✅ · 7 ⏳ · 8(opt)
+0 ✅ · 1 ✅ · 2 ✅ · 3 ✅ · 4 ✅ · 5 ✅ · 6 ✅ · 7 ✅ · 8(opt)
+
 
 
 
