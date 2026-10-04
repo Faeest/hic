@@ -1,6 +1,8 @@
 import "server-only";
 
+import { cacheLife, cacheTag } from "next/cache";
 import { publicDb } from "@/lib/supabase/public";
+import { CONTENT_TAGS } from "@/lib/cache/tags";
 import type { FaqItem, FaqRow } from "@/lib/types";
 import { faq as seedFaq } from "@/data/faq";
 import { bySort, warnFallback } from "./util";
@@ -13,6 +15,9 @@ function toApp(row: FaqRow): FaqItem {
 
 /** All published FAQ items. */
 export async function getFaq(): Promise<FaqItem[]> {
+  "use cache";
+  cacheTag(CONTENT_TAGS.faq);
+  cacheLife("max");
   try {
     const { data, error } = await publicDb
       .from("faq")

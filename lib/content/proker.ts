@@ -1,6 +1,8 @@
 import "server-only";
 
+import { cacheLife, cacheTag } from "next/cache";
 import { publicDb } from "@/lib/supabase/public";
+import { CONTENT_TAGS } from "@/lib/cache/tags";
 import type { Proker, ProkerRow } from "@/lib/types";
 import { proker as seedProker } from "@/data/proker";
 import { bySort, warnFallback } from "./util";
@@ -21,6 +23,9 @@ function toApp(row: ProkerRow): Proker {
 
 /** All published program kerja. */
 export async function getProker(): Promise<Proker[]> {
+  "use cache";
+  cacheTag(CONTENT_TAGS.proker);
+  cacheLife("max");
   try {
     const { data, error } = await publicDb
       .from("proker")

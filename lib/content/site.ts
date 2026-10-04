@@ -1,6 +1,8 @@
 import "server-only";
 
+import { cacheLife, cacheTag } from "next/cache";
 import { publicDb } from "@/lib/supabase/public";
+import { CONTENT_TAGS } from "@/lib/cache/tags";
 import type { Section, SectionRow, Site, SiteSettingsRow } from "@/lib/types";
 import { bySort, warnFallback } from "./util";
 import { seedSections, seedSite } from "./seed";
@@ -52,6 +54,9 @@ export function rowToSection(row: SectionRow): Section {
 }
 
 export async function getSite(): Promise<Site> {
+  "use cache";
+  cacheTag(CONTENT_TAGS.site);
+  cacheLife("max");
   try {
     const { data, error } = await publicDb
       .from("site_settings")
@@ -68,6 +73,9 @@ export async function getSite(): Promise<Site> {
 }
 
 export async function getSections(): Promise<Section[]> {
+  "use cache";
+  cacheTag(CONTENT_TAGS.sections);
+  cacheLife("max");
   try {
     const { data, error } = await publicDb
       .from("sections")

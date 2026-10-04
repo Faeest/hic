@@ -4,6 +4,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { ArrowUpRight } from "@phosphor-icons/react";
 import type { Divisi, Site } from "@/lib/types";
+import { Copyright } from "@/components/layout/Copyright";
 
 export function Footer({ site, divisi }: { site: Site; divisi: Divisi[] }) {
   return (
@@ -125,9 +126,7 @@ export function Footer({ site, divisi }: { site: Site; divisi: Divisi[] }) {
 
           {/* Utility bar */}
           <div className="mt-12 flex flex-col items-center justify-between gap-4 border-t border-ink/10 pt-7 sm:flex-row">
-            <p className="text-sm text-ink-faint">
-              © {new Date().getFullYear()} {site.namaPanjang}.
-            </p>
+            <Copyright site={site} />
             <div className="flex flex-wrap items-center justify-center gap-x-6 gap-y-2">
               {site.sosial.map((s) => (
                 <a

@@ -1,8 +1,8 @@
 "use server";
 
-import { revalidatePath } from "next/cache";
 import { assertAdmin } from "@/lib/auth/dal";
 import { createClient } from "@/lib/supabase/server";
+import { revalidatePublic } from "@/lib/actions/revalidate";
 import type { PilarMisi, Sosial, Statistik } from "@/lib/types";
 
 export type ActionResult = { ok: true } | { ok: false; error: string };
@@ -64,7 +64,6 @@ export async function updateSite(formData: FormData): Promise<ActionResult> {
 
   if (error) return { ok: false, error: error.message };
 
-  revalidatePath("/", "layout");
-  revalidatePath("/divisi/[slug]", "page");
+  revalidatePublic();
   return { ok: true };
 }

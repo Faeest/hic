@@ -1,6 +1,8 @@
 import "server-only";
 
+import { cacheLife, cacheTag } from "next/cache";
 import { publicDb } from "@/lib/supabase/public";
+import { CONTENT_TAGS } from "@/lib/cache/tags";
 import type { Foto, GaleriRow } from "@/lib/types";
 import { galeri as seedGaleri } from "@/data/galeri";
 import { bySort, warnFallback } from "./util";
@@ -19,6 +21,9 @@ function toApp(row: GaleriRow): Foto {
 
 /** All published gallery photos. */
 export async function getGaleri(): Promise<Foto[]> {
+  "use cache";
+  cacheTag(CONTENT_TAGS.galeri);
+  cacheLife("max");
   try {
     const { data, error } = await publicDb
       .from("galeri")

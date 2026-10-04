@@ -1,6 +1,8 @@
 import "server-only";
 
+import { cacheLife, cacheTag } from "next/cache";
 import { publicDb } from "@/lib/supabase/public";
+import { CONTENT_TAGS } from "@/lib/cache/tags";
 import type {
   Divisi,
   DivisiRow,
@@ -56,6 +58,9 @@ function assemble(
  * error or when the table is empty.
  */
 export async function getAllDivisi(): Promise<Divisi[]> {
+  "use cache";
+  cacheTag(CONTENT_TAGS.divisi);
+  cacheLife("max");
   try {
     const { data: rows, error } = await publicDb
       .from("divisi")
@@ -85,6 +90,9 @@ export async function getAllDivisi(): Promise<Divisi[]> {
 
 /** Single divisi by slug. Falls back to the matching seed entry. */
 export async function getDivisi(slug: string): Promise<Divisi | undefined> {
+  "use cache";
+  cacheTag(CONTENT_TAGS.divisi);
+  cacheLife("max");
   try {
     const { data: row, error } = await publicDb
       .from("divisi")

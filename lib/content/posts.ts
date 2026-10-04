@@ -1,6 +1,8 @@
 import "server-only";
 
+import { cacheLife, cacheTag } from "next/cache";
 import { publicDb } from "@/lib/supabase/public";
+import { CONTENT_TAGS } from "@/lib/cache/tags";
 import type { Post, PostRow } from "@/lib/types";
 import { warnFallback } from "./util";
 
@@ -22,6 +24,9 @@ function toApp(row: PostRow): Post {
 
 /** Published posts, newest first. */
 export async function getPosts(): Promise<Post[]> {
+  "use cache";
+  cacheTag(CONTENT_TAGS.posts);
+  cacheLife("max");
   try {
     const { data, error } = await publicDb
       .from("posts")
@@ -38,6 +43,9 @@ export async function getPosts(): Promise<Post[]> {
 
 /** A single published post by slug. */
 export async function getPost(slug: string): Promise<Post | null> {
+  "use cache";
+  cacheTag(CONTENT_TAGS.posts);
+  cacheLife("max");
   try {
     const { data, error } = await publicDb
       .from("posts")

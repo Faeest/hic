@@ -1,8 +1,8 @@
 "use server";
 
-import { revalidatePath } from "next/cache";
 import { assertAdmin } from "@/lib/auth/dal";
 import { createClient } from "@/lib/supabase/server";
+import { revalidatePublic } from "@/lib/actions/revalidate";
 import { isAllowedTable, type CrudTable } from "@/lib/admin/tables";
 import type { SupabaseClient } from "@supabase/supabase-js";
 
@@ -114,8 +114,7 @@ export async function createRow(table: string, fd: FormData): Promise<CrudResult
   const { error } = await supabase.from(table).insert(buildPayload(table, fd));
   if (error) return { ok: false, error: error.message };
 
-  revalidatePath("/", "layout");
-  revalidatePath("/divisi/[slug]", "page");
+  revalidatePublic();
   return { ok: true };
 }
 
@@ -139,8 +138,7 @@ export async function updateRow(
     .eq("id", id);
   if (error) return { ok: false, error: error.message };
 
-  revalidatePath("/", "layout");
-  revalidatePath("/divisi/[slug]", "page");
+  revalidatePublic();
   return { ok: true };
 }
 
@@ -157,8 +155,7 @@ export async function deleteRow(table: string, id: string): Promise<CrudResult> 
   const { error } = await supabase.from(table).delete().eq("id", id);
   if (error) return { ok: false, error: error.message };
 
-  revalidatePath("/", "layout");
-  revalidatePath("/divisi/[slug]", "page");
+  revalidatePublic();
   return { ok: true };
 }
 
@@ -183,7 +180,6 @@ export async function reorderRows(
     if (error) return { ok: false, error: error.message };
   }
 
-  revalidatePath("/", "layout");
-  revalidatePath("/divisi/[slug]", "page");
+  revalidatePublic();
   return { ok: true };
 }

@@ -5,6 +5,33 @@ Plan: `C:\Users\faees\.opencode\plan\hic-supabase-cms-plan.md`
 
 ## Status: ALL PHASES COMPLETE ✅ — live at https://hic.faeest.my.id
 
+### ✅ Phase 8 done (Cache Components)
+- `next.config.ts`: `cacheComponents: true` (PPR enabled).
+- `lib/cache/tags.ts`: shared `CONTENT_TAGS` for on-demand invalidation.
+- All public readers (`lib/content/*`) use `'use cache'` + `cacheTag` +
+  `cacheLife("max")` — content is cached long-term, invalidated on edit.
+- `lib/actions/revalidate.ts`: `revalidatePublic()` now calls `updateTag`
+  (immediate, Server-Action-only API) per tag + `revalidatePath` per route.
+  All mutation actions (`site`, `crud`, `posts`) centralized on it.
+- `app/admin/(protected)/layout.tsx`: `instant = false` opt-out — admin pages
+  read session cookies, so they stay dynamic; the public site keeps full PPR.
+- Fixed a real prerender bug Cache Components caught: `new Date()` in
+  `Footer.tsx` (Client Component) → new `components/layout/Copyright.tsx`
+  streams the year at request time behind `<Suspense>`.
+
+### ✅ Phase 8 verification
+- `tsc` + `eslint` clean. `npm run build` EXIT 0 with `- Cache Components enabled`.
+- Route table: `/` static (`30d`/`1y`), `/divisi/*` + `/blog/*` static via
+  generateStaticParams, `[slug]` routes show `◐` Partial Prerender, `/admin/*`
+  dynamic.
+- **Cache round-trip proven**: edited tagline in DB → page stayed stale →
+  triggered revalidation → page refreshed. (`updateTag` in real Server Actions
+  behaves the same, only immediate.)
+
+### ✅ Docs
+- `docs/SUBDOMAIN.md`: handover text for campus IT — subdomain via A record
+  (recommended) vs separate deploy from the GitHub repo.
+
 ### ✅ Phase 7 done (DEPLOYED)
 - `/home/lerraf/hic.env` on VPS (mode 600, outside app dir): holds the two
   public Supabase vars. The **secret key never touches the server** — nothing

@@ -1,9 +1,9 @@
 "use server";
 
-import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { assertAdmin } from "@/lib/auth/dal";
 import { createClient } from "@/lib/supabase/server";
+import { revalidatePublic } from "@/lib/actions/revalidate";
 
 export type PostResult = { ok: true; id?: string } | { ok: false; error: string };
 
@@ -77,8 +77,7 @@ export async function createPost(fd: FormData): Promise<PostResult> {
 
   if (error) return { ok: false, error: error.message };
 
-  revalidatePath("/blog");
-  revalidatePath("/blog/[slug]", "page");
+  revalidatePublic();
   return { ok: true, id: data?.id };
 }
 
@@ -114,8 +113,7 @@ export async function updatePost(id: string, fd: FormData): Promise<PostResult> 
 
   if (error) return { ok: false, error: error.message };
 
-  revalidatePath("/blog");
-  revalidatePath("/blog/[slug]", "page");
+  revalidatePublic();
   return { ok: true, id };
 }
 
@@ -131,8 +129,7 @@ export async function deletePost(id: string): Promise<PostResult> {
   const { error } = await supabase.from("posts").delete().eq("id", id);
   if (error) return { ok: false, error: error.message };
 
-  revalidatePath("/blog");
-  revalidatePath("/blog/[slug]", "page");
+  revalidatePublic();
   return { ok: true };
 }
 

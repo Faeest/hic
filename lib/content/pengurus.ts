@@ -1,6 +1,8 @@
 import "server-only";
 
+import { cacheLife, cacheTag } from "next/cache";
 import { publicDb } from "@/lib/supabase/public";
+import { CONTENT_TAGS } from "@/lib/cache/tags";
 import type { KategoriPengurus, Pengurus, PengurusRow } from "@/lib/types";
 import {
   koordinatorDivisi as seedKoordinator,
@@ -33,6 +35,9 @@ function toApp(row: PengurusRow): Pengurus {
 
 /** All published pengurus, grouped by kategori. */
 export async function getPengurus(): Promise<PengurusGroups> {
+  "use cache";
+  cacheTag(CONTENT_TAGS.pengurus);
+  cacheLife("max");
   try {
     const { data, error } = await publicDb
       .from("pengurus")

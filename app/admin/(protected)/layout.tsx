@@ -9,7 +9,13 @@ import { AdminShell } from "@/components/admin/AdminShell";
  *
  * Note: a layout check is not a security boundary on its own (see Next.js auth
  * docs); each page and Server Action also calls requireAdmin/assertAdmin.
+ *
+ * `instant = false` opts these routes out of Cache Components' instant-navigation
+ * validation: admin pages read session cookies and unpublished data, so they
+ * are inherently dynamic. The public site keeps full PPR.
  */
+export const instant = false;
+
 export default async function AdminProtectedLayout({
   children,
 }: {
