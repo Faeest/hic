@@ -1,6 +1,6 @@
 import "server-only";
 
-import { createClient } from "@/lib/supabase/server";
+import { publicDb } from "@/lib/supabase/public";
 import type { Section, SectionRow, Site, SiteSettingsRow } from "@/lib/types";
 import { bySort, warnFallback } from "./util";
 import { seedSections, seedSite } from "./seed";
@@ -35,6 +35,8 @@ export function rowToSite(row: SiteSettingsRow): Site {
       peran: row.testimoni_peran,
     },
     marqueeItems: row.marquee_items ?? [],
+    tahunBerdiri: row.tahun_berdiri || "1996",
+    periodeKepengurusan: row.periode_kepengurusan || "2025–2026",
   };
 }
 
@@ -51,8 +53,7 @@ export function rowToSection(row: SectionRow): Section {
 
 export async function getSite(): Promise<Site> {
   try {
-    const supabase = await createClient();
-    const { data, error } = await supabase
+    const { data, error } = await publicDb
       .from("site_settings")
       .select("*")
       .eq("id", 1)
@@ -68,8 +69,7 @@ export async function getSite(): Promise<Site> {
 
 export async function getSections(): Promise<Section[]> {
   try {
-    const supabase = await createClient();
-    const { data, error } = await supabase
+    const { data, error } = await publicDb
       .from("sections")
       .select("*")
       .order("sort", { ascending: true });

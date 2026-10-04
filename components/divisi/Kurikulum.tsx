@@ -4,7 +4,7 @@ import { motion } from "framer-motion";
 import { GraduationCap } from "@phosphor-icons/react";
 import { Reveal } from "@/components/ui/Reveal";
 import { divisiVars } from "@/lib/utils";
-import type { Divisi } from "@/data/divisi";
+import type { Divisi } from "@/lib/types";
 
 export function Kurikulum({ d }: { d: Divisi }) {
   const totalPertemuan = d.kurikulum.reduce((a, k) => a + parseInt(k.durasi), 0);

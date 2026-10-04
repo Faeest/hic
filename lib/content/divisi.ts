@@ -1,6 +1,6 @@
 import "server-only";
 
-import { createClient } from "@/lib/supabase/server";
+import { publicDb } from "@/lib/supabase/public";
 import type {
   Divisi,
   DivisiRow,
@@ -57,8 +57,7 @@ function assemble(
  */
 export async function getAllDivisi(): Promise<Divisi[]> {
   try {
-    const supabase = await createClient();
-    const { data: rows, error } = await supabase
+    const { data: rows, error } = await publicDb
       .from("divisi")
       .select("*")
       .order("sort", { ascending: true });
@@ -67,8 +66,8 @@ export async function getAllDivisi(): Promise<Divisi[]> {
 
     const ids = rows.map((r) => r.id);
     const [{ data: kur }, { data: men }] = await Promise.all([
-      supabase.from("kurikulum").select("*").in("divisi_id", ids),
-      supabase.from("mentor").select("*").in("divisi_id", ids),
+      publicDb.from("kurikulum").select("*").in("divisi_id", ids),
+      publicDb.from("mentor").select("*").in("divisi_id", ids),
     ]);
 
     return bySort(rows as DivisiRow[]).map((row) =>
@@ -87,8 +86,7 @@ export async function getAllDivisi(): Promise<Divisi[]> {
 /** Single divisi by slug. Falls back to the matching seed entry. */
 export async function getDivisi(slug: string): Promise<Divisi | undefined> {
   try {
-    const supabase = await createClient();
-    const { data: row, error } = await supabase
+    const { data: row, error } = await publicDb
       .from("divisi")
       .select("*")
       .eq("slug", slug)
@@ -97,8 +95,8 @@ export async function getDivisi(slug: string): Promise<Divisi | undefined> {
     if (!row) return seedDivisiList.find((d) => d.slug === slug);
 
     const [{ data: kur }, { data: men }] = await Promise.all([
-      supabase.from("kurikulum").select("*").eq("divisi_id", row.id),
-      supabase.from("mentor").select("*").eq("divisi_id", row.id),
+      publicDb.from("kurikulum").select("*").eq("divisi_id", row.id),
+      publicDb.from("mentor").select("*").eq("divisi_id", row.id),
     ]);
 
     return assemble(

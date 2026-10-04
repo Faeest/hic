@@ -135,6 +135,8 @@ export type Site = {
   logoDarkUrl: string;
   testimoni: Testimoni;
   marqueeItems: string[];
+  tahunBerdiri: string;
+  periodeKepengurusan: string;
 };
 
 export type Post = {
@@ -178,6 +180,8 @@ export type SiteSettingsRow = {
   testimoni_teks: string;
   testimoni_peran: string;
   marquee_items: string[];
+  tahun_berdiri: string;
+  periode_kepengurusan: string;
   updated_at: string;
 };
 

@@ -4,12 +4,9 @@ import { motion } from "framer-motion";
 import { ArrowUpRight, Wallet } from "@phosphor-icons/react";
 import { Reveal } from "@/components/ui/Reveal";
 import { divisiVars } from "@/lib/utils";
-import { getProker } from "@/data/proker";
-import type { Divisi } from "@/data/divisi";
+import type { Divisi, Proker } from "@/lib/types";
 
-export function DivisiProker({ d }: { d: Divisi }) {
-  const items = getProker(d.slug);
-
+export function DivisiProker({ d, items }: { d: Divisi; items: Proker[] }) {
   if (items.length === 0) return null;
 
   return (

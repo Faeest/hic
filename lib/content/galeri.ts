@@ -1,6 +1,6 @@
 import "server-only";
 
-import { createClient } from "@/lib/supabase/server";
+import { publicDb } from "@/lib/supabase/public";
 import type { Foto, GaleriRow } from "@/lib/types";
 import { galeri as seedGaleri } from "@/data/galeri";
 import { bySort, warnFallback } from "./util";
@@ -20,8 +20,7 @@ function toApp(row: GaleriRow): Foto {
 /** All published gallery photos. */
 export async function getGaleri(): Promise<Foto[]> {
   try {
-    const supabase = await createClient();
-    const { data, error } = await supabase
+    const { data, error } = await publicDb
       .from("galeri")
       .select("*")
       .order("sort", { ascending: true });

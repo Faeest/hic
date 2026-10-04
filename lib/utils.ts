@@ -5,7 +5,7 @@ export function formatAngka(n: number): string {
   return n.toLocaleString("id-ID");
 }
 
-import type { Divisi } from "@/data/divisi";
+import type { Divisi } from "@/lib/types";
 import type { CSSProperties } from "react";
 
 export function divisiVars(d: Divisi): CSSProperties {

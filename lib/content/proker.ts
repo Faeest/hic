@@ -1,6 +1,6 @@
 import "server-only";
 
-import { createClient } from "@/lib/supabase/server";
+import { publicDb } from "@/lib/supabase/public";
 import type { Proker, ProkerRow } from "@/lib/types";
 import { proker as seedProker } from "@/data/proker";
 import { bySort, warnFallback } from "./util";
@@ -22,8 +22,7 @@ function toApp(row: ProkerRow): Proker {
 /** All published program kerja. */
 export async function getProker(): Promise<Proker[]> {
   try {
-    const supabase = await createClient();
-    const { data, error } = await supabase
+    const { data, error } = await publicDb
       .from("proker")
       .select("*")
       .order("sort", { ascending: true });

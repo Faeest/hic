@@ -3,7 +3,8 @@
 import { motion } from "framer-motion";
 import { Reveal } from "@/components/ui/Reveal";
 import { SectionHead } from "@/components/ui/SectionHead";
-import { pengurusInti, koordinatorDivisi, pembina } from "@/data/pengurus";
+import type { PengurusGroups } from "@/lib/content/pengurus";
+import type { Section, Site } from "@/lib/types";
 
 function Avatar({ inisial, gradien, size = "lg" }: { inisial: string; gradien: string; size?: "sm" | "lg" }) {
   return (
@@ -29,43 +30,60 @@ function Avatar({ inisial, gradien, size = "lg" }: { inisial: string; gradien: s
   );
 }
 
-export function Pengurus({ id }: { id: string }) {
+export function Pengurus({
+  id,
+  pengurus,
+  section,
+  site,
+}: {
+  id: string;
+  pengurus: PengurusGroups;
+  section: Section;
+  site: Site;
+}) {
+  const { pembina, inti: pengurusInti, koordinator: koordinatorDivisi } = pengurus;
+  if (!section.visible) return null;
+
   return (
     <section id={id} className="relative scroll-mt-24 bg-paper py-24 sm:py-32">
       <div className="mx-auto max-w-7xl px-5 sm:px-8">
         <SectionHead
-          index="III"
-          label="Pengurus"
-          title="Orang-orang di balik kursi."
-          accent="kursi"
+          index={section.index}
+          label={section.label}
+          title={section.title}
+          accent={section.accent}
         />
 
         {/* Dosen Pembina */}
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: false, margin: "-60px" }}
-          transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
-          className="mt-16"
-        >
-          <div className="glass-panel flex flex-col items-center gap-6 overflow-hidden rounded-[2rem] p-8 sm:flex-row sm:p-10">
-            <div className="w-28 shrink-0 sm:w-32">
-              <Avatar inisial={pembina.inisial} gradien={pembina.gradien} size="sm" />
-            </div>
-            <div className="flex-1 text-center sm:text-left">
-              <span className="rounded-full bg-ember/10 px-3.5 py-1.5 text-xs font-medium text-ember">
-                {pembina.jabatan}
+        {pembina && (
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: false, margin: "-60px" }}
+            transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
+            className="mt-16"
+          >
+            <div className="glass-panel flex flex-col items-center gap-6 overflow-hidden rounded-[2rem] p-8 sm:flex-row sm:p-10">
+              <div className="w-28 shrink-0 sm:w-32">
+                <Avatar inisial={pembina.inisial} gradien={pembina.gradien} size="sm" />
+              </div>
+              <div className="flex-1 text-center sm:text-left">
+                <span className="rounded-full bg-ember/10 px-3.5 py-1.5 text-xs font-medium text-ember">
+                  {pembina.jabatan}
+                </span>
+                <h3 className="mt-3 font-display text-2xl font-semibold tracking-tight text-ink sm:text-3xl">
+                  {pembina.nama}
+                </h3>
+                <p className="mt-2 max-w-lg text-base leading-relaxed text-ink-soft">
+                  {pembina.deskripsi}
+                </p>
+              </div>
+              <span className="shrink-0 font-mono text-sm text-ink-faint">
+                Periode {site.periodeKepengurusan}
               </span>
-              <h3 className="mt-3 font-display text-2xl font-semibold tracking-tight text-ink sm:text-3xl">
-                {pembina.nama}
-              </h3>
-              <p className="mt-2 max-w-lg text-base leading-relaxed text-ink-soft">
-                {pembina.deskripsi}
-              </p>
             </div>
-            <span className="shrink-0 font-mono text-sm text-ink-faint">Periode 2025–2026</span>
-          </div>
-        </motion.div>
+          </motion.div>
+        )}
 
         {/* Inti pengurus */}
         <div className="mt-12 grid gap-10 lg:grid-cols-3">

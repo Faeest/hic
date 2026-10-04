@@ -4,7 +4,7 @@ import { motion } from "framer-motion";
 import { ArrowUpRight } from "@phosphor-icons/react";
 import Link from "next/link";
 import { divisiVars } from "@/lib/utils";
-import type { Divisi } from "@/data/divisi";
+import type { Divisi } from "@/lib/types";
 
 export function DivisiGabung({ d }: { d: Divisi }) {
   return (

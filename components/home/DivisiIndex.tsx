@@ -5,7 +5,7 @@ import { useState } from "react";
 import Link from "next/link";
 import { ArrowUpRight } from "@phosphor-icons/react";
 import { SectionHead } from "@/components/ui/SectionHead";
-import { divisi, type Divisi } from "@/data/divisi";
+import type { Divisi, Section } from "@/lib/types";
 import { divisiVars } from "@/lib/utils";
 
 function DivisiRow({
@@ -112,8 +112,17 @@ function DivisiRow({
   );
 }
 
-export function DivisiIndex({ id }: { id: string }) {
+export function DivisiIndex({
+  id,
+  divisi,
+  section,
+}: {
+  id: string;
+  divisi: Divisi[];
+  section: Section;
+}) {
   const [open, setOpen] = useState<number | null>(0);
+  if (!section.visible) return null;
 
   return (
     <section id={id} className="relative scroll-mt-24 overflow-hidden bg-cream py-24 sm:py-32">
@@ -128,10 +137,10 @@ export function DivisiIndex({ id }: { id: string }) {
       <div className="relative mx-auto max-w-7xl px-5 sm:px-8">
         <div className="flex flex-col gap-8 lg:flex-row lg:items-end lg:justify-between">
           <SectionHead
-            index="II"
-            label="Divisi"
-            title="Tiga jalur, satu cara belajar."
-            accent="cara belajar"
+            index={section.index}
+            label={section.label}
+            title={section.title}
+            accent={section.accent}
           />
         </div>
 

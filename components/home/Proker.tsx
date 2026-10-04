@@ -5,13 +5,23 @@ import { ArrowUpRight, Wallet } from "@phosphor-icons/react";
 import Link from "next/link";
 import { SectionHead } from "@/components/ui/SectionHead";
 import { Reveal } from "@/components/ui/Reveal";
-import { proker } from "@/data/proker";
+import type { Proker as ProkerItem, Section } from "@/lib/types";
 
 const dots =
   "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20'%3E%3Ccircle cx='2' cy='2' r='1.4' fill='%23ffffff' fill-opacity='0.28'/%3E%3C/svg%3E\")";
 
-export function Proker({ id }: { id: string }) {
+export function Proker({
+  id,
+  proker,
+  section,
+}: {
+  id: string;
+  proker: ProkerItem[];
+  section: Section;
+}) {
+  if (!section.visible) return null;
   const [featured, ...rest] = proker;
+  if (!featured) return null;
 
   return (
     <section id={id} className="relative scroll-mt-24 overflow-hidden bg-cream py-24 sm:py-32">
@@ -25,10 +35,10 @@ export function Proker({ id }: { id: string }) {
       />
       <div className="relative mx-auto max-w-7xl px-5 sm:px-8">
         <SectionHead
-          index="IV"
-          label="Program Kerja"
-          title="Agenda nyata, bukan sekadar rencana."
-          accent="bukan sekadar rencana"
+          index={section.index}
+          label={section.label}
+          title={section.title}
+          accent={section.accent}
         />
 
         <div className="mt-16 grid gap-5 lg:grid-cols-3">

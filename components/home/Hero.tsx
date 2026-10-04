@@ -4,7 +4,7 @@ import { useRef } from "react";
 import { motion, useScroll, useTransform, type MotionValue } from "framer-motion";
 import { ArrowDownRight, ArrowUpRight } from "@phosphor-icons/react";
 import { HeroCanvas } from "./HeroCanvas";
-import { club } from "@/data/club";
+import type { Site } from "@/lib/types";
 
 const EASE = [0.16, 1, 0.3, 1] as const;
 
@@ -35,8 +35,8 @@ function Word({
   );
 }
 
-export function Hero() {
-  const headline = ["Hardware", "Interactive", "Club"];
+export function Hero({ id, site }: { id: string; site: Site }) {
+  const headline = site.heroHeadline.length ? site.heroHeadline : ["Hardware", "Interactive", "Club"];
   const secRef = useRef<HTMLElement>(null);
   const { scrollYProgress } = useScroll({
     target: secRef,
@@ -49,7 +49,7 @@ export function Hero() {
 
   return (
     <section
-      id="beranda"
+      id={id}
       ref={secRef}
       className="relative flex min-h-[100dvh] flex-col overflow-hidden"
     >
@@ -79,9 +79,7 @@ export function Hero() {
             transition={{ duration: 0.8, delay: 0.9, ease: EASE }}
             className="mt-8 max-w-xl text-lg leading-relaxed text-ink-soft sm:text-xl"
           >
-            Ruang belajar keilmuan di mana mahasiswa menjadi{" "}
-            <span className="font-semibold text-ember">mentor bagi satu sama lain</span> —
-            melalui kelas kecil untuk Web, UI/UX, dan Robotics.
+            {site.heroSubcopy}
           </motion.p>
         </motion.div>
 
@@ -125,7 +123,7 @@ export function Hero() {
             transition={{ duration: 0.9, delay: 1.2, ease: EASE }}
             className="my-16 grid grid-cols-2 gap-px overflow-hidden rounded-full glass-panel shadow-none! sm:grid-cols-4"
           >
-          {club.statistik.map((s) => (
+          {site.statistik.map((s) => (
             <div
               key={s.label}
               className="flex flex-col gap-1.5 px-6 py-6 sm:px-8"

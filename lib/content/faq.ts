@@ -1,6 +1,6 @@
 import "server-only";
 
-import { createClient } from "@/lib/supabase/server";
+import { publicDb } from "@/lib/supabase/public";
 import type { FaqItem, FaqRow } from "@/lib/types";
 import { faq as seedFaq } from "@/data/faq";
 import { bySort, warnFallback } from "./util";
@@ -14,8 +14,7 @@ function toApp(row: FaqRow): FaqItem {
 /** All published FAQ items. */
 export async function getFaq(): Promise<FaqItem[]> {
   try {
-    const supabase = await createClient();
-    const { data, error } = await supabase
+    const { data, error } = await publicDb
       .from("faq")
       .select("*")
       .order("sort", { ascending: true });

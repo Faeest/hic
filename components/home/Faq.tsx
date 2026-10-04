@@ -4,10 +4,18 @@ import { motion, AnimatePresence, useScroll, useTransform } from "framer-motion"
 import { useRef, useState } from "react";
 import { Plus } from "@phosphor-icons/react";
 import { SectionHead } from "@/components/ui/SectionHead";
-import { faq } from "@/data/faq";
+import type { FaqItem, Section } from "@/lib/types";
 import { cn } from "@/lib/utils";
 
-export function Faq({ id }: { id: string }) {
+export function Faq({
+  id,
+  faq,
+  section,
+}: {
+  id: string;
+  faq: FaqItem[];
+  section: Section;
+}) {
   const [open, setOpen] = useState<number | null>(0);
   const wrapRef = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({
@@ -15,6 +23,8 @@ export function Faq({ id }: { id: string }) {
     offset: ["start end", "end start"],
   });
   const blobY = useTransform(scrollYProgress, [0, 1], [50, -50]);
+
+  if (!section.visible) return null;
 
   return (
     <section id={id} className="relative scroll-mt-24 overflow-hidden bg-paper py-24 sm:py-32">
@@ -35,10 +45,10 @@ export function Faq({ id }: { id: string }) {
           </motion.div>
         </div>
         <SectionHead
-          index="VI"
-          label="FAQ"
-          title="Sering ditanya, jawabannya di sini."
-          accent="jawabannya di sini"
+          index={section.index}
+          label={section.label}
+          title={section.title}
+          accent={section.accent}
           align="center"
           className="relative"
         />

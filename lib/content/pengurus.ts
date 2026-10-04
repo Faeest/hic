@@ -1,6 +1,6 @@
 import "server-only";
 
-import { createClient } from "@/lib/supabase/server";
+import { publicDb } from "@/lib/supabase/public";
 import type { KategoriPengurus, Pengurus, PengurusRow } from "@/lib/types";
 import {
   koordinatorDivisi as seedKoordinator,
@@ -34,8 +34,7 @@ function toApp(row: PengurusRow): Pengurus {
 /** All published pengurus, grouped by kategori. */
 export async function getPengurus(): Promise<PengurusGroups> {
   try {
-    const supabase = await createClient();
-    const { data, error } = await supabase
+    const { data, error } = await publicDb
       .from("pengurus")
       .select("*")
       .order("sort", { ascending: true });

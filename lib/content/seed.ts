@@ -44,14 +44,16 @@ export const seedSite: Site = {
     "Robotics",
     "Peer Mentoring",
   ],
+  tahunBerdiri: "1996",
+  periodeKepengurusan: "2025–2026",
 };
 
 export const seedSections: Section[] = [
   { key: "tentang", index: "I", label: "Tentang HIC", title: "Belajar dari yang baru saja belajar.", accent: "baru saja belajar", visible: true },
   { key: "divisi", index: "II", label: "Divisi", title: "Tiga jalur, satu cara belajar.", accent: "cara belajar", visible: true },
-  { key: "pengurus", index: "III", label: "Pengurus", title: "Orang-orang di balik kelas.", accent: "di balik kelas", visible: true },
-  { key: "proker", index: "IV", label: "Program Kerja", title: "Yang kami kerjakan sepanjang periode.", accent: "sepanjang periode", visible: true },
+  { key: "pengurus", index: "III", label: "Pengurus", title: "Orang-orang di balik kursi.", accent: "kursi", visible: true },
+  { key: "proker", index: "IV", label: "Program Kerja", title: "Agenda nyata, bukan sekadar rencana.", accent: "bukan sekadar rencana", visible: true },
   { key: "galeri", index: "V", label: "Galeri Kegiatan", title: "Momen-momen di sekret & ruang kelas.", accent: "sekret & ruang kelas", visible: true },
-  { key: "faq", index: "VI", label: "FAQ", title: "Pertanyaan yang sering muncul.", accent: "sering muncul", visible: true },
-  { key: "gabung", index: "VII", label: "Gabung", title: "Mulai dari langkah kecil yang penasaran.", accent: "langkah kecil", visible: true },
+  { key: "faq", index: "VI", label: "FAQ", title: "Sering ditanya, jawabannya di sini.", accent: "jawabannya di sini", visible: true },
+  { key: "gabung", index: "VI", label: "Tertarik gabung?", title: "Mulai dari langkah kecil yang penasaran.", accent: "langkah kecil", visible: true },
 ];

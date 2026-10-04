@@ -5,7 +5,7 @@ import Image from "next/image";
 import { motion, useScroll, useTransform } from "framer-motion";
 import { SectionHead } from "@/components/ui/SectionHead";
 import { Reveal } from "@/components/ui/Reveal";
-import { galeri } from "@/data/galeri";
+import type { Foto, Section } from "@/lib/types";
 import { cn } from "@/lib/utils";
 
 const spanClasses = [
@@ -20,7 +20,7 @@ function GaleriFigure({
   f,
   i,
 }: {
-  f: (typeof galeri)[number];
+  f: Foto;
   i: number;
 }) {
   const figRef = useRef<HTMLElement>(null);
@@ -59,15 +59,24 @@ function GaleriFigure({
   );
 }
 
-export function Galeri({ id }: { id: string }) {
+export function Galeri({
+  id,
+  galeri,
+  section,
+}: {
+  id: string;
+  galeri: Foto[];
+  section: Section;
+}) {
+  if (!section.visible) return null;
   return (
     <section id={id} className="relative scroll-mt-24 bg-paper py-24 sm:py-32">
       <div className="mx-auto max-w-7xl px-5 sm:px-8">
         <SectionHead
-          index="V"
-          label="Galeri Kegiatan"
-          title="Momen-momen di sekret & ruang kelas."
-          accent="sekret & ruang kelas"
+          index={section.index}
+          label={section.label}
+          title={section.title}
+          accent={section.accent}
         />
 
         <div className="mt-16 grid auto-rows-[10rem] grid-cols-2 gap-4 sm:auto-rows-[13rem] sm:gap-5 lg:auto-rows-[15rem] lg:grid-cols-4">
@@ -78,7 +87,7 @@ export function Galeri({ id }: { id: string }) {
 
         <Reveal className="mt-10">
           <p className="text-center font-mono text-xs uppercase tracking-widest text-ink-faint">
-            5 momen · sepanjang periode kepengurusan
+            {galeri.length} momen · sepanjang periode kepengurusan
           </p>
         </Reveal>
       </div>

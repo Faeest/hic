@@ -5,7 +5,7 @@ import { motion, useScroll, useTransform } from "framer-motion";
 import { ArrowUpRight, ChatCircleDots } from "@phosphor-icons/react";
 import { Reveal } from "@/components/ui/Reveal";
 import { Marquee } from "@/components/ui/Marquee";
-import { club } from "@/data/club";
+import type { Section, Site } from "@/lib/types";
 
 const marqueeWords = [
   "Belajar",
@@ -15,13 +15,22 @@ const marqueeWords = [
   "Bereksperimen",
 ];
 
-export function Gabung({ id }: { id: string }) {
+export function Gabung({
+  id,
+  site,
+  section,
+}: {
+  id: string;
+  site: Site;
+  section: Section;
+}) {
   const cardRef = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({
     target: cardRef,
     offset: ["start end", "end start"],
   });
   const blobY = useTransform(scrollYProgress, [0, 1], [90, -90]);
+  if (!section.visible) return null;
   return (
     <section id={id} className="relative scroll-mt-24 bg-paper py-24 sm:py-32">
       <div className="mx-auto max-w-7xl px-5 sm:px-8">
@@ -53,12 +62,12 @@ export function Gabung({ id }: { id: string }) {
               transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
             >
               <p className="flex items-baseline gap-3 text-sm text-white/70">
-                <span className="font-mono">VI</span>
+                <span className="font-mono">{section.index}</span>
                 <span className="h-px w-6 self-center bg-white/40" aria-hidden />
-                <span className="font-medium">Tertarik gabung?</span>
+                <span className="font-medium">{section.label}</span>
               </p>
               <h2 className="mt-4 max-w-3xl font-display text-[2.6rem] font-semibold leading-[1.02] tracking-tight text-white sm:text-6xl lg:text-7xl">
-                Mulai dari langkah kecil yang penasaran.
+                {section.title}
               </h2>
               <p className="mt-6 max-w-xl text-lg leading-relaxed text-white/80">
                 Tidak perlu jadi jagoan lebih dulu — di HIC semua orang sedang
@@ -75,7 +84,7 @@ export function Gabung({ id }: { id: string }) {
               className="mt-10 flex flex-wrap items-center gap-4"
             >
               <a
-                href={`mailto:${club.kontak.email}`}
+                href={`mailto:${site.kontak.email}`}
                 className="group inline-flex items-center gap-2.5 rounded-full bg-white px-8 py-4 text-base font-semibold text-ember transition-transform duration-300 hover:scale-[1.03]"
               >
                 Hubungi kami
@@ -86,7 +95,7 @@ export function Gabung({ id }: { id: string }) {
                 />
               </a>
               <a
-                href={`mailto:${club.kontak.email}?subject=Pendaftaran%20anggota%20HIC`}
+                href={`mailto:${site.kontak.email}?subject=Pendaftaran%20anggota%20HIC`}
                 className="inline-flex items-center gap-2.5 rounded-full border border-white/40 px-8 py-4 text-base font-medium text-white transition-colors duration-300 hover:border-white hover:bg-white/10"
               >
                 <ChatCircleDots size={18} weight="duotone" />
@@ -95,7 +104,7 @@ export function Gabung({ id }: { id: string }) {
             </motion.div>
 
             <div className="mt-14 flex flex-wrap items-center gap-x-10 gap-y-3 border-t border-white/20 pt-8">
-              {club.statistik.map((s) => (
+              {site.statistik.map((s) => (
                 <div key={s.label} className="flex items-baseline gap-2.5">
                   <span className="font-display text-2xl font-semibold text-white">
                     {s.angka}
@@ -115,10 +124,10 @@ export function Gabung({ id }: { id: string }) {
         <div className="glass-panel shadow-none! flex flex-col items-center justify-between gap-6 rounded-[2rem] px-8 py-10 text-center sm:flex-row sm:text-left">
           <div>
             <p className="font-display text-xl font-semibold text-ink sm:text-2xl">
-              “Di sini saya belajar React dari teman sekamar, bukan dari dosen.”
+              “{site.testimoni.teks}”
             </p>
             <p className="mt-2 text-sm uppercase tracking-wider text-ink-faint">
-              Dimas Arya · Alumnus Divisi Web
+              {site.testimoni.nama} · {site.testimoni.peran}
             </p>
           </div>
           <div className="shrink-0">

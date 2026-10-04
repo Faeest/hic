@@ -135,6 +135,8 @@ async function main() {
         testimoni_teks: seedSite.testimoni.teks,
         testimoni_peran: seedSite.testimoni.peran,
         marquee_items: seedSite.marqueeItems,
+        tahun_berdiri: seedSite.tahunBerdiri,
+        periode_kepengurusan: seedSite.periodeKepengurusan,
       },
     ],
     "id"

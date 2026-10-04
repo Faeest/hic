@@ -1,6 +1,6 @@
 import "server-only";
 
-import { createClient } from "@/lib/supabase/server";
+import { publicDb } from "@/lib/supabase/public";
 import type { Post, PostRow } from "@/lib/types";
 import { warnFallback } from "./util";
 
@@ -23,8 +23,7 @@ function toApp(row: PostRow): Post {
 /** Published posts, newest first. */
 export async function getPosts(): Promise<Post[]> {
   try {
-    const supabase = await createClient();
-    const { data, error } = await supabase
+    const { data, error } = await publicDb
       .from("posts")
       .select("*")
       .eq("published", true)
@@ -40,8 +39,7 @@ export async function getPosts(): Promise<Post[]> {
 /** A single published post by slug. */
 export async function getPost(slug: string): Promise<Post | null> {
   try {
-    const supabase = await createClient();
-    const { data, error } = await supabase
+    const { data, error } = await publicDb
       .from("posts")
       .select("*")
       .eq("slug", slug)

@@ -3,39 +3,46 @@
 Branch: `feat/supabase-cms`
 Plan: `C:\Users\faees\.opencode\plan\hic-supabase-cms-plan.md`
 
-## Status: Phase 0–2 COMPLETE & VERIFIED. Migration applied. Ready for Phase 3.
+## Status: Phase 3 COMPLETE & VERIFIED. Ready for Phase 4 (auth + admin).
 
-### ✅ Done
-- **Phase 0** deps: `@supabase/supabase-js`, `@supabase/ssr`, `react-markdown`,
-  `remark-gfm`, `tsx` (dev), `server-only`. Env: `.env.local` + `.env.example`.
-- **Phase 1**:
-  - `supabase/migrations/0001_init.sql` — 10 tables, RLS, `updated_at` triggers,
-    `media` bucket + storage policies. Idempotent.
-  - Migration **APPLIED** via Supabase MCP as `hic_init_schema` (20261004024954).
-  - `scripts/seed.ts` — idempotent, deterministic UUIDv5. Ran twice, no duplicates.
-- **Phase 2**:
-  - `lib/types.ts`, `lib/supabase/{env,client,server,admin}.ts`
-  - `lib/content/{seed,util,site,divisi,pengurus,proker,galeri,faq,posts}.ts`
-  - `data/*.ts` re-export types from `lib/types.ts`.
-- `npx tsc --noEmit` → clean.
-
-### ✅ Verification results
-- 10 tables created, all RLS-enabled. Policy counts correct (3 each, 2 for
-  site_settings/sections). `media` bucket public + storage policies present.
-- Seeded: site_settings 1, sections 7, divisi 3, kurikulum 12, mentor 6,
-  pengurus 7, proker 6, galeri 5, faq 6, posts 0.
-- **Idempotency proven**: re-ran seed, counts unchanged.
-- **RLS proven with anon key**: reads published ✓; INSERT denied (42501) ✓;
-  UPDATE/DELETE affect 0 rows ✓; unpublished rows hidden ✓.
-- **Content layer proven end-to-end** via a temporary Next.js route (19/19
-  checks passed), then removed. Zero fallback warnings, zero errors.
-- Security advisor: my `set_updated_at` warning fixed (search_path + revoke).
-
-### ⏭️ NEXT — Phase 3 (rewire public site to props)
+### ✅ Phase 3 done
 - `app/page.tsx` → async Server Component fetching all content, passing props.
-- Update components: Hero, MarqueeBand, Tentang, DivisiIndex, Pengurus, Proker,
-  Galeri, Faq, Gabung, Navbar, Footer, + divisi components.
-- Fix "est. 2018" → 1996 (Footer.tsx:144, Navbar.tsx:307).
+- `app/divisi/[slug]/page.tsx` → fetches by slug + list for nav.
+- All 17 components rewired to props (Hero, MarqueeBand, Tentang, DivisiIndex,
+  Pengurus, Proker, Galeri, Faq, Gabung, Navbar, Footer, DivisiHero, Kurikulum,
+  MentorSection, DivisiKarya, DivisiNav, DivisiGabung).
+- Sections are now data-driven and hideable (`section.visible`).
+- Bug fixed: "est. 2018" → 1996 (Footer + Navbar).
+- New editable fields: `tahun_berdiri`, `periode_kepengurusan` (migration 0002).
+
+### 🔧 Key architectural fix (found during build)
+Public content readers originally used the cookie-bound SSR client, which
+forced **dynamic rendering** and broke `generateStaticParams` (build warnings,
+routes marked ƒ). Fixed by adding `lib/supabase/public.ts` — a **cookie-less
+anon client** for public reads (RLS still protects writes). Result: `/` is
+**static** and `/divisi/*` are **SSG**.
+
+Trade-off: static pages won't reflect admin edits until revalidated. Solution:
+`lib/actions/revalidate.ts` (`revalidatePublic()`) — call in every admin Server
+Action. **PROVEN** end-to-end: changed a DB value, page stayed stale, called
+`revalidatePath("/")`, page updated.
+
+### ✅ Phase 3 verification
+- `npx tsc --noEmit` → clean. `npx eslint .` → clean.
+- `npm run build` → EXIT 0, **zero `[content]` fallback warnings**, `/` static,
+  `/divisi/*` SSG via generateStaticParams.
+- **Byte-level diff** vs original (git worktree of `a2390d9`): homepage and all
+  3 divisi pages are **textually IDENTICAL** except the intentional
+  `est. 2018` → `est. 1996` fix.
+- Live DB proof: edited tagline in Supabase → stale until revalidate → updated.
+
+### ⏭️ NEXT — Phase 4 (auth + admin shell)
+- `@supabase/ssr` login page + Server Action; `proxy.ts` gate for `/admin/*`.
+- Admin shell/layout. Then Phase 5 (CRUD) + Phase 6 (blog).
+
+### Phase map
+0 ✅ · 1 ✅ · 2 ✅ · 3 ✅ · 4 ⏳ · 5 · 6 · 7 · 8(opt)
+
 
 
 ### ⚠️ Notes

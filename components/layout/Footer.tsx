@@ -3,10 +3,9 @@
 import Link from "next/link";
 import Image from "next/image";
 import { ArrowUpRight } from "@phosphor-icons/react";
-import { club, sosial } from "@/data/club";
-import { divisi } from "@/data/divisi";
+import type { Divisi, Site } from "@/lib/types";
 
-export function Footer() {
+export function Footer({ site, divisi }: { site: Site; divisi: Divisi[] }) {
   return (
     <footer className="relative overflow-hidden border-t border-ink/10 bg-cream dark:bg-[#14120f]">
       {/* Mini CTA band */}
@@ -45,24 +44,24 @@ export function Footer() {
               >
                 <span className="relative h-10 w-10 overflow-hidden rounded-xl">
                   <Image
-                    src="/variant_logo-hic/Logogram ORANGE BLACK.png"
+                    src={site.logoLightUrl}
                     alt="Logo HIC"
                     fill
                     sizes="40px"
                     className="object-contain object-center dark:hidden"
                   />
                   <Image
-                    src="/variant_logo-hic/Logogram ORANGE WHITE.png"
+                    src={site.logoDarkUrl}
                     alt="Logo HIC"
                     fill
                     sizes="40px"
                     className="hidden object-contain object-center dark:block"
                   />
                 </span>
-                {club.namaPanjang}
+                {site.namaPanjang}
               </Link>
               <p className="mt-5 text-base leading-relaxed text-ink-soft">
-                {club.tagline}
+                {site.tagline}
               </p>
             </div>
 
@@ -111,14 +110,14 @@ export function Footer() {
               <ul className="mt-4 space-y-3 text-base text-ink-soft">
                 <li>
                   <a
-                    href={`mailto:${club.kontak.email}`}
+                    href={`mailto:${site.kontak.email}`}
                     className="transition-colors hover:text-ember"
                   >
-                    {club.kontak.email}
+                    {site.kontak.email}
                   </a>
                 </li>
-                <li>{club.kontak.instagram}</li>
-                <li className="leading-relaxed">{club.kontak.lokasi}</li>
+                <li>{site.kontak.instagram}</li>
+                <li className="leading-relaxed">{site.kontak.lokasi}</li>
               </ul>
             </div>
           </div>
@@ -126,10 +125,10 @@ export function Footer() {
           {/* Utility bar */}
           <div className="mt-12 flex flex-col items-center justify-between gap-4 border-t border-ink/10 pt-7 sm:flex-row">
             <p className="text-sm text-ink-faint">
-              © {new Date().getFullYear()} {club.namaPanjang}.
+              © {new Date().getFullYear()} {site.namaPanjang}.
             </p>
             <div className="flex flex-wrap items-center justify-center gap-x-6 gap-y-2">
-              {sosial.map((s) => (
+              {site.sosial.map((s) => (
                 <a
                   key={s.label}
                   href={s.url}
@@ -141,7 +140,7 @@ export function Footer() {
                 </a>
               ))}
             </div>
-            <p className="font-mono text-xs text-ink-faint">est. 2018</p>
+            <p className="font-mono text-xs text-ink-faint">est. {site.tahunBerdiri}</p>
           </div>
         </div>
       </div>

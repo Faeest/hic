@@ -4,7 +4,7 @@ import { motion } from "framer-motion";
 import { UserCircle } from "@phosphor-icons/react";
 import { Reveal } from "@/components/ui/Reveal";
 import { divisiVars } from "@/lib/utils";
-import type { Divisi } from "@/data/divisi";
+import type { Divisi } from "@/lib/types";
 
 export function MentorSection({ d }: { d: Divisi }) {
   return (

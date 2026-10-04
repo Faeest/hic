@@ -4,7 +4,7 @@ import { motion } from "framer-motion";
 import { ArrowLeft, ArrowUpRight } from "@phosphor-icons/react";
 import Link from "next/link";
 import { divisiVars } from "@/lib/utils";
-import type { Divisi } from "@/data/divisi";
+import type { Divisi } from "@/lib/types";
 
 const EASE = [0.16, 1, 0.3, 1] as const;
 
