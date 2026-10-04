@@ -3,51 +3,41 @@
 Branch: `feat/supabase-cms`
 Plan: `C:\Users\faees\.opencode\plan\hic-supabase-cms-plan.md`
 
-## Status: Phase 5 COMPLETE & VERIFIED. Ready for Phase 6 (blog).
+## Status: Phase 6 COMPLETE & VERIFIED. Ready for Phase 7 (deploy).
 
-### ✅ Phase 5 done
-- **Field primitives** (`components/admin/fields/`): TextField, TextArea,
-  SelectField, ToggleField, ColorField, ImageField (upload + URL), RepeaterField
-  (JSON arrays/objects with reorder), SubmitButton (pending state), FieldWrap.
-- **Generic CRUD**: `lib/admin/tables.ts` (allow-list), `lib/admin/resource.ts`
-  (FieldSpec/ResourceConfig), `lib/actions/crud.ts` (create/update/delete/reorder),
-  `components/admin/ResourceManager.tsx` (list + form renderer).
-- **Per-entity configs**: `lib/admin/configs.ts` (sections, divisi, pengurus,
-  proker, galeri, faq, kurikulum, mentor).
-- **Site settings**: `lib/actions/site.ts` + `components/admin/SiteForm.tsx` —
-  identity, logo, hero, tentang, pilar misi, statistik, marquee, kontak, sosial,
-  testimoni.
-- **Admin pages**: site, sections, divisi (+ `divisi/[id]` for kurikulum &
-  mentor), pengurus, proker, galeri, faq, media (uploader w/ copy URL).
-- **Uploads**: `lib/actions/upload.ts` → Supabase Storage `media` bucket.
-- `next.config.ts`: Supabase host added to `images.remotePatterns`.
+### ✅ Phase 6 done
+- `lib/actions/posts.ts` — create/update/delete with slug auto-generation,
+  tag parsing, first-publish `published_at` handling (assertAdmin guarded).
+- `lib/content/admin-posts.ts` — admin reads (incl. drafts).
+- `components/blog/Markdown.tsx` — shared Markdown renderer (react-markdown +
+  remark-gfm) styled with Tailwind, used by admin preview AND public post page.
+- `components/admin/PostEditor.tsx` — title/slug/excerpt/cover/tags/published +
+  Markdown textarea with **live preview** toggle.
+- `components/admin/PostListActions.tsx` — view/edit/delete.
+- Admin pages: `/admin/posts` (list), `/admin/posts/new`, `/admin/posts/[id]`.
+- Public pages: `/blog` (list, static) + `/blog/[slug]` (SSG, per-post
+  `generateMetadata`/OG).
+- Navbar (desktop + mobile) and Footer now link to `/blog`.
 
-### 🔧 Issues found & fixed
-1. **`@phosphor-icons/react` in Server Components** — icons use React context.
-   Fix: import from `@phosphor-icons/react/dist/ssr` in server files, or move
-   icons into client components.
-2. **`"use server"` file exported a non-function** (`CRUD_TABLES` const) →
-   build error "A 'use server' file can only export async functions". Fix: moved
-   constants to `lib/admin/tables.ts`.
-3. **Dynamic table name broke typed client** → used a loosely-typed view of the
-   authenticated client (RLS remains the real guard).
+### ✅ Phase 6 verification
+- `tsc` + `eslint` clean. `npm run build` EXIT 0 (22 routes).
+- `/blog` static; `/blog/[slug]` SSG with the post prerendered via
+  `generateStaticParams`.
+- Public blog list shows the post + tags; post page renders Markdown correctly
+  (`<h2>`, `<strong>`, `<blockquote>`, `<ul>`, `<code>`), and the **visible DOM
+  contains no raw Markdown** (`##` / `**` only exist in the RSC payload).
+- Admin `/admin/posts`, `/admin/posts/new`, `/admin/posts/[id]` all render 200
+  with a session; unauth `/admin/posts` → 307 to login.
+- A real post is live at `/blog/selamat-datang-di-blog-hic`.
 
-### ✅ Phase 5 verification
-- `tsc` + `eslint` clean. `npm run build` EXIT 0, all 18 admin routes present.
-- **All admin pages render 200** with a real session cookie (9 pages + divisi
-  detail with kurikulum/mentor data).
-- **CRUD proven end-to-end** (via a temp route exercising the real action logic):
-  site update persisted (incl. JSON arrays), FAQ create → update → delete all
-  `ok:true`; DB confirmed via SQL; **unauthenticated call rejected**
-  (`"Tidak diizinkan."`).
-- Public site verified unchanged after CRUD testing; test data cleaned up.
-
-### ⏭️ NEXT — Phase 6 (blog)
-- `posts` admin CRUD (Markdown editor + live preview), public `/blog` +
-  `/blog/[slug]` with react-markdown, nav/footer links.
+### ⏭️ NEXT — Phase 7 (deploy)
+- VPS: systemd `EnvironmentFile` for Supabase env; run `npm run seed` once.
+- `deploy.sh` unchanged (git archive) — env must live on the server.
+- Point campus subdomain at the VPS.
 
 ### Phase map
-0 ✅ · 1 ✅ · 2 ✅ · 3 ✅ · 4 ✅ · 5 ✅ · 6 ⏳ · 7 · 8(opt)
+0 ✅ · 1 ✅ · 2 ✅ · 3 ✅ · 4 ✅ · 5 ✅ · 6 ✅ · 7 ⏳ · 8(opt)
+
 
 
 

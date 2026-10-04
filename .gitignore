@@ -44,3 +44,10 @@ next-env.d.ts
 # large reference docs (keep locally, not in the repo)
 docs/*.pdf
 docs/*.docx
+
+# local scratch / build logs
+_*.log
+_*.html
+_*.txt
+_*.out
+_*.cjs

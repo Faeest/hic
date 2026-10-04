@@ -20,6 +20,8 @@ const links = [
   { href: "/#faq", label: "FAQ", id: "faq" },
 ];
 
+const blogLink = { href: "/blog", label: "Blog" };
+
 export function Navbar({ site }: { site: Site; divisi?: Divisi[] }) {
   const [scrolled, setScrolled] = useState(() =>
     typeof window !== "undefined" ? window.scrollY > 24 : false
@@ -200,6 +202,12 @@ export function Navbar({ site }: { site: Site; divisi?: Divisi[] }) {
             })}
             <ThemeToggle className="ml-1" />
             <Link
+              href={blogLink.href}
+              className="rounded-full px-4.5 py-2 text-sm font-medium text-ink-soft transition-colors duration-300 hover:text-ember"
+            >
+              {blogLink.label}
+            </Link>
+            <Link
               href="/#gabung"
               className="ml-1 rounded-full bg-ember px-5 py-2.5 text-sm font-medium text-white shadow-[0_10px_24px_-10px_rgba(212,83,17,0.6)] transition-all duration-300 hover:bg-flare"
             >
@@ -290,6 +298,28 @@ export function Navbar({ site }: { site: Site; divisi?: Divisi[] }) {
                   </motion.div>
                 );
               })}
+              <motion.div
+                initial={{ opacity: 0, y: 24 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{
+                  delay: 0.1 + links.length * 0.06,
+                  duration: 0.6,
+                  ease: [0.16, 1, 0.3, 1],
+                }}
+              >
+                <Link
+                  href={blogLink.href}
+                  onClick={() => setOpen(false)}
+                  className="group flex items-center justify-between border-b border-ink/10 py-4"
+                >
+                  <span className="font-display text-3xl font-semibold tracking-tight text-ink transition-colors group-hover:text-ember">
+                    {blogLink.label}
+                  </span>
+                  <span className="font-mono text-xs text-ink-faint">
+                    {String(links.length + 1).padStart(2, "0")}
+                  </span>
+                </Link>
+              </motion.div>
             </div>
             <motion.div
               initial={{ opacity: 0 }}

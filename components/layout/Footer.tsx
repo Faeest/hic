@@ -92,6 +92,7 @@ export function Footer({ site, divisi }: { site: Site; divisi: Divisi[] }) {
                   { href: "/#proker", label: "Program" },
                   { href: "/#galeri", label: "Galeri" },
                   { href: "/#faq", label: "FAQ" },
+                  { href: "/blog", label: "Blog" },
                 ].map((l) => (
                   <li key={l.label}>
                     <Link
