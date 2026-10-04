@@ -3,45 +3,51 @@
 Branch: `feat/supabase-cms`
 Plan: `C:\Users\faees\.opencode\plan\hic-supabase-cms-plan.md`
 
-## Status: Phase 3 COMPLETE & VERIFIED. Ready for Phase 4 (auth + admin).
+## Status: Phase 4 COMPLETE & VERIFIED. Ready for Phase 5 (admin CRUD).
 
-### ✅ Phase 3 done
-- `app/page.tsx` → async Server Component fetching all content, passing props.
-- `app/divisi/[slug]/page.tsx` → fetches by slug + list for nav.
-- All 17 components rewired to props (Hero, MarqueeBand, Tentang, DivisiIndex,
-  Pengurus, Proker, Galeri, Faq, Gabung, Navbar, Footer, DivisiHero, Kurikulum,
-  MentorSection, DivisiKarya, DivisiNav, DivisiGabung).
-- Sections are now data-driven and hideable (`section.visible`).
-- Bug fixed: "est. 2018" → 1996 (Footer + Navbar).
-- New editable fields: `tahun_berdiri`, `periode_kepengurusan` (migration 0002).
+### ✅ Phase 4 done
+- `lib/auth/dal.ts` — `getAdminSession()`, `requireAdmin()` (redirect),
+  `assertAdmin()` (fail-closed for Server Actions).
+- `lib/actions/auth.ts` — `signIn` (useActionState-compatible), `signOut`.
+- `proxy.ts` — Next 16 Proxy: refreshes Supabase session, optimistic `/admin`
+  gate (redirects with `?next=`), skips login when already authed.
+- `app/admin/login/page.tsx` + `components/admin/LoginForm.tsx` — login UI.
+- `app/admin/(protected)/layout.tsx` — route group so login stays public while
+  everything else requires admin.
+- `components/admin/AdminShell.tsx` — sidebar nav + top bar + sign out.
+- `app/admin/(protected)/page.tsx` + `components/admin/DashboardGrid.tsx` —
+  dashboard with live content counts.
 
-### 🔧 Key architectural fix (found during build)
-Public content readers originally used the cookie-bound SSR client, which
-forced **dynamic rendering** and broke `generateStaticParams` (build warnings,
-routes marked ƒ). Fixed by adding `lib/supabase/public.ts` — a **cookie-less
-anon client** for public reads (RLS still protects writes). Result: `/` is
-**static** and `/divisi/*` are **SSG**.
+### 🔧 Issue found & fixed
+`@phosphor-icons/react` uses React context → **cannot be imported into a Server
+Component** (build error `createContext is not a function`). Fix: dashboard page
+is a Server Component that fetches counts and passes them to the client
+`DashboardGrid`. Pattern applies to all admin pages: **server page = data,
+client component = icons/UI**.
 
-Trade-off: static pages won't reflect admin edits until revalidated. Solution:
-`lib/actions/revalidate.ts` (`revalidatePublic()`) — call in every admin Server
-Action. **PROVEN** end-to-end: changed a DB value, page stayed stale, called
-`revalidatePath("/")`, page updated.
+### ✅ Phase 4 verification
+- `tsc` + `eslint` clean. `npm run build` EXIT 0.
+- Routes: `/` static, `/divisi/*` SSG, `/admin` dynamic, `/admin/login` static,
+  **Proxy (Middleware) registered**.
+- **Auth gate proven**: `/admin` → 307 `→ /admin/login?next=%2Fadmin`;
+  `/admin/login` → 200; `/` → 200.
+- **Login proven**: password grant against Supabase Auth returns a token.
+- **RLS write proven**: authenticated PATCH succeeds (1 row); anon PATCH denied.
+- Admin user created: `hic.stiki@gmail.com` (email confirmed).
 
-### ✅ Phase 3 verification
-- `npx tsc --noEmit` → clean. `npx eslint .` → clean.
-- `npm run build` → EXIT 0, **zero `[content]` fallback warnings**, `/` static,
-  `/divisi/*` SSG via generateStaticParams.
-- **Byte-level diff** vs original (git worktree of `a2390d9`): homepage and all
-  3 divisi pages are **textually IDENTICAL** except the intentional
-  `est. 2018` → `est. 1996` fix.
-- Live DB proof: edited tagline in Supabase → stale until revalidate → updated.
+### ⚠️ Security follow-ups
+- Admin password is currently `12345678` — **change before launch** (weak).
+- Rotate the secret key (shared in plain chat).
 
-### ⏭️ NEXT — Phase 4 (auth + admin shell)
-- `@supabase/ssr` login page + Server Action; `proxy.ts` gate for `/admin/*`.
-- Admin shell/layout. Then Phase 5 (CRUD) + Phase 6 (blog).
+### ⏭️ NEXT — Phase 5 (admin CRUD)
+- Reusable field primitives (TextField, TextArea, ImageField, ColorField,
+  SelectField, ToggleField, RepeaterField, SortableList, SubmitButton).
+- Server Actions per entity + `revalidatePublic()` after each mutation.
+- Pages: site, sections, divisi, pengurus, proker, galeri, faq, media.
 
 ### Phase map
-0 ✅ · 1 ✅ · 2 ✅ · 3 ✅ · 4 ⏳ · 5 · 6 · 7 · 8(opt)
+0 ✅ · 1 ✅ · 2 ✅ · 3 ✅ · 4 ✅ · 5 ⏳ · 6 · 7 · 8(opt)
+
 
 
 
