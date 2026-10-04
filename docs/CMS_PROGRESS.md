@@ -3,50 +3,52 @@
 Branch: `feat/supabase-cms`
 Plan: `C:\Users\faees\.opencode\plan\hic-supabase-cms-plan.md`
 
-## Status: Phase 4 COMPLETE & VERIFIED. Ready for Phase 5 (admin CRUD).
+## Status: Phase 5 COMPLETE & VERIFIED. Ready for Phase 6 (blog).
 
-### ✅ Phase 4 done
-- `lib/auth/dal.ts` — `getAdminSession()`, `requireAdmin()` (redirect),
-  `assertAdmin()` (fail-closed for Server Actions).
-- `lib/actions/auth.ts` — `signIn` (useActionState-compatible), `signOut`.
-- `proxy.ts` — Next 16 Proxy: refreshes Supabase session, optimistic `/admin`
-  gate (redirects with `?next=`), skips login when already authed.
-- `app/admin/login/page.tsx` + `components/admin/LoginForm.tsx` — login UI.
-- `app/admin/(protected)/layout.tsx` — route group so login stays public while
-  everything else requires admin.
-- `components/admin/AdminShell.tsx` — sidebar nav + top bar + sign out.
-- `app/admin/(protected)/page.tsx` + `components/admin/DashboardGrid.tsx` —
-  dashboard with live content counts.
+### ✅ Phase 5 done
+- **Field primitives** (`components/admin/fields/`): TextField, TextArea,
+  SelectField, ToggleField, ColorField, ImageField (upload + URL), RepeaterField
+  (JSON arrays/objects with reorder), SubmitButton (pending state), FieldWrap.
+- **Generic CRUD**: `lib/admin/tables.ts` (allow-list), `lib/admin/resource.ts`
+  (FieldSpec/ResourceConfig), `lib/actions/crud.ts` (create/update/delete/reorder),
+  `components/admin/ResourceManager.tsx` (list + form renderer).
+- **Per-entity configs**: `lib/admin/configs.ts` (sections, divisi, pengurus,
+  proker, galeri, faq, kurikulum, mentor).
+- **Site settings**: `lib/actions/site.ts` + `components/admin/SiteForm.tsx` —
+  identity, logo, hero, tentang, pilar misi, statistik, marquee, kontak, sosial,
+  testimoni.
+- **Admin pages**: site, sections, divisi (+ `divisi/[id]` for kurikulum &
+  mentor), pengurus, proker, galeri, faq, media (uploader w/ copy URL).
+- **Uploads**: `lib/actions/upload.ts` → Supabase Storage `media` bucket.
+- `next.config.ts`: Supabase host added to `images.remotePatterns`.
 
-### 🔧 Issue found & fixed
-`@phosphor-icons/react` uses React context → **cannot be imported into a Server
-Component** (build error `createContext is not a function`). Fix: dashboard page
-is a Server Component that fetches counts and passes them to the client
-`DashboardGrid`. Pattern applies to all admin pages: **server page = data,
-client component = icons/UI**.
+### 🔧 Issues found & fixed
+1. **`@phosphor-icons/react` in Server Components** — icons use React context.
+   Fix: import from `@phosphor-icons/react/dist/ssr` in server files, or move
+   icons into client components.
+2. **`"use server"` file exported a non-function** (`CRUD_TABLES` const) →
+   build error "A 'use server' file can only export async functions". Fix: moved
+   constants to `lib/admin/tables.ts`.
+3. **Dynamic table name broke typed client** → used a loosely-typed view of the
+   authenticated client (RLS remains the real guard).
 
-### ✅ Phase 4 verification
-- `tsc` + `eslint` clean. `npm run build` EXIT 0.
-- Routes: `/` static, `/divisi/*` SSG, `/admin` dynamic, `/admin/login` static,
-  **Proxy (Middleware) registered**.
-- **Auth gate proven**: `/admin` → 307 `→ /admin/login?next=%2Fadmin`;
-  `/admin/login` → 200; `/` → 200.
-- **Login proven**: password grant against Supabase Auth returns a token.
-- **RLS write proven**: authenticated PATCH succeeds (1 row); anon PATCH denied.
-- Admin user created: `hic.stiki@gmail.com` (email confirmed).
+### ✅ Phase 5 verification
+- `tsc` + `eslint` clean. `npm run build` EXIT 0, all 18 admin routes present.
+- **All admin pages render 200** with a real session cookie (9 pages + divisi
+  detail with kurikulum/mentor data).
+- **CRUD proven end-to-end** (via a temp route exercising the real action logic):
+  site update persisted (incl. JSON arrays), FAQ create → update → delete all
+  `ok:true`; DB confirmed via SQL; **unauthenticated call rejected**
+  (`"Tidak diizinkan."`).
+- Public site verified unchanged after CRUD testing; test data cleaned up.
 
-### ⚠️ Security follow-ups
-- Admin password is currently `12345678` — **change before launch** (weak).
-- Rotate the secret key (shared in plain chat).
-
-### ⏭️ NEXT — Phase 5 (admin CRUD)
-- Reusable field primitives (TextField, TextArea, ImageField, ColorField,
-  SelectField, ToggleField, RepeaterField, SortableList, SubmitButton).
-- Server Actions per entity + `revalidatePublic()` after each mutation.
-- Pages: site, sections, divisi, pengurus, proker, galeri, faq, media.
+### ⏭️ NEXT — Phase 6 (blog)
+- `posts` admin CRUD (Markdown editor + live preview), public `/blog` +
+  `/blog/[slug]` with react-markdown, nav/footer links.
 
 ### Phase map
-0 ✅ · 1 ✅ · 2 ✅ · 3 ✅ · 4 ✅ · 5 ⏳ · 6 · 7 · 8(opt)
+0 ✅ · 1 ✅ · 2 ✅ · 3 ✅ · 4 ✅ · 5 ✅ · 6 ⏳ · 7 · 8(opt)
+
 
 
 
