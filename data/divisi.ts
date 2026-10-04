@@ -1,29 +1,8 @@
-export type KurikulumItem = {
-  nomor: string;
-  judul: string;
-  durasi: string;
-  deskripsi: string;
-};
+import type { Divisi, KurikulumItem } from "@/lib/types";
 
-export type Divisi = {
-  slug: string;
-  nama: string;
-  namaPanjang: string;
-  angka: string;
-  tagline: string;
-  deskripsi: string;
-  akronim: string;
-  warna: {
-    utama: string;
-    terang: string;
-    latar: string;
-    latarDark: string;
-    border: string;
-    borderDark: string;
-  };
-  kurikulum: KurikulumItem[];
-  mentor: { nama: string; fokus: string }[];
-};
+// Types now live in lib/types.ts (single source of truth). Re-exported so
+// existing `import type { ... } from "@/data/divisi"` keeps working.
+export type { Divisi, KurikulumItem };
 
 export const divisi: Divisi[] = [
   {

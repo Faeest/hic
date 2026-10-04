@@ -1,12 +1,8 @@
-export type Sosial = {
-  label: string;
-  url: string;
-};
+import type { PilarMisi, Sosial } from "@/lib/types";
 
-export type PilarMisi = {
-  nama: string;
-  deskripsi: string;
-};
+// Types now live in lib/types.ts (single source of truth). Re-exported so
+// existing `import type { ... } from "@/data/club"` keeps working.
+export type { PilarMisi, Sosial };
 
 export const club = {
   nama: "HIC",

@@ -1,7 +1,7 @@
-export type FaqItem = {
-  pertanyaan: string;
-  jawaban: string;
-};
+import type { FaqItem } from "@/lib/types";
+
+// Type now lives in lib/types.ts (single source of truth).
+export type { FaqItem };
 
 export const faq: FaqItem[] = [
   {

@@ -1,12 +1,7 @@
-export type Proker = {
-  judul: string;
-  kategori: string;
-  divisiSlug: string;
-  tahun: string;
-  deskripsi: string;
-  dana: string;
-  warna: string;
-};
+import type { Proker } from "@/lib/types";
+
+// Type now lives in lib/types.ts (single source of truth).
+export type { Proker };
 
 export const proker: Proker[] = [
   {

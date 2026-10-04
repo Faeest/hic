@@ -1,9 +1,7 @@
-export type Foto = {
-  src: string;
-  judul: string;
-  keterangan: string;
-  span?: "wide" | "tall";
-};
+import type { Foto } from "@/lib/types";
+
+// Type now lives in lib/types.ts (single source of truth).
+export type { Foto };
 
 export const galeri: Foto[] = [
   {

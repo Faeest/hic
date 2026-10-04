@@ -1,10 +1,7 @@
-export type Pengurus = {
-  nama: string;
-  jabatan: string;
-  deskripsi: string;
-  inisial: string;
-  gradien: string;
-};
+import type { Pengurus } from "@/lib/types";
+
+// Type now lives in lib/types.ts (single source of truth).
+export type { Pengurus };
 
 export const pembina: Pengurus = {
   nama: "Hilman Nuril Hadi, S.Kom., M.Kom",
