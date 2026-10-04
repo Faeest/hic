@@ -1,0 +1,16 @@
+[Unit]
+Description=HIC Next.js site
+After=network.target
+
+[Service]
+Type=simple
+WorkingDirectory=/home/lerraf/hic
+EnvironmentFile=/home/lerraf/hic.env
+ExecStart=/usr/bin/npm run start -- -p 3100
+Restart=on-failure
+RestartSec=5
+Environment=NODE_ENV=production
+Environment=NEXT_TELEMETRY_DISABLED=1
+
+[Install]
+WantedBy=default.target
