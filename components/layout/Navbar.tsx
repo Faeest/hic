@@ -106,12 +106,14 @@ export function Navbar({ site }: { site: Site; divisi?: Divisi[] }) {
     };
   }, [pathname]);
 
-  const isActive = (id: string) =>
-    pathname !== "/"
-      ? id === "divisi"
-      : active
-        ? active === id
-        : id === "beranda";
+  const isActive = (id: string) => {
+    if (pathname === "/") return active ? active === id : id === "beranda";
+    // Other pages: only highlight the matching section (e.g. Divisi on /divisi/*).
+    if (pathname.startsWith("/divisi")) return id === "divisi";
+    return false;
+  };
+
+  const isBlog = pathname.startsWith("/blog");
 
   const navClass = cn(
     "fixed inset-x-0 top-0 z-50 transition-all duration-500",
@@ -203,9 +205,19 @@ export function Navbar({ site }: { site: Site; divisi?: Divisi[] }) {
             <ThemeToggle className="ml-1" />
             <Link
               href={blogLink.href}
-              className="rounded-full px-4.5 py-2 text-sm font-medium text-ink-soft transition-colors duration-300 hover:text-ember"
+              className={cn(
+                "relative rounded-full px-4.5 py-2 text-sm font-medium transition-colors duration-300",
+                isBlog ? "text-ember" : "text-ink-soft hover:text-ember"
+              )}
             >
-              {blogLink.label}
+              {isBlog && (
+                <motion.span
+                  layoutId="nav-pill"
+                  transition={{ type: "spring", stiffness: 320, damping: 28 }}
+                  className="absolute inset-0 rounded-full bg-ember/10"
+                />
+              )}
+              <span className="relative z-10">{blogLink.label}</span>
             </Link>
             <Link
               href="/#gabung"
@@ -312,7 +324,12 @@ export function Navbar({ site }: { site: Site; divisi?: Divisi[] }) {
                   onClick={() => setOpen(false)}
                   className="group flex items-center justify-between border-b border-ink/10 py-4"
                 >
-                  <span className="font-display text-3xl font-semibold tracking-tight text-ink transition-colors group-hover:text-ember">
+                  <span
+                    className={cn(
+                      "font-display text-3xl font-semibold tracking-tight transition-colors",
+                      isBlog ? "text-ember" : "text-ink group-hover:text-ember"
+                    )}
+                  >
                     {blogLink.label}
                   </span>
                   <span className="font-mono text-xs text-ink-faint">
