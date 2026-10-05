@@ -1,6 +1,6 @@
 "use client";
 
-import Link from "next/link";
+import Link, { useLinkStatus } from "next/link";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
 import {
@@ -16,7 +16,9 @@ import {
   SignOut,
   List,
   X,
+  Spinner,
 } from "@phosphor-icons/react";
+import type { Icon as PhosphorIcon } from "@phosphor-icons/react";
 import { cn } from "@/lib/utils";
 import { signOut } from "@/lib/actions/auth";
 
@@ -33,6 +35,75 @@ const NAV = [
   { href: "/admin/media", label: "Media", icon: FolderOpen },
 ];
 
+/**
+ * Renders the icon/label of a nav entry and reports whether *this* link's
+ * navigation is in flight.
+ *
+ * `useLinkStatus` must be called from a descendant of `<Link>` — the Link
+ * provides the status via context to its children, so calling it in the
+ * component that renders the `<Link>` would always read `pending: false`.
+ * That is why the row is split into `NavItem` (renders the anchor) and
+ * `NavItemContent` (renders the inside).
+ *
+ * Why we need this at all: admin routes are dynamic (`instant = false`) and
+ * read cookies + unpublished data. Between the click and the new route
+ * committing there is otherwise no signal at all, so a tap looks like it did
+ * nothing. `loading.tsx` covers the content area; this covers the item itself.
+ */
+function NavItemContent({
+  label,
+  icon: Icon,
+}: {
+  label: string;
+  icon: PhosphorIcon;
+}) {
+  const { pending } = useLinkStatus();
+  return (
+    <span data-pending={pending} aria-busy={pending} className="contents">
+      {pending ? (
+        <Spinner size={18} weight="bold" className="animate-spin" aria-hidden />
+      ) : (
+        <Icon size={18} weight="duotone" aria-hidden />
+      )}
+      {label}
+    </span>
+  );
+}
+
+function NavItem({
+  href,
+  label,
+  icon,
+  active,
+  onNavigate,
+}: {
+  href: string;
+  label: string;
+  icon: PhosphorIcon;
+  active: boolean;
+  onNavigate: () => void;
+}) {
+  return (
+    <Link
+      href={href}
+      onClick={onNavigate}
+      aria-current={active ? "page" : undefined}
+      className={cn(
+        "flex items-center gap-3 rounded-2xl px-4 py-2.5 text-sm font-medium transition-colors",
+        active
+          ? "bg-ember text-white"
+          : "text-ink-soft hover:bg-ink/5 hover:text-ink dark:hover:bg-white/5",
+        // Highlight the tapped row the moment it is clicked, before the route
+        // commits (the child sets data-pending). Keeps feedback even if the
+        // destination has no instant loading boundary.
+        "has-[[data-pending=true]]:bg-ember has-[[data-pending=true]]:text-white"
+      )}
+    >
+      <NavItemContent label={label} icon={icon} />
+    </Link>
+  );
+}
+
 export function AdminShell({
   email,
   children,
@@ -48,21 +119,15 @@ export function AdminShell({
 
   const nav = (
     <nav className="flex flex-col gap-1">
-      {NAV.map(({ href, label, icon: Icon }) => (
-        <Link
+      {NAV.map(({ href, label, icon }) => (
+        <NavItem
           key={href}
           href={href}
-          onClick={() => setOpen(false)}
-          className={cn(
-            "flex items-center gap-3 rounded-2xl px-4 py-2.5 text-sm font-medium transition-colors",
-            isActive(href)
-              ? "bg-ember text-white"
-              : "text-ink-soft hover:bg-ink/5 hover:text-ink dark:hover:bg-white/5"
-          )}
-        >
-          <Icon size={18} weight="duotone" />
-          {label}
-        </Link>
+          label={label}
+          icon={icon}
+          active={isActive(href)}
+          onNavigate={() => setOpen(false)}
+        />
       ))}
     </nav>
   );
