@@ -4,7 +4,16 @@ import { cacheLife, cacheTag } from "next/cache";
 import { publicDb } from "@/lib/supabase/public";
 import { CONTENT_TAGS } from "@/lib/cache/tags";
 import type { Post, PostRow } from "@/lib/types";
+import { posts as seedPosts } from "@/data/posts";
 import { warnFallback } from "./util";
+
+/**
+ * Seed posts. Never return an empty list: `app/blog/[slug]` uses
+ * `generateStaticParams`, and Cache Components fails the build when it returns
+ * zero params. An unreachable or empty `posts` table must degrade to seed
+ * content instead of breaking `next build`.
+ */
+export const seedPostList: Post[] = seedPosts;
 
 function toApp(row: PostRow): Post {
   return {
@@ -34,10 +43,15 @@ export async function getPosts(): Promise<Post[]> {
       .eq("published", true)
       .order("published_at", { ascending: false });
     if (error) throw error;
-    return ((data as PostRow[]) ?? []).map(toApp);
+    const rows = (data as PostRow[]) ?? [];
+    if (rows.length === 0) {
+      warnFallback("posts", "no published rows");
+      return seedPostList;
+    }
+    return rows.map(toApp);
   } catch (error) {
     warnFallback("posts", error);
-    return [];
+    return seedPostList;
   }
 }
 
@@ -57,7 +71,7 @@ export async function getPost(slug: string): Promise<Post | null> {
     return data ? toApp(data as PostRow) : null;
   } catch (error) {
     warnFallback(`post:${slug}`, error);
-    return null;
+    return seedPostList.find((p) => p.slug === slug) ?? null;
   }
 }
 
