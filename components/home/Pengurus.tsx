@@ -1,31 +1,47 @@
 "use client";
 
+import Image from "next/image";
 import { motion } from "framer-motion";
 import { Reveal } from "@/components/ui/Reveal";
 import { SectionHead } from "@/components/ui/SectionHead";
 import type { PengurusGroups } from "@/lib/content/pengurus";
-import type { Section, Site } from "@/lib/types";
+import type { Pengurus as PengurusItem, Section, Site } from "@/lib/types";
+import { cn } from "@/lib/utils";
 
-function Avatar({ inisial, gradien, size = "lg" }: { inisial: string; gradien: string; size?: "sm" | "lg" }) {
+function Portrait({
+  p,
+  size = "lg",
+}: {
+  p: PengurusItem;
+  size?: "sm" | "lg";
+}) {
   return (
     <div
-      className={size === "lg" ? "relative aspect-square w-full overflow-hidden" : "relative aspect-square w-full overflow-hidden rounded-2xl"}
-      style={{ background: gradien }}
-      aria-hidden
+      className={cn(
+        "relative aspect-square w-full overflow-hidden rounded-sm border border-ink/10 bg-cream dark:bg-white/[0.03]"
+      )}
     >
-      <div className="absolute inset-0 flex items-end p-5">
-        <span
-          className={
-            size === "lg"
-              ? "font-display text-5xl font-bold tracking-tight text-white/90"
-              : "font-display text-3xl font-bold tracking-tight text-white/90"
-          }
-        >
-          {inisial}
-        </span>
-      </div>
-      <div className="absolute inset-x-0 top-0 h-px bg-white/40" />
-      <div className="absolute inset-0 opacity-40 [background-size:18px_18px] [background-image:linear-gradient(rgba(255,255,255,0.14)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.14)_1px,transparent_1px)]" />
+      {p.foto ? (
+        <Image
+          src={p.foto}
+          alt={p.nama}
+          fill
+          sizes={size === "lg" ? "(min-width: 1024px) 33vw, 100vw" : "128px"}
+          className="object-cover"
+        />
+      ) : (
+        /* No photo yet — typographic, not a gradient placeholder */
+        <div className="absolute inset-0 flex items-end p-5">
+          <span
+            className={cn(
+              "font-display font-semibold tracking-tight text-ember",
+              size === "lg" ? "text-5xl" : "text-3xl"
+            )}
+          >
+            {p.inisial}
+          </span>
+        </div>
+      )}
     </div>
   );
 }
@@ -57,18 +73,18 @@ export function Pengurus({
         {/* Dosen Pembina */}
         {pembina && (
           <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: false, margin: "-60px" }}
-            transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
+            viewport={{ once: true, margin: "-60px" }}
+            transition={{ duration: 0.5, ease: "easeOut" }}
             className="mt-16"
           >
-            <div className="glass-panel flex flex-col items-center gap-6 overflow-hidden rounded-[2rem] p-8 sm:flex-row sm:p-10">
+            <div className="surface flex flex-col items-center gap-6 bg-cream p-8 sm:flex-row sm:p-10">
               <div className="w-28 shrink-0 sm:w-32">
-                <Avatar inisial={pembina.inisial} gradien={pembina.gradien} size="sm" />
+                <Portrait p={pembina} size="sm" />
               </div>
               <div className="flex-1 text-center sm:text-left">
-                <span className="rounded-full bg-ember/10 px-3.5 py-1.5 text-xs font-medium text-ember">
+                <span className="rounded-sm border border-ember/25 px-2.5 py-1 text-xs font-medium text-ember">
                   {pembina.jabatan}
                 </span>
                 <h3 className="mt-3 font-display text-2xl font-semibold tracking-tight text-ink sm:text-3xl">
@@ -86,74 +102,63 @@ export function Pengurus({
         )}
 
         {/* Inti pengurus */}
-        <div className="mt-12 grid gap-10 lg:grid-cols-3">
-          {pengurusInti.map((p, i) => {
-            const isLead = i === 0;
-            return (
-              <motion.div
-                key={p.nama}
-                initial={{ opacity: 0, y: 40 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: false, margin: "-80px" }}
-                transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1], delay: i * 0.1 }}
-                className={
-                  isLead
-                    ? "lg:row-span-2 lg:-mt-6"
-                    : "lg:mt-6"
-                }
-              >
-                <div
-                  className={
-                    isLead
-                      ? "glass-panel overflow-hidden rounded-[2rem]"
-                      : "glass-panel overflow-hidden rounded-[2rem]"
-                  }
-                >
-                  <Avatar inisial={p.inisial} gradien={p.gradien} />
-                  <div className="p-7">
-                    <div className="flex items-center justify-between gap-4">
-                      <h3 className="font-display text-2xl font-semibold tracking-tight text-ink sm:text-[1.7rem]">
-                        {p.nama}
-                      </h3>
-                      <span className="shrink-0 whitespace-nowrap rounded-full bg-ember/10 px-3.5 py-1.5 text-xs font-medium text-ember">
-                        {p.jabatan}
-                      </span>
-                    </div>
-                    <p className="mt-3 text-base leading-relaxed text-ink-soft">
-                      {p.deskripsi}
-                    </p>
+        <div className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+          {pengurusInti.map((p, i) => (
+            <motion.div
+              key={p.nama}
+              initial={{ opacity: 0 }}
+              whileInView={{ opacity: 1 }}
+              viewport={{ once: true, margin: "-80px" }}
+              transition={{ duration: 0.5, ease: "easeOut", delay: i * 0.06 }}
+            >
+              <div className="surface overflow-hidden bg-paper">
+                <Portrait p={p} />
+                <div className="p-6">
+                  <div className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-2">
+                    <h3 className="font-display text-xl font-semibold tracking-tight text-ink">
+                      {p.nama}
+                    </h3>
+                    <span className="shrink-0 whitespace-nowrap text-xs text-ember">
+                      {p.jabatan}
+                    </span>
                   </div>
+                  <p className="mt-3 text-sm leading-relaxed text-ink-soft">
+                    {p.deskripsi}
+                  </p>
                 </div>
-              </motion.div>
-            );
-          })}
+              </div>
+            </motion.div>
+          ))}
         </div>
 
         {/* Koordinator divisi */}
         <Reveal className="mt-20">
-          <div className="mb-8 flex items-baseline gap-3">
-            <span className="h-px w-6 self-center bg-ink/15" aria-hidden />
-            <span className="text-sm font-medium text-ink-faint">Penanggung Jawab Divisi</span>
+          <div className="mb-8 flex items-baseline gap-3 border-t border-ink/12 pt-6">
+            <span className="text-sm text-ink-faint">
+              Penanggung jawab divisi
+            </span>
           </div>
         </Reveal>
-        <div className="grid gap-6 sm:grid-cols-3">
+        <div className="grid gap-4 sm:grid-cols-3">
           {koordinatorDivisi.map((k, i) => (
             <motion.div
               key={k.nama}
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: false, margin: "-60px" }}
-              transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1], delay: i * 0.08 }}
-              className="group flex items-center gap-5 rounded-4xl border border-ink/10 bg-cream p-5 transition-colors duration-300 hover:border-ember/40 hover:bg-peach"
+              initial={{ opacity: 0 }}
+              whileInView={{ opacity: 1 }}
+              viewport={{ once: true, margin: "-60px" }}
+              transition={{ duration: 0.5, ease: "easeOut", delay: i * 0.05 }}
+              className="group flex items-center gap-4 border-t border-ink/12 pt-4"
             >
-              <div className="w-20 shrink-0">
-                <Avatar inisial={k.inisial} gradien={k.gradien} size="sm" />
+              <div className="w-16 shrink-0">
+                <Portrait p={k} size="sm" />
               </div>
               <div className="min-w-0">
-                <h4 className="truncate font-display text-lg font-semibold text-ink">
+                <h4 className="truncate font-display text-base font-semibold text-ink">
                   {k.nama}
                 </h4>
-                <p className="text-sm font-medium text-ember">{k.jabatan}</p>
+                <p className="text-xs text-ember">
+                  {k.jabatan}
+                </p>
                 <p className="mt-1 text-xs leading-snug text-ink-soft">
                   {k.deskripsi}
                 </p>

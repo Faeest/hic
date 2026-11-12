@@ -4,17 +4,15 @@ import { useRef } from "react";
 import Image from "next/image";
 import { motion, useScroll, useTransform } from "framer-motion";
 import { SectionHead } from "@/components/ui/SectionHead";
-import { Reveal } from "@/components/ui/Reveal";
 import type { Foto, Section } from "@/lib/types";
 import { cn } from "@/lib/utils";
 
-const spanClasses = [
-  "col-span-2 row-span-2 lg:col-span-2",
-  "",
-  "",
-  "",
-  "",
-];
+const spanClass = (f: Foto) =>
+  f.span === "wide"
+    ? "col-span-2"
+    : f.span === "tall"
+      ? "row-span-2"
+      : "";
 
 function GaleriFigure({
   f,
@@ -28,17 +26,17 @@ function GaleriFigure({
     target: figRef,
     offset: ["start end", "end start"],
   });
-  const imgY = useTransform(scrollYProgress, [0, 1], ["-10%", "10%"]);
+  const imgY = useTransform(scrollYProgress, [0, 1], ["-6%", "6%"]);
   return (
     <motion.figure
       ref={figRef}
-      initial={{ opacity: 0, y: 30 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: false, margin: "-60px" }}
-      transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1], delay: i * 0.06 }}
+      initial={{ opacity: 0 }}
+      whileInView={{ opacity: 1 }}
+      viewport={{ once: true, margin: "-60px" }}
+      transition={{ duration: 0.5, ease: "easeOut", delay: i * 0.04 }}
       className={cn(
-        "group relative h-full w-full overflow-hidden rounded-3xl",
-        spanClasses[i] ?? ""
+        "group relative h-full w-full overflow-hidden rounded-xs bg-cream dark:bg-white/5",
+        spanClass(f)
       )}
     >
       <motion.div aria-hidden style={{ y: imgY }} className="absolute inset-x-0 -top-[12%] h-[124%]">
@@ -47,7 +45,7 @@ function GaleriFigure({
           alt={f.judul}
           fill
           sizes="(min-width: 1024px) 25vw, (min-width: 640px) 33vw, 50vw"
-          className="object-cover transition-transform duration-[1.2s] ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:scale-[1.05]"
+          className="object-cover"
         />
       </motion.div>
       <div className="absolute inset-0 bg-[linear-gradient(180deg,transparent_50%,rgba(0,0,0,0.55)_100%)]" aria-hidden />
@@ -70,7 +68,7 @@ export function Galeri({
 }) {
   if (!section.visible) return null;
   return (
-    <section id={id} className="relative scroll-mt-24 bg-paper py-24 sm:py-32">
+    <section id={id} className="relative scroll-mt-24 bg-paper py-16 sm:py-20">
       <div className="mx-auto max-w-7xl px-5 sm:px-8">
         <SectionHead
           index={section.index}
@@ -78,18 +76,19 @@ export function Galeri({
           title={section.title}
           accent={section.accent}
         />
+      </div>
 
-        <div className="mt-16 grid auto-rows-[10rem] grid-cols-2 gap-4 sm:auto-rows-[13rem] sm:gap-5 lg:auto-rows-[15rem] lg:grid-cols-4">
-          {galeri.map((f, i) => (
-            <GaleriFigure key={f.src} f={f} i={i} />
-          ))}
-        </div>
+      {/* Full-bleed plate — the grid runs to the viewport edge, not a card */}
+      <div className="mt-10 grid w-full auto-rows-[11rem] grid-cols-2 gap-1 sm:auto-rows-[14rem] md:grid-cols-3 lg:auto-rows-[16rem] lg:grid-cols-4">
+        {galeri.map((f, i) => (
+          <GaleriFigure key={f.src} f={f} i={i} />
+        ))}
+      </div>
 
-        <Reveal className="mt-10">
-          <p className="text-center font-mono text-xs uppercase tracking-widest text-ink-faint">
-            {galeri.length} momen · sepanjang periode kepengurusan
-          </p>
-        </Reveal>
+      <div className="mx-auto max-w-7xl px-5 pt-6 sm:px-8">
+        <p className="text-sm text-ink-faint">
+          {galeri.length} foto · DITKOM 2024, DITKOM 2025, dan hari biasa di sekret
+        </p>
       </div>
     </section>
   );

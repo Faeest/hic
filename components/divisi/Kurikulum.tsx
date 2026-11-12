@@ -16,18 +16,16 @@ export function Kurikulum({ d }: { d: Divisi }) {
     >
       <div className="mx-auto max-w-7xl px-5 sm:px-8">
         <Reveal>
-          <div className="flex items-end justify-between gap-6">
+          <div className="flex flex-wrap items-end justify-between gap-4">
             <div>
-              <p className="flex items-baseline gap-3 text-sm">
-                <span className="font-mono text-[var(--div-main)]">{d.angka}</span>
-                <span className="h-px w-6 self-center bg-ink/15" aria-hidden />
-                <span className="font-medium text-ink-soft">Kurikulum</span>
+              <p className="text-sm font-medium text-[var(--div-main)]">
+                Kurikulum
               </p>
               <h2 className="mt-3 font-display text-4xl font-semibold tracking-tight text-ink sm:text-5xl">
                 Jalur belajarnya begini.
               </h2>
             </div>
-            <span className="hidden shrink-0 items-center gap-2 rounded-full border border-ink/10 px-5 py-2.5 text-sm text-ink-soft sm:inline-flex">
+            <span className="hidden shrink-0 items-center gap-2 border border-ink/10 px-4 py-2 text-xs text-ink-soft sm:inline-flex">
               <GraduationCap size={16} weight="duotone" className="text-[var(--div-main)]" />
               {d.kurikulum.length} tahap · {totalPertemuan} pertemuan
             </span>
@@ -38,10 +36,10 @@ export function Kurikulum({ d }: { d: Divisi }) {
           {d.kurikulum.map((k, i) => (
             <motion.div
               key={k.nomor}
-              initial={{ opacity: 0, y: 24 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: false, margin: "-50px" }}
-              transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1], delay: i * 0.05 }}
+              initial={{ opacity: 0 }}
+              whileInView={{ opacity: 1 }}
+              viewport={{ once: true, margin: "-50px" }}
+              transition={{ duration: 0.4, ease: "easeOut", delay: i * 0.04 }}
               className="group grid gap-4 border-t border-ink/10 py-8 transition-colors duration-300 last:border-b md:grid-cols-[140px_1fr_auto] md:items-center md:gap-8"
             >
               <span className="flex items-baseline gap-3">
@@ -61,7 +59,7 @@ export function Kurikulum({ d }: { d: Divisi }) {
                   {k.deskripsi}
                 </p>
               </div>
-              <span className="w-fit self-start rounded-full bg-[var(--div-bg)] px-4 py-1.5 text-sm text-[var(--div-main)] md:justify-self-end md:self-center dark:bg-[var(--div-bg-dark)]">
+              <span className="w-fit self-start border border-ink/10 bg-[var(--div-bg)] px-3 py-1 font-mono text-xs text-[var(--div-main)] md:justify-self-end md:self-center dark:bg-[var(--div-bg-dark)]">
                 {k.durasi}
               </span>
             </motion.div>

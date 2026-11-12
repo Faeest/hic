@@ -1,0 +1,6 @@
+{
+    "debug.javascript.defaultRuntimeExecutable": {
+        "pwa-node": "c:\\users\\faees\\appdata\\local\\mise\\shims\\node"
+    },
+    "python.defaultInterpreterPath": "C:\\Users\\faees\\AppData\\Local\\mise\\installs\\python\\3.11.16\\python.exe"
+}

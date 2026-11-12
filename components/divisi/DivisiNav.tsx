@@ -16,14 +16,13 @@ export function DivisiNav({ current, all }: { current: Divisi; all: Divisi[] }) 
     <section className="relative overflow-hidden bg-cream" style={divisiVars(nextD)}>
       <div className="mx-auto max-w-7xl px-5 py-16 sm:px-8 sm:py-20">
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: false, margin: "-60px" }}
-          transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
+          viewport={{ once: true, margin: "-60px" }}
+          transition={{ duration: 0.4, ease: "easeOut" }}
         >
-          <p className="flex items-baseline gap-3 text-sm">
-            <span className="h-px w-6 self-center bg-ink/15" aria-hidden />
-            <span className="font-medium text-ink-faint">Jelajahi divisi berikutnya</span>
+          <p className="text-sm text-ink-faint">
+            Berikutnya
           </p>
           <Link
             href={`/divisi/${nextD.slug}`}
@@ -39,7 +38,7 @@ export function DivisiNav({ current, all }: { current: Divisi; all: Divisi[] }) 
                 {nextD.nama}
               </span>
             </div>
-            <span className="inline-flex w-fit items-center gap-2.5 rounded-full bg-[var(--div-main)] px-6 py-3.5 text-sm font-medium text-white transition-transform duration-300 group-hover:scale-[1.03]">
+            <span className="inline-flex w-fit items-center gap-2.5 rounded-sm bg-[var(--div-main)] px-6 py-3.5 text-sm font-medium text-white transition-opacity duration-300 group-hover:opacity-90">
               Buka divisi
               <ArrowUpRight size={16} weight="bold" className="transition-transform duration-300 group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
             </span>

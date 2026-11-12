@@ -62,19 +62,19 @@ export function Markdown({
             </blockquote>
           ),
           code: ({ children }) => (
-            <code className="rounded-md bg-ink/5 px-1.5 py-0.5 font-mono text-sm text-ink dark:bg-white/10">
+            <code className="rounded-xs bg-ink/5 px-1.5 py-0.5 font-mono text-sm text-ink dark:bg-white/10">
               {children}
             </code>
           ),
           pre: ({ children }) => (
-            <pre className="overflow-x-auto rounded-2xl bg-ink/90 p-5 font-mono text-sm text-white dark:bg-black/50">
+            <pre className="overflow-x-auto rounded-sm bg-ink/90 p-5 font-mono text-sm text-white dark:bg-black/50">
               {children}
             </pre>
           ),
           hr: () => <hr className="border-ink/10 dark:border-white/10" />,
           img: ({ src, alt }) => (
             // eslint-disable-next-line @next/next/no-img-element
-            <img src={typeof src === "string" ? src : ""} alt={alt ?? ""} className="rounded-2xl" />
+            <img src={typeof src === "string" ? src : ""} alt={alt ?? ""} className="rounded-xs" />
           ),
           table: ({ children }) => (
             <div className="overflow-x-auto">

@@ -1,6 +1,5 @@
 "use client";
 
-import { Target, FlagCheckered } from "@phosphor-icons/react";
 import { Reveal } from "@/components/ui/Reveal";
 import { SectionHead } from "@/components/ui/SectionHead";
 import type { Section, Site } from "@/lib/types";
@@ -18,69 +17,50 @@ export function Tentang({ id, site, section }: { id: string; site: Site; section
               title={section.title}
               accent={section.accent}
             />
-            <Reveal delay={0.2} className="mt-8">
-              <ul className="flex flex-wrap gap-2.5">
-                {site.tentangTags.map((tag) => (
-                  <li
-                    key={tag}
-                    className="rounded-full border border-ember/20 bg-peach px-4 py-2 text-sm font-medium text-ember"
-                  >
-                    {tag}
-                  </li>
-                ))}
-              </ul>
+            <Reveal delay={0.1} className="mt-8">
+              <p className="text-sm leading-relaxed text-ink-soft">
+                {site.tentangTags.join(" · ")}
+              </p>
             </Reveal>
           </div>
 
-          <div className="flex flex-col gap-8">
+          <div className="flex flex-col gap-10">
             <Reveal>
-              <p className="text-lg leading-relaxed text-ink-soft sm:text-xl">
+              <p className="max-w-[62ch] text-lg leading-relaxed text-ink-soft sm:text-xl">
                 {site.tentangIntro}
               </p>
             </Reveal>
 
-            {/* Visi */}
-            <Reveal delay={0.1}>
-              <div className="glass-panel relative overflow-hidden rounded-[2rem] p-8 sm:p-10">
-                <div className="relative flex gap-5">
-                  <span className="grid h-12 w-12 shrink-0 place-items-center rounded-2xl bg-ember text-white">
-                    <Target size={22} weight="duotone" />
-                  </span>
-                  <div>
-                    <h3 className="font-display text-xl font-semibold text-ink">
-                      Visi
-                    </h3>
-                    <p className="mt-3 text-base leading-relaxed text-ink-soft sm:text-lg">
-                      {site.visi[0]}
-                    </p>
-                  </div>
-                </div>
+            {/* Visi — a statement with a rule, not a card */}
+            <Reveal delay={0.06}>
+              <div className="border-t border-ink/12 pt-6">
+                <h3 className="text-sm font-medium text-ember">
+                  Visi
+                </h3>
+                <p className="mt-3 max-w-[60ch] text-base leading-relaxed text-ink-soft sm:text-lg">
+                  {site.visi[0]}
+                </p>
               </div>
             </Reveal>
 
-            {/* Pilar Misi */}
-            <Reveal delay={0.18}>
-              <div className="flex flex-col gap-3">
-                <div className="flex items-center gap-3">
-                  <span className="grid h-11 w-11 shrink-0 place-items-center rounded-2xl bg-peach text-ember">
-                    <FlagCheckered size={22} weight="duotone" />
-                  </span>
-                  <div>
-                    <h3 className="font-display text-xl font-semibold text-ink">
-                      {site.pilarMisi.length} Pilar Misi
-                    </h3>
-                    <p className="text-sm text-ink-soft">
-                      Arah kerja kepengurusan periode {site.periodeKepengurusan}
-                    </p>
-                  </div>
+            {/* Pilar Misi — ruled list, numbers in the margin */}
+            <Reveal delay={0.1}>
+              <div>
+                <div className="flex flex-wrap items-baseline justify-between gap-2 border-t border-ink/12 pt-6">
+                  <h3 className="text-sm font-medium text-ember">
+                    {site.pilarMisi.length} pilar misi
+                  </h3>
+                  <p className="text-sm text-ink-soft">
+                    Periode {site.periodeKepengurusan}
+                  </p>
                 </div>
-                <div className="mt-2 grid gap-2.5 sm:grid-cols-2">
+                <div className="mt-4 grid gap-x-8 gap-y-0 sm:grid-cols-2">
                   {site.pilarMisi.map((p, i) => (
                     <div
                       key={p.nama}
-                      className="flex items-start gap-3 rounded-2xl border border-ink/10 bg-cream p-4 transition-colors duration-300 hover:border-ember/40 dark:border-white/10 dark:bg-white/[0.03]"
+                      className="flex items-baseline gap-3 border-b border-ink/10 py-3"
                     >
-                      <span className="font-mono text-sm text-ember">
+                      <span className="font-mono text-xs text-ink-faint">
                         {String(i + 1).padStart(2, "0")}
                       </span>
                       <div className="min-w-0">
@@ -97,7 +77,7 @@ export function Tentang({ id, site, section }: { id: string; site: Site; section
               </div>
             </Reveal>
 
-            <Reveal delay={0.25}>
+            <Reveal delay={0.14}>
               <p className="font-mono text-sm text-ink-faint">
                 est. {site.tahunBerdiri} ·{" "}
                 <span className="text-ember">{site.namaLengkap}</span>

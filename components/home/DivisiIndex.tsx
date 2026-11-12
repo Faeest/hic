@@ -22,10 +22,10 @@ function DivisiRow({
   return (
     <motion.div
       layout
-      initial={{ opacity: 0, y: 24 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: false, margin: "-60px" }}
-      transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1], delay: index * 0.06 }}
+      initial={{ opacity: 0 }}
+      whileInView={{ opacity: 1 }}
+      viewport={{ once: true, margin: "-60px" }}
+      transition={{ duration: 0.5, ease: "easeOut", delay: index * 0.05 }}
       className="group border-t border-ink/10 last:border-b"
       style={divisiVars(d)}
     >
@@ -38,10 +38,8 @@ function DivisiRow({
         <span className="font-mono text-xs text-ink-faint sm:text-sm">
           {d.angka}
         </span>
-        <span
-          className="relative grid h-12 w-12 shrink-0 place-items-center rounded-2xl bg-[var(--div-bg)] text-[var(--div-main)] sm:h-14 sm:w-14 dark:bg-[var(--div-bg-dark)]"
-        >
-          <span className="relative z-10 font-display text-lg font-bold sm:text-xl">
+        <span className="grid h-11 w-11 shrink-0 place-items-center rounded-sm bg-[var(--div-bg)] text-[var(--div-main)] sm:h-12 sm:w-12 dark:bg-[var(--div-bg-dark)]">
+          <span className="relative z-10 font-display text-base font-bold sm:text-lg">
             {d.akronim}
           </span>
         </span>
@@ -50,11 +48,14 @@ function DivisiRow({
             {d.nama}
           </span>
         </span>
-        <span className="hidden md:block md:max-w-[24ch] text-sm leading-relaxed text-ink-soft">
+        <span className="hidden max-w-[24ch] text-sm leading-relaxed text-ink-soft md:block">
           {d.tagline}
         </span>
-        <span className="grid h-11 w-11 shrink-0 place-items-center rounded-full border border-ink/15 text-ink transition-all duration-300 group-hover:border-ember group-hover:bg-ember group-hover:text-white">
-          <motion.span animate={{ rotate: active ? 45 : 0 }} transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}>
+        <span className="grid h-10 w-10 shrink-0 place-items-center rounded-sm border border-ink/15 text-ink transition-colors duration-300 group-hover:border-ember group-hover:bg-ember group-hover:text-white">
+          <motion.span
+            animate={{ rotate: active ? 45 : 0 }}
+            transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
+          >
             <ArrowUpRight size={18} weight="bold" />
           </motion.span>
         </span>
@@ -75,12 +76,12 @@ function DivisiRow({
                   {d.deskripsi}
                 </p>
                 <div className="flex shrink-0 flex-col gap-3">
-                  <p className="font-mono text-[11px] uppercase tracking-[0.2em] text-ink-faint">
+                  <p className="text-xs text-ink-faint">
                     Kurikulum · {d.kurikulum.length} tahap
                   </p>
                   <Link
                     href={`/divisi/${d.slug}`}
-                    className="inline-flex items-center justify-center gap-2 rounded-full px-6 py-3 text-sm font-medium text-white transition-colors duration-300 bg-[var(--div-main)]"
+                    className="inline-flex items-center justify-center gap-2 rounded-sm px-6 py-3 text-sm font-medium text-white transition-colors duration-300 bg-[var(--div-main)]"
                   >
                     Buka divisi
                     <ArrowUpRight size={16} weight="bold" />
@@ -88,13 +89,13 @@ function DivisiRow({
                 </div>
               </div>
 
-              <div className="mt-8 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+              <div className="mt-8 grid gap-px border border-ink/10 bg-ink/10 sm:grid-cols-2 lg:grid-cols-4">
                 {d.kurikulum.map((k) => (
                   <div
                     key={k.nomor}
-                    className="rounded-2xl border bg-[var(--div-bg)] p-5 transition-colors duration-300 border-[var(--div-border)] dark:bg-[var(--div-bg-dark)] dark:border-[var(--div-border-dark)]"
+                    className="bg-paper p-5 dark:bg-[var(--div-bg-dark)]"
                   >
-                    <span className="font-mono text-[11px] text-[var(--div-main)]">
+                    <span className="font-mono text-xs text-[var(--div-main)]">
                       Tahap {k.nomor}
                     </span>
                     <h4 className="mt-1.5 font-display text-base font-semibold text-ink">
@@ -125,7 +126,7 @@ export function DivisiIndex({
   if (!section.visible) return null;
 
   return (
-    <section id={id} className="relative scroll-mt-24 overflow-hidden bg-cream py-24 sm:py-32">
+    <section id={id} className="relative scroll-mt-24 overflow-hidden bg-cream py-14 sm:py-16">
       <div
         aria-hidden
         className="dot-grid pointer-events-none absolute inset-x-0 top-0 h-40 opacity-40"
@@ -144,7 +145,7 @@ export function DivisiIndex({
           />
         </div>
 
-        <div className="mt-14 sm:mt-20">
+        <div className="mt-12 sm:mt-14">
           {divisi.map((d, i) => (
             <DivisiRow
               key={d.slug}

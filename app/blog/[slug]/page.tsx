@@ -65,7 +65,7 @@ export default async function BlogPostPage({
     <>
       <Navbar site={site} divisi={divisi} />
       <main className="bg-paper">
-        <article className="mx-auto max-w-3xl px-5 py-24 sm:px-8 sm:py-32">
+        <article className="mx-auto max-w-[68ch] px-5 py-14 sm:px-8 sm:py-16">
           <Link
             href="/blog"
             className="inline-flex items-center gap-2 text-sm font-medium text-ink-soft transition-colors hover:text-ember"
@@ -78,7 +78,7 @@ export default async function BlogPostPage({
             {post.tags.map((t) => (
               <span
                 key={t}
-                className="rounded-full bg-peach px-3 py-1 text-xs font-medium text-ember"
+                className="border border-ember/25 px-2.5 py-0.5 text-xs text-ember"
               >
                 {t}
               </span>
@@ -100,7 +100,7 @@ export default async function BlogPostPage({
           )}
 
           {post.coverUrl && (
-            <div className="relative mt-10 aspect-[16/9] overflow-hidden rounded-[2rem] bg-cream dark:bg-white/5">
+            <div className="relative mt-10 aspect-[16/9] overflow-hidden rounded-xs bg-cream dark:bg-white/5">
               <Image
                 src={post.coverUrl}
                 alt={post.title}

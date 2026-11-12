@@ -37,10 +37,10 @@ export default async function BlogPage() {
     <>
       <Navbar site={site} divisi={divisi} />
       <main className="bg-paper">
-        <section className="relative scroll-mt-24 bg-paper py-24 sm:py-32">
+        <section className="relative scroll-mt-24 bg-paper py-14 sm:py-16">
           <div className="mx-auto max-w-7xl px-5 sm:px-8">
             <p className="flex items-baseline gap-3 text-sm">
-              <span className="font-mono text-ember">Blog</span>
+              <span className="font-medium text-ember">Blog</span>
               <span className="h-px w-6 self-center bg-ember/40" aria-hidden />
               <span className="font-medium text-ink-soft">Catatan HIC</span>
             </p>
@@ -49,7 +49,7 @@ export default async function BlogPage() {
             </h1>
 
             {posts.length === 0 ? (
-              <p className="mt-16 rounded-3xl border border-dashed border-ink/15 px-6 py-16 text-center text-ink-faint dark:border-white/15">
+              <p className="mt-16 border border-dashed border-ink/15 px-6 py-16 text-center text-ink-faint dark:border-white/15">
                 Belum ada artikel yang diterbitkan.
               </p>
             ) : (
@@ -58,7 +58,7 @@ export default async function BlogPage() {
                   <Link
                     key={p.id}
                     href={`/blog/${p.slug}`}
-                    className="glass-panel group flex flex-col overflow-hidden rounded-[2rem] transition-transform duration-300 hover:-translate-y-1"
+                    className="surface group flex flex-col overflow-hidden bg-paper transition-colors duration-300 hover:border-ember/40"
                   >
                     {p.coverUrl && (
                       <div className="relative aspect-[16/10] overflow-hidden bg-cream dark:bg-white/5">
@@ -67,7 +67,7 @@ export default async function BlogPage() {
                           alt={p.title}
                           fill
                           sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
-                          className="object-cover transition-transform duration-500 group-hover:scale-105"
+                          className="object-cover"
                           unoptimized={!p.coverUrl.startsWith("/")}
                         />
                       </div>
@@ -78,7 +78,7 @@ export default async function BlogPage() {
                           {p.tags.slice(0, 3).map((t) => (
                             <span
                               key={t}
-                              className="rounded-full bg-peach px-3 py-1 text-xs font-medium text-ember"
+                              className="border border-ember/25 px-2.5 py-0.5 text-xs text-ember"
                             >
                               {t}
                             </span>

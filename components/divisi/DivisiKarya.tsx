@@ -15,10 +15,8 @@ export function DivisiProker({ d, items }: { d: Divisi; items: Proker[] }) {
         <Reveal>
           <div className="flex items-end justify-between gap-6">
             <div>
-              <p className="flex items-baseline gap-3 text-sm">
-                <span className="font-mono text-[var(--div-main)]">{d.angka}</span>
-                <span className="h-px w-6 self-center bg-ink/15" aria-hidden />
-                <span className="font-medium text-ink-soft">Program kerja divisi</span>
+              <p className="text-sm font-medium text-[var(--div-main)]">
+                Program kerja divisi
               </p>
               <h2 className="mt-3 font-display text-4xl font-semibold tracking-tight text-ink sm:text-5xl">
                 Agenda yang menyentuh {d.nama}.
@@ -31,11 +29,11 @@ export function DivisiProker({ d, items }: { d: Divisi; items: Proker[] }) {
           {items.map((p, i) => (
             <motion.article
               key={p.judul}
-              initial={{ opacity: 0, y: 24 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: false, margin: "-50px" }}
-              transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1], delay: i * 0.06 }}
-              className="group relative block overflow-hidden rounded-3xl"
+              initial={{ opacity: 0 }}
+              whileInView={{ opacity: 1 }}
+              viewport={{ once: true, margin: "-50px" }}
+              transition={{ duration: 0.4, ease: "easeOut", delay: i * 0.04 }}
+              className="group relative block overflow-hidden rounded-sm border border-ink/10"
             >
               <div
                 className="relative flex aspect-[4/3] flex-col justify-end overflow-hidden p-6 sm:p-7"
@@ -52,10 +50,10 @@ export function DivisiProker({ d, items }: { d: Divisi; items: Proker[] }) {
                 />
                 <div className="relative z-10">
                   <div className="flex items-center justify-between gap-3">
-                    <span className="font-mono text-[11px] uppercase tracking-widest text-white/80">
+                    <span className="text-xs text-white/85">
                       {p.kategori} · {p.tahun}
                     </span>
-                    <span className="grid h-9 w-9 place-items-center rounded-full bg-white/20 text-white backdrop-blur-sm transition-all duration-300 group-hover:rotate-45">
+                    <span className="grid h-9 w-9 place-items-center rounded-full bg-black/20 text-white transition-transform duration-300 group-hover:-translate-y-0.5 group-hover:translate-x-0.5">
                       <ArrowUpRight size={16} weight="bold" />
                     </span>
                   </div>
@@ -65,7 +63,7 @@ export function DivisiProker({ d, items }: { d: Divisi; items: Proker[] }) {
                   <p className="mt-2 text-sm leading-snug text-white/85">
                     {p.deskripsi}
                   </p>
-                  <p className="mt-4 flex items-center gap-1.5 font-mono text-[11px] uppercase tracking-widest text-white/70">
+                  <p className="mt-4 flex items-center gap-1.5 text-xs text-white/70">
                     <Wallet size={13} weight="duotone" />
                     {p.dana}
                   </p>

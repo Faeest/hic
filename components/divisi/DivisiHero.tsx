@@ -17,7 +17,7 @@ export function DivisiHero({ d }: { d: Divisi }) {
       <div className="absolute inset-0 bg-[var(--div-bg)] dark:bg-[var(--div-bg-dark)]" aria-hidden />
       <div
         aria-hidden
-        className="absolute inset-0 opacity-40 [background-size:24px_24px] [background-image:linear-gradient(rgba(212,83,17,0.08)_1px,transparent_1px),linear-gradient(90deg,rgba(212,83,17,0.08)_1px,transparent_1px)]"
+        className="line-grid absolute inset-0 opacity-40"
       />
       <div
         aria-hidden
@@ -37,7 +37,7 @@ export function DivisiHero({ d }: { d: Divisi }) {
         >
           <Link
             href="/#divisi"
-            className="group inline-flex items-center gap-2.5 font-mono text-xs uppercase tracking-widest text-ink-soft transition-colors hover:text-ember"
+            className="group inline-flex items-center gap-2.5 text-sm text-ink-soft transition-colors hover:text-ember"
           >
             <ArrowLeft
               size={16}
@@ -104,7 +104,7 @@ export function DivisiHero({ d }: { d: Divisi }) {
           </p>
           <a
             href="#kurikulum"
-            className="group inline-flex shrink-0 items-center gap-2.5 self-start rounded-full bg-[var(--div-main)] px-7 py-4 text-base font-medium text-white transition-transform duration-300 hover:scale-[1.03] lg:self-auto"
+            className="group inline-flex shrink-0 items-center gap-2.5 self-start rounded-sm bg-[var(--div-main)] px-7 py-4 text-base font-medium text-white transition-opacity duration-300 hover:opacity-90 lg:self-auto"
           >
             Lihat kurikulum
             <ArrowUpRight

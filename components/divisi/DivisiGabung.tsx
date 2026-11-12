@@ -11,11 +11,11 @@ export function DivisiGabung({ d }: { d: Divisi }) {
     <section className="relative bg-paper py-24 sm:py-28" style={divisiVars(d)}>
       <div className="mx-auto max-w-7xl px-5 sm:px-8">
         <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: false, margin: "-80px" }}
-          transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-          className="relative overflow-hidden rounded-[2.5rem] bg-[var(--div-main)] px-6 py-16 sm:px-12 sm:py-20 lg:px-16"
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
+          viewport={{ once: true, margin: "-80px" }}
+          transition={{ duration: 0.5, ease: "easeOut" }}
+          className="relative overflow-hidden rounded-md bg-[var(--div-main)] px-6 py-16 sm:px-12 sm:py-20 lg:px-16"
         >
           <div
             aria-hidden
@@ -40,7 +40,7 @@ export function DivisiGabung({ d }: { d: Divisi }) {
             <div className="flex shrink-0 flex-wrap gap-3.5">
               <Link
                 href="/#gabung"
-                className="group inline-flex items-center gap-2.5 rounded-full bg-white px-8 py-4 text-base font-semibold text-ember transition-transform duration-300 hover:scale-[1.03]"
+                className="group inline-flex items-center gap-2.5 rounded-sm bg-white px-8 py-4 text-base font-semibold text-ember transition-colors duration-300 hover:bg-peach"
               >
                 Hubungi HIC
                 <ArrowUpRight
@@ -51,7 +51,7 @@ export function DivisiGabung({ d }: { d: Divisi }) {
               </Link>
               <Link
                 href="/#divisi"
-                className="inline-flex items-center gap-2.5 rounded-full border border-white/40 px-8 py-4 text-base font-medium text-white transition-colors duration-300 hover:border-white hover:bg-white/10"
+                className="inline-flex items-center gap-2.5 rounded-sm border border-white/50 px-8 py-4 text-base font-medium text-white transition-colors duration-300 hover:border-white hover:bg-white/10"
               >
                 Semua divisi
               </Link>

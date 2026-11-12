@@ -55,5 +55,5 @@ export const seedSections: Section[] = [
   { key: "proker", index: "IV", label: "Program Kerja", title: "Agenda nyata, bukan sekadar rencana.", accent: "bukan sekadar rencana", visible: true },
   { key: "galeri", index: "V", label: "Galeri Kegiatan", title: "Momen-momen di sekret & ruang kelas.", accent: "sekret & ruang kelas", visible: true },
   { key: "faq", index: "VI", label: "FAQ", title: "Sering ditanya, jawabannya di sini.", accent: "jawabannya di sini", visible: true },
-  { key: "gabung", index: "VI", label: "Tertarik gabung?", title: "Mulai dari langkah kecil yang penasaran.", accent: "langkah kecil", visible: true },
+  { key: "gabung", index: "VII", label: "Tertarik gabung?", title: "Mulai dari langkah kecil yang penasaran.", accent: "langkah kecil", visible: true },
 ];

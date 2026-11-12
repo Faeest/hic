@@ -3,7 +3,6 @@
 import { useRef } from "react";
 import { motion, useScroll, useTransform, type MotionValue } from "framer-motion";
 import { ArrowDownRight, ArrowUpRight } from "@phosphor-icons/react";
-import { HeroCanvas } from "./HeroCanvas";
 import type { Site } from "@/lib/types";
 
 const EASE = [0.16, 1, 0.3, 1] as const;
@@ -54,11 +53,7 @@ export function Hero({ id, site }: { id: string; site: Site }) {
       className="relative flex min-h-[100dvh] flex-col overflow-hidden"
     >
       <div className="mesh-orange absolute inset-0" aria-hidden />
-      <div
-        aria-hidden
-        className="dot-grid pointer-events-none absolute inset-0 opacity-60"
-      />
-      <HeroCanvas />
+      <div aria-hidden className="hero-rules pointer-events-none absolute inset-0" />
 
       <motion.div
         style={{ opacity: contentOpacity }}
@@ -92,7 +87,7 @@ export function Hero({ id, site }: { id: string; site: Site }) {
           >
           <a
             href="#divisi"
-            className="group inline-flex items-center gap-2.5 rounded-full bg-ember px-7 py-4 text-base font-medium text-white shadow-[0_16px_40px_-16px_rgba(212,83,17,0.7)] transition-all duration-300 hover:bg-flare"
+            className="group inline-flex items-center gap-2.5 rounded-sm bg-ember px-7 py-4 text-base font-medium text-white transition-colors duration-300 hover:bg-flare"
           >
             Jelajahi Divisi
             <ArrowDownRight
@@ -103,7 +98,7 @@ export function Hero({ id, site }: { id: string; site: Site }) {
           </a>
           <a
             href="#tentang"
-            className="group inline-flex items-center gap-2.5 rounded-full glass-panel shadow-ember px-7 py-4 text-base font-medium text-ink transition-all duration-300 hover:text-ember"
+            className="group inline-flex items-center gap-2.5 rounded-sm border border-ink/15 px-7 py-4 text-base font-medium text-ink transition-colors duration-300 hover:border-ember hover:text-ember"
           >
             Tentang HIC
             <ArrowUpRight
@@ -121,17 +116,17 @@ export function Hero({ id, site }: { id: string; site: Site }) {
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.9, delay: 1.2, ease: EASE }}
-            className="my-16 grid grid-cols-2 gap-px overflow-hidden rounded-full glass-panel shadow-none! sm:grid-cols-4"
+            className="my-16 grid grid-cols-2 gap-px overflow-hidden border-y border-ink/10 bg-ink/10 sm:grid-cols-4"
           >
           {site.statistik.map((s) => (
             <div
               key={s.label}
-              className="flex flex-col gap-1.5 px-6 py-6 sm:px-8"
+              className="flex flex-col gap-1.5 bg-paper px-6 py-6 sm:px-8"
             >
               <span className="font-display text-3xl font-semibold text-ember sm:text-4xl">
                 {s.angka}
               </span>
-              <span className="font-mono text-[11px] uppercase tracking-[0.18em] text-ink-soft">
+              <span className="text-sm text-ink-soft">
                 {s.label}
               </span>
             </div>

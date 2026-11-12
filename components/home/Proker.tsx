@@ -41,15 +41,15 @@ export function Proker({
           accent={section.accent}
         />
 
-        <div className="mt-16 grid gap-5 lg:grid-cols-3">
+        <div className="mt-16 grid gap-4 lg:grid-cols-3">
           {/* Featured large card */}
           <motion.a
             href={`/divisi/${featured.divisiSlug}`}
-            initial={{ opacity: 0, y: 40 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: false, margin: "-60px" }}
-            transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-            className="group relative block overflow-hidden rounded-[2rem] lg:col-span-2 lg:row-span-2"
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
+            viewport={{ once: true, margin: "-60px" }}
+            transition={{ duration: 0.5, ease: "easeOut" }}
+            className="group relative block overflow-hidden rounded-sm lg:col-span-2 lg:row-span-2"
           >
             <div
               className="relative flex aspect-[4/3] flex-col justify-end overflow-hidden p-8 sm:aspect-[16/10] sm:p-10 lg:aspect-auto lg:h-full"
@@ -62,21 +62,21 @@ export function Proker({
               />
               <div className="relative z-10 flex items-start justify-between gap-4">
                 <div className="flex flex-col gap-2">
-                  <span className="w-fit rounded-full bg-white/20 px-3.5 py-1.5 font-mono text-[11px] uppercase tracking-widest text-white backdrop-blur-sm">
+                  <span className="w-fit bg-black/20 px-2.5 py-1 text-xs text-white">
                     {featured.kategori} · {featured.tahun}
                   </span>
                   <h3 className="max-w-md font-display text-3xl font-bold tracking-tight text-white sm:text-4xl lg:text-5xl">
                     {featured.judul}
                   </h3>
                 </div>
-                <span className="grid h-12 w-12 shrink-0 place-items-center rounded-full bg-white text-[#1c1512] transition-transform duration-300 group-hover:rotate-45">
+                <span className="grid h-11 w-11 shrink-0 place-items-center rounded-full bg-white text-[#1c1512] transition-transform duration-300 group-hover:-translate-y-0.5 group-hover:translate-x-0.5">
                   <ArrowUpRight size={20} weight="bold" />
                 </span>
               </div>
               <p className="relative z-10 mt-4 max-w-lg text-base leading-relaxed text-white/90">
                 {featured.deskripsi}
               </p>
-              <p className="relative z-10 mt-4 font-mono text-[11px] uppercase tracking-widest text-white/70">
+              <p className="relative z-10 mt-4 text-xs text-white/70">
                 Perkiraan dana: {featured.dana}
               </p>
             </div>
@@ -86,11 +86,11 @@ export function Proker({
             <motion.a
               key={p.judul}
               href={`/divisi/${p.divisiSlug}`}
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: false, margin: "-60px" }}
-              transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1], delay: 0.1 + i * 0.06 }}
-              className="group relative block overflow-hidden rounded-[2rem]"
+              initial={{ opacity: 0 }}
+              whileInView={{ opacity: 1 }}
+              viewport={{ once: true, margin: "-60px" }}
+              transition={{ duration: 0.5, ease: "easeOut", delay: 0.06 + i * 0.05 }}
+              className="group relative block overflow-hidden rounded-sm"
             >
               <div
                 className="relative flex aspect-[4/3] flex-col justify-end overflow-hidden p-7 sm:p-8"
@@ -102,14 +102,14 @@ export function Proker({
                   style={{ backgroundImage: dots, backgroundSize: "20px 20px" }}
                 />
                 <div className="relative z-10">
-                  <span className="font-mono text-[11px] uppercase tracking-widest text-white/80">
+                  <span className="text-xs text-white/85">
                     {p.kategori} · {p.tahun}
                   </span>
                   <h3 className="mt-2 font-display text-2xl font-bold tracking-tight text-white">
                     {p.judul}
                   </h3>
                   <p className="mt-2 text-sm leading-snug text-white/85">{p.deskripsi}</p>
-                  <p className="mt-3 flex items-center gap-1.5 font-mono text-[11px] uppercase tracking-widest text-white/70">
+                  <p className="mt-3 flex items-center gap-1.5 text-xs text-white/70">
                     <Wallet size={13} weight="duotone" />
                     {p.dana}
                   </p>
@@ -119,7 +119,7 @@ export function Proker({
           ))}
         </div>
 
-        <Reveal className="mt-12 text-center">
+        <Reveal className="mt-12">
           <Link
             href="#divisi"
             className="inline-flex items-center gap-2 font-medium text-ember transition-colors hover:text-flare"

@@ -1,19 +1,17 @@
-import { Suspense } from "react";
+import { cacheLife } from "next/cache";
 import type { Site } from "@/lib/types";
 
-/**
- * Copyright year, read at request time so the prerendered static shell doesn't
- * embed a stale `new Date()` value. Wrapped in <Suspense> per Cache Components
- * guidance for "current time" reads.
- */
+/** Year is cached like other content so it never trips the prerender guard. */
 async function Year() {
+  "use cache";
+  cacheLife("max");
   return <>{new Date().getFullYear()}</>;
 }
 
 export function Copyright({ site }: { site: Site }) {
   return (
     <p className="text-sm text-ink-faint">
-      © <Suspense fallback="2026"><Year /></Suspense> {site.namaPanjang}.
+      © <Year /> {site.namaPanjang}.
     </p>
   );
 }

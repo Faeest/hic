@@ -12,7 +12,6 @@
   --color-ember: #d45311;
   --color-flare: #fb9606;
   --color-mango: #ffbe6b;
-  --color-tangerine: #f67f1e;
 
   --color-ink: var(--ink);
   --color-ink-soft: var(--ink-soft);
@@ -20,7 +19,7 @@
 
   --font-display: var(--font-clash);
   --font-sans: var(--font-satoshi);
-  --font-mono: var(--font-jetbrains);
+  --font-mono: "JetBrains Mono Variable", ui-monospace, SFMono-Regular, Menlo, monospace;
 }
 
 :root {
@@ -36,9 +35,6 @@
   --glass-bg: rgba(255, 255, 255, 0.55);
   --glass-border: rgba(212, 83, 17, 0.08);
   --glass-highlight: rgba(255, 255, 255, 0.9);
-
-  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
-  --radius-glass: 1.75rem;
 }
 
 .dark {
@@ -90,16 +86,25 @@ body {
   color: white;
 }
 
-/* Glassmorphism panel — frosted refract, adapts to dark */
+/* Flat surface — one edge treatment (hairline), never hairline + shadow */
+.surface {
+  border: 1px solid color-mix(in srgb, var(--ink) 13%, transparent);
+}
+
+/* Legacy alias: every former glass panel is now a flat surface */
 .glass-panel {
+  position: relative;
+  background: var(--paper);
+  border: 1px solid color-mix(in srgb, var(--ink) 13%, transparent);
+}
+
+/* Blur is reserved for chrome that genuinely overlaps scrolling content */
+.glass-blur {
   position: relative;
   background: var(--glass-bg);
   -webkit-backdrop-filter: blur(18px);
   backdrop-filter: blur(18px);
-  border: 1px solid var(--glass-border);
-  box-shadow:
-    inset 0 1px 0 var(--glass-highlight),
-    0 24px 60px -30px rgba(212, 83, 17, 0.18);
+  border: 1px solid color-mix(in srgb, var(--ink) 10%, transparent);
 }
 
 /* Orange wash — the signature background, linear only */
@@ -111,6 +116,17 @@ body {
 .dark .mesh-orange {
   background:
     linear-gradient(180deg, var(--cream) 0%, var(--paper) 100%);
+}
+
+/* Hero ruling — printed hairline field, no canvas, no blur */
+.hero-rules {
+  background-image: repeating-linear-gradient(
+    180deg,
+    color-mix(in srgb, var(--color-ember) 9%, transparent) 0 1px,
+    transparent 1px 7px
+  );
+  -webkit-mask-image: radial-gradient(120% 90% at 20% 10%, black 0%, transparent 78%);
+  mask-image: radial-gradient(120% 90% at 20% 10%, black 0%, transparent 78%);
 }
 
 /* Dot grid — crisp technical texture, SVG solid dots (no gradients) */
@@ -203,7 +219,7 @@ body {
   background: var(--cream);
 }
 ::-webkit-scrollbar-thumb {
-  background: linear-gradient(var(--color-mango), var(--color-ember));
+  background: var(--color-ember);
   border-radius: 999px;
   border: 2px solid var(--cream);
 }

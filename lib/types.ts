@@ -75,6 +75,8 @@ export type Pengurus = {
   deskripsi: string;
   inisial: string;
   gradien: string;
+  /** Real portrait, when we have one. Missing → typographic treatment. */
+  foto?: string;
 };
 
 export type KategoriPengurus = "pembina" | "inti" | "koordinator";
@@ -237,6 +239,7 @@ export type PengurusRow = {
   deskripsi: string;
   inisial: string;
   gradien: string;
+  foto?: string | null;
   kategori: KategoriPengurus;
   sort: number;
   published: boolean;

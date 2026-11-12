@@ -1,6 +1,6 @@
 "use client";
 
-import { motion, useScroll, useSpring, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
@@ -32,12 +32,6 @@ export function Navbar({ site }: { site: Site; divisi?: Divisi[] }) {
   const unlockTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const pathname = usePathname();
   const lenis = useLenis();
-  const { scrollYProgress } = useScroll();
-  const progress = useSpring(scrollYProgress, {
-    stiffness: 120,
-    damping: 30,
-    mass: 0.3,
-  });
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 24);
@@ -116,21 +110,16 @@ export function Navbar({ site }: { site: Site; divisi?: Divisi[] }) {
   const isBlog = pathname.startsWith("/blog");
 
   const navClass = cn(
-    "fixed inset-x-0 top-0 z-50 transition-all duration-500",
-    scrolled ? "py-3" : "py-6"
+    "fixed inset-x-0 top-0 z-50 border-b border-ink/12 bg-paper/95 backdrop-blur-md transition-colors duration-300"
   );
 
   return (
     <>
-      <motion.div
-        style={{ scaleX: progress }}
-        className="fixed inset-x-0 top-0 z-[60] h-1 origin-left bg-gradient-to-r from-ember via-flare to-mango"
-      />
       <header className={navClass}>
         <nav
           className={cn(
-            "mx-auto flex max-w-7xl items-center justify-between px-5 transition-all duration-500 sm:px-8",
-            scrolled && "px-3 sm:px-4"
+            "mx-auto flex max-w-7xl items-center justify-between gap-6 px-5 transition-all duration-300 sm:px-8",
+            scrolled ? "h-14" : "h-16"
           )}
         >
           <motion.div
@@ -143,28 +132,28 @@ export function Navbar({ site }: { site: Site; divisi?: Divisi[] }) {
               onClick={(e) => scrollToSection(e, "beranda")}
               className="group flex items-center gap-2.5 font-display text-xl font-bold tracking-tight text-ink"
             >
-              <span className="relative grid h-13 w-13 p-3 shrink-0 place-items-center overflow-hidden rounded-full border border-ink/10 bg-white p-1.5 shadow-[0_2px_10px_-4px_rgba(28,21,18,0.25)] transition-transform duration-300 group-hover:rotate-[8deg] dark:border-white/15 dark:bg-[#1b1815] glass-panel">
+              <span className="relative grid h-10 w-10 shrink-0 place-items-center overflow-hidden rounded-xs border border-ink/12 bg-white p-1 transition-transform duration-300 group-hover:rotate-[8deg] dark:border-white/15 dark:bg-[#1b1815]">
                 <span className="relative h-full w-full">
                   <Image
                     src={site.logoLightUrl}
                     alt="Logo HIC"
                     fill
-                    sizes="36px"
+                    sizes="32px"
                     className="object-contain object-center dark:hidden"
                   />
                   <Image
                     src={site.logoDarkUrl}
                     alt="Logo HIC"
                     fill
-                    sizes="36px"
+                    sizes="32px"
                     className="hidden object-contain object-center dark:block"
                   />
                 </span>
               </span>
-              <span className="flex items-baseline gap-1.5 rounded-full border border-ink/10 bg-white px-3.5 py-2 shadow-[0_2px_10px_-4px_rgba(28,21,18,0.25)] dark:border-white/15 dark:bg-[#1b1815] glass-panel">
+              <span className="flex items-baseline gap-1.5">
                 {site.nama}
                 <span className="hidden font-sans text-[11px] font-medium tracking-wide text-ink-soft sm:inline">
-                  UBHINUS
+                  STIKI
                 </span>
               </span>
             </Link>
@@ -175,8 +164,7 @@ export function Navbar({ site }: { site: Site; divisi?: Divisi[] }) {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.7, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
             className={cn(
-              "hidden items-center glass-panel gap-1 rounded-full py-1 px-2 transition-all duration-500 lg:flex",
-              scrolled ? "bg-grey/90!" : ""
+              "hidden items-center gap-1 transition-all duration-500 lg:flex"
             )}
           >
             {links.map((l) => {
@@ -187,7 +175,7 @@ export function Navbar({ site }: { site: Site; divisi?: Divisi[] }) {
                   href={l.href}
                   onClick={(e) => scrollToSection(e, l.id)}
                   className={cn(
-                    "relative rounded-full px-4.5 py-2 text-sm font-medium transition-colors duration-300",
+                    "relative px-2 py-2 text-sm font-medium transition-colors duration-300",
                     activeLink ? "text-ember" : "text-ink-soft hover:text-ember"
                   )}
                 >
@@ -195,7 +183,7 @@ export function Navbar({ site }: { site: Site; divisi?: Divisi[] }) {
                     <motion.span
                       layoutId="nav-pill"
                       transition={{ type: "spring", stiffness: 320, damping: 28 }}
-                      className="absolute inset-0 rounded-full bg-ember/10"
+                      className="absolute inset-x-1 bottom-1 top-auto h-0.5 bg-ember"
                     />
                   )}
                   <span className="relative z-10">{l.label}</span>
@@ -206,7 +194,7 @@ export function Navbar({ site }: { site: Site; divisi?: Divisi[] }) {
             <Link
               href={blogLink.href}
               className={cn(
-                "relative rounded-full px-4.5 py-2 text-sm font-medium transition-colors duration-300",
+                "relative px-2 py-2 text-sm font-medium transition-colors duration-300",
                 isBlog ? "text-ember" : "text-ink-soft hover:text-ember"
               )}
             >
@@ -214,14 +202,14 @@ export function Navbar({ site }: { site: Site; divisi?: Divisi[] }) {
                 <motion.span
                   layoutId="nav-pill"
                   transition={{ type: "spring", stiffness: 320, damping: 28 }}
-                  className="absolute inset-0 rounded-full bg-ember/10"
+                  className="absolute inset-x-1 bottom-1 top-auto h-0.5 bg-ember"
                 />
               )}
               <span className="relative z-10">{blogLink.label}</span>
             </Link>
             <Link
               href="/#gabung"
-              className="ml-1 rounded-full bg-ember px-5 py-2.5 text-sm font-medium text-white shadow-[0_10px_24px_-10px_rgba(212,83,17,0.6)] transition-all duration-300 hover:bg-flare"
+              className="ml-2 rounded-sm bg-ember px-4 py-2 text-sm font-medium text-white transition-colors duration-300 hover:bg-flare"
             >
               Gabung HIC
             </Link>
@@ -234,7 +222,7 @@ export function Navbar({ site }: { site: Site; divisi?: Divisi[] }) {
               aria-label={open ? "Tutup menu" : "Buka menu"}
               aria-expanded={open}
               onClick={() => setOpen((v) => !v)}
-              className="relative z-50 grid h-11 w-11 place-items-center rounded-full glass-panel"
+              className="relative z-50 grid h-10 w-10 place-items-center border border-ink/12 bg-paper"
             >
               <div className="flex w-5 flex-col items-center justify-center gap-[5px]">
                 <span
@@ -347,11 +335,11 @@ export function Navbar({ site }: { site: Site; divisi?: Divisi[] }) {
               <Link
                 href="/#gabung"
                 onClick={() => setOpen(false)}
-                className="rounded-full bg-ember px-6 py-3.5 text-base font-medium text-white"
+                className="rounded-sm bg-ember px-6 py-3.5 text-base font-medium text-white"
               >
                 Gabung HIC
               </Link>
-              <span className="font-mono text-xs uppercase tracking-widest text-ink-faint">
+              <span className="font-mono text-xs text-ink-faint">
                 UC • {site.tahunBerdiri}
               </span>
             </motion.div>

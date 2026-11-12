@@ -30,6 +30,7 @@ function toApp(row: PengurusRow): Pengurus {
     deskripsi: row.deskripsi,
     inisial: row.inisial,
     gradien: row.gradien,
+    foto: row.foto ?? undefined,
   };
 }
 

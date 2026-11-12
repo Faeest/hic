@@ -7,7 +7,7 @@ export const faq: FaqItem[] = [
   {
     pertanyaan: "Bagaimana cara gabung HIC?",
     jawaban:
-      "Cukup datang ke sekret di Building C, Ruang 204 saat jam PMB dibuka, atau isi formulir minat lewat tautan di section Gabung. Setelah itu kamu akan diarahkan ke kelas perdana divisi pilihanmu.",
+      "Cukup datang ke sekret Gedung C, Ruang 204 saat jam PMB dibuka, atau isi formulir minat lewat tautan di section Gabung. Setelah itu kamu akan diarahkan ke kelas perdana divisi pilihanmu.",
   },
   {
     pertanyaan: "Apakah harus punya dasar coding dulu?",

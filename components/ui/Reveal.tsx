@@ -3,45 +3,37 @@
 import { motion, type Variants } from "framer-motion";
 import type { ReactNode } from "react";
 import { cn } from "@/lib/utils";
-import { useScrollDirection } from "@/lib/useScrollDirection";
 
-const variants: Variants = {
-  hidden: { opacity: 0, y: 28 },
-  show: { opacity: 1, y: 0 },
-};
-
+/**
+ * Single, restrained entrance: opacity only. No translate, no re-trigger.
+ * Translating text on every scroll pass delays reading and is the most
+ * recognisable template tell.
+ */
 export function Reveal({
   children,
   className,
   delay = 0,
-  y = 28,
 }: {
   children: ReactNode;
   className?: string;
   delay?: number;
-  y?: number;
 }) {
-  const dir = useScrollDirection();
-  const v: Variants = {
-    hidden: (d: number) => ({ opacity: 0, y: d >= 0 ? y : -y }),
-    show: {
-      opacity: 1,
-      y: 0,
-      transition: { duration: 0.9, ease: [0.16, 1, 0.3, 1], delay },
-    },
-  };
   return (
     <motion.div
-      variants={v}
-      custom={dir}
-      initial="hidden"
-      whileInView="show"
-      viewport={{ once: false, margin: "-80px" }}
+      initial={{ opacity: 0 }}
+      whileInView={{ opacity: 1 }}
+      viewport={{ once: true, margin: "-80px" }}
+      transition={{ duration: 0.4, ease: "easeOut", delay }}
       className={cn(className)}
     >
       {children}
     </motion.div>
   );
 }
+
+const variants: Variants = {
+  hidden: { opacity: 0 },
+  show: { opacity: 1 },
+};
 
 export { variants };

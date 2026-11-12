@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import localFont from "next/font/local";
+import { MotionProvider } from "@/components/ui/MotionProvider";
 import { SmoothScroll } from "@/components/ui/SmoothScroll";
 import { Analytics } from "@vercel/analytics/next";
 import "./globals.css";
@@ -29,12 +30,12 @@ const satoshi = localFont({
 export const metadata: Metadata = {
   title: "HIC — Hardware Interactive Club",
   description:
-    "UKM keilmuan UBHINUS tempat mahasiswa saling mengajar: Web, UI/UX, dan Robotics. Belajar, berkarya, dan tumbuh bareng.",
-  keywords: ["HIC", "UKM", "Hardware Interactive Club", "web", "uiux", "robotics", "UBHINUS"],
+    "UKM keilmuan STIKI tempat mahasiswa saling mengajar: Web, UI/UX, dan Robotics. Belajar, berkarya, dan tumbuh bareng.",
+  keywords: ["HIC", "UKM", "Hardware Interactive Club", "web", "uiux", "robotics", "STIKI"],
   openGraph: {
     title: "HIC — Hardware Interactive Club",
     description:
-        "UKM keilmuan UBHINUS tempat mahasiswa saling mengajar: Web, UI/UX, dan Robotics.",
+        "UKM keilmuan STIKI tempat mahasiswa saling mengajar: Web, UI/UX, dan Robotics.",
     type: "website",
     locale: "id_ID",
   },
@@ -51,7 +52,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         />
       </head>
       <body className="min-h-dvh flex flex-col bg-paper text-ink transition-colors duration-400">
-        <SmoothScroll>{children}</SmoothScroll>
+        <MotionProvider>
+          <SmoothScroll>{children}</SmoothScroll>
+        </MotionProvider>
         <Analytics />
       </body>
     </html>

@@ -1,27 +1,17 @@
 "use client";
 
-import { useEffect, useState } from "react";
 import { Moon, Sun } from "@phosphor-icons/react";
 import { cn } from "@/lib/utils";
 
-function getInitial() {
-  if (typeof window === "undefined") return false;
-  return document.documentElement.classList.contains("dark");
-}
-
+/**
+ * Icons are driven by CSS (`dark:` variant) rather than React state, so the
+ * server-rendered markup matches the client and hydration stays clean.
+ */
 export function ThemeToggle({ className }: { className?: string }) {
-  const [dark, setDark] = useState(getInitial);
-
-  useEffect(() => {
-    const onStorage = () => setDark(getInitial());
-    window.addEventListener("hic:theme", onStorage as EventListener);
-    return () => window.removeEventListener("hic:theme", onStorage as EventListener);
-  }, []);
-
   const toggle = () => {
-    const next = !dark;
-    setDark(next);
-    document.documentElement.classList.toggle("dark", next);
+    const root = document.documentElement;
+    const next = !root.classList.contains("dark");
+    root.classList.toggle("dark", next);
     try {
       localStorage.setItem("hic-theme", next ? "dark" : "light");
     } catch {
@@ -34,18 +24,15 @@ export function ThemeToggle({ className }: { className?: string }) {
     <button
       type="button"
       onClick={toggle}
-      aria-label={dark ? "Aktifkan mode terang" : "Aktifkan mode gelap"}
-      title={dark ? "Mode terang" : "Mode gelap"}
+      aria-label="Ganti mode terang atau gelap"
+      title="Ganti tema"
       className={cn(
-        "grid h-11 w-11 place-items-center rounded-full text-ink-soft transition-colors duration-300 hover:text-ember",
+        "grid h-10 w-10 place-items-center rounded-sm text-ink-soft transition-colors duration-300 hover:text-ember",
         className
       )}
     >
-      {dark ? (
-        <Sun size={20} weight="duotone" />
-      ) : (
-        <Moon size={20} weight="duotone" />
-      )}
+      <Moon size={20} weight="duotone" className="dark:hidden" />
+      <Sun size={20} weight="duotone" className="hidden dark:block" />
     </button>
   );
 }

@@ -1,8 +1,6 @@
-"use client";
-
 import Link from "next/link";
 import Image from "next/image";
-import { ArrowUpRight } from "@phosphor-icons/react";
+import { ArrowUpRight } from "@phosphor-icons/react/dist/ssr";
 import type { Divisi, Site } from "@/lib/types";
 import { Copyright } from "@/components/layout/Copyright";
 
@@ -13,9 +11,8 @@ export function Footer({ site, divisi }: { site: Site; divisi: Divisi[] }) {
       <div className="relative mx-auto max-w-7xl px-5 pt-14 sm:px-8 lg:pt-16">
         <div className="flex flex-col items-start justify-between gap-6 border-b border-ink/10 pb-10 sm:flex-row sm:items-center">
           <div>
-            <p className="flex items-baseline gap-3 text-sm">
-              <span className="h-px w-6 self-center bg-ink/15" aria-hidden />
-              <span className="font-medium text-ink-faint">Punya prinsip belajar yang sama?</span>
+            <p className="text-sm font-medium text-ink-faint">
+              Punya prinsip belajar yang sama?
             </p>
             <p className="mt-2 max-w-md font-display text-2xl font-semibold tracking-tight text-ink sm:text-3xl">
               Mari tumbuh bareng di HIC.
@@ -23,7 +20,7 @@ export function Footer({ site, divisi }: { site: Site; divisi: Divisi[] }) {
           </div>
           <Link
             href="/#gabung"
-            className="group inline-flex shrink-0 items-center gap-2.5 rounded-full bg-ember px-6 py-3.5 text-sm font-medium text-white transition-colors duration-300 hover:bg-flare"
+            className="group inline-flex shrink-0 items-center gap-2.5 rounded-sm bg-ember px-6 py-3.5 text-sm font-medium text-white transition-colors duration-300 hover:bg-flare"
           >
             Gabung HIC
             <ArrowUpRight
@@ -43,7 +40,7 @@ export function Footer({ site, divisi }: { site: Site; divisi: Divisi[] }) {
                 href="/"
                 className="inline-flex items-center gap-2.5 font-display text-2xl font-bold tracking-tight text-ink"
               >
-                <span className="relative h-10 w-10 overflow-hidden rounded-xl">
+                <span className="relative h-10 w-10 overflow-hidden rounded-sm">
                   <Image
                     src={site.logoLightUrl}
                     alt="Logo HIC"
