@@ -25,6 +25,9 @@
 *.pem
 
 # debug
+.next-dev.log
+.next-start.log
+/media-snapshots/
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*

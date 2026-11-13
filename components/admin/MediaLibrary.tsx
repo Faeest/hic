@@ -9,8 +9,10 @@ import {
   Check,
   Spinner,
   Trash,
+  ArrowsClockwise,
 } from "@phosphor-icons/react";
-import { uploadImage, deleteMedia } from "@/lib/actions/upload";
+import { uploadImage, deleteMedia, replaceMedia } from "@/lib/actions/upload";
+import { compressKeepingType } from "@/lib/media/compress";
 import type { MediaItem } from "@/lib/admin/media";
 import { cn } from "@/lib/utils";
 
@@ -38,9 +40,12 @@ const fmtDate = (iso: string | null) => {
  * shared links. The original absolute Supabase URL stays in the DB; both work.
  * (Thumbnails above keep using `item.url` so browsing the library talks to
  * Supabase directly instead of streaming every image through the server.)
+ *
+ * `origin` is passed in rather than read from `window` at render time so the
+ * server render and the first client render agree (no hydration mismatch); the
+ * click handler supplies `window.location.origin`.
  */
-const domainUrl = (item: MediaItem) => {
-  const origin = typeof window === "undefined" ? "" : window.location.origin;
+const mediaUrl = (origin: string, item: MediaItem) => {
   const path = item.path.split("/").map(encodeURIComponent).join("/");
   return `${origin}/media/${path}`;
 };
@@ -50,8 +55,39 @@ export function MediaLibrary({ items }: { items: MediaItem[] }) {
   const [error, setError] = useState<string | null>(null);
   const [copied, setCopied] = useState<string | null>(null);
   const [deleting, setDeleting] = useState<string | null>(null);
+  const [replacing, setReplacing] = useState<string | null>(null);
+  /** Cache-bust key per path, bumped after an in-place replace. */
+  const [bust, setBust] = useState<Record<string, number>>({});
   const [pending, startTransition] = useTransition();
   const fileRef = useRef<HTMLInputElement>(null);
+  const replaceRef = useRef<HTMLInputElement>(null);
+  const replaceTarget = useRef<MediaItem | null>(null);
+
+  const pickReplacement = (item: MediaItem) => {
+    replaceTarget.current = item;
+    setError(null);
+    replaceRef.current?.click();
+  };
+
+  const onReplace = (file: File | undefined) => {
+    const target = replaceTarget.current;
+    if (!file || !target) return;
+    setError(null);
+    setReplacing(target.path);
+    startTransition(async () => {
+      const prepared = await compressKeepingType(file, target.path);
+      const fd = new FormData();
+      fd.set("file", prepared);
+      fd.set("path", target.path);
+      const res = await replaceMedia(fd);
+      if (res.error) setError(res.error);
+      else setBust((b) => ({ ...b, [target.path]: Date.now() }));
+      setReplacing(null);
+      replaceTarget.current = null;
+      if (replaceRef.current) replaceRef.current.value = "";
+      router.refresh();
+    });
+  };
 
   const onPick = (files: FileList | null) => {
     if (!files || files.length === 0) return;
@@ -127,6 +163,14 @@ export function MediaLibrary({ items }: { items: MediaItem[] }) {
           className="hidden"
           onChange={(e) => onPick(e.target.files)}
         />
+        {/* Shared picker for in-place replacement; the target lives in a ref. */}
+        <input
+          ref={replaceRef}
+          type="file"
+          accept="image/*"
+          className="hidden"
+          onChange={(e) => onReplace(e.target.files?.[0])}
+        />
       </div>
 
       {error && (
@@ -150,7 +194,7 @@ export function MediaLibrary({ items }: { items: MediaItem[] }) {
             <div key={it.path} className="surface flex flex-col gap-3 bg-paper p-3">
               <div className="relative aspect-[4/3] overflow-hidden rounded-xs bg-cream dark:bg-white/5">
                 <Image
-                  src={it.url}
+                  src={bust[it.path] ? `${it.url}?v=${bust[it.path]}` : it.url}
                   alt={it.name}
                   fill
                   sizes="(min-width: 1024px) 30vw, 50vw"
@@ -170,8 +214,8 @@ export function MediaLibrary({ items }: { items: MediaItem[] }) {
               <div className="flex items-center gap-2">
                 <button
                   type="button"
-                  onClick={() => copy(domainUrl(it), it.path)}
-                  title={domainUrl(it)}
+                  onClick={() => copy(mediaUrl(window.location.origin, it), it.path)}
+                  title={it.path}
                   className="inline-flex flex-1 items-center justify-center gap-2 rounded-sm border border-ink/15 px-3 py-2 text-xs font-medium text-ink-soft transition-colors hover:text-ember dark:border-white/15"
                 >
                   {copied === it.path ? (
@@ -180,6 +224,23 @@ export function MediaLibrary({ items }: { items: MediaItem[] }) {
                     <Copy size={14} weight="bold" />
                   )}
                   {copied === it.path ? "Tersalin" : "Salin URL"}
+                </button>
+                <button
+                  type="button"
+                  onClick={() => pickReplacement(it)}
+                  disabled={replacing === it.path}
+                  aria-label={`Ganti berkas ${it.name}`}
+                  title="Ganti isi berkas, URL tetap sama"
+                  className={cn(
+                    "grid h-9 w-9 shrink-0 place-items-center rounded-sm border border-ink/15 text-ink-soft transition-colors hover:border-ember/40 hover:text-ember dark:border-white/15",
+                    replacing === it.path && "opacity-50"
+                  )}
+                >
+                  {replacing === it.path ? (
+                    <Spinner size={14} className="animate-spin" />
+                  ) : (
+                    <ArrowsClockwise size={14} weight="bold" />
+                  )}
                 </button>
                 <button
                   type="button"

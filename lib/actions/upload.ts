@@ -93,3 +93,61 @@ export async function deleteMedia(path: string): Promise<UploadResult> {
   revalidatePublic();
   return { url: undefined };
 }
+
+/**
+ * Overwrite an existing object in place, keeping its storage key — and therefore
+ * its public URL — unchanged, so every row pointing at it shows the new image
+ * without an edit.
+ *
+ * Supabase's CDN does not purge on overwrite, so the `/media/...` route handler
+ * fetches with a per-minute cache bucket; a replacement becomes visible within
+ * about a minute. Direct Supabase URLs (legacy rows) can lag up to the object's
+ * TTL.
+ */
+export async function replaceMedia(
+  formData: FormData
+): Promise<UploadResult> {
+  try {
+    await assertAdmin();
+  } catch {
+    return { error: "Tidak diizinkan." };
+  }
+
+  const file = formData.get("file");
+  const path = String(formData.get("path") ?? "");
+
+  if (!path || path.includes("..") || path.startsWith("/")) {
+    return { error: "Path tidak valid." };
+  }
+  if (!(file instanceof File) || file.size === 0) {
+    return { error: "Tidak ada berkas." };
+  }
+  if (file.size > MAX_BYTES) {
+    return { error: "Ukuran berkas melebihi 10 MB." };
+  }
+  if (!ALLOWED.includes(file.type)) {
+    return { error: `Tipe berkas tidak didukung: ${file.type || "tidak diketahui"}.` };
+  }
+
+  // Uploading across extensions would leave the key's name and the object's
+  // Content-Type disagreeing; the UI never does this, so treat it as a bug.
+  const ext = (name: string) => {
+    const dot = name.lastIndexOf(".");
+    return dot >= 0 ? name.slice(dot).toLowerCase() : "";
+  };
+  if (ext(file.name) !== ext(path)) {
+    return { error: "Jenis berkas harus sama dengan berkas aslinya." };
+  }
+
+  const supabase = await createClient();
+  const { error } = await supabase.storage.from("media").upload(path, file, {
+    contentType: file.type,
+    upsert: true,
+  });
+
+  if (error) return { error: error.message };
+
+  revalidatePublic();
+  const { data } = supabase.storage.from("media").getPublicUrl(path);
+  return { url: data.publicUrl };
+}

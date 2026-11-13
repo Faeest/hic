@@ -5,61 +5,13 @@ import Image from "next/image";
 import { UploadSimple, Trash, Spinner } from "@phosphor-icons/react";
 import { FieldWrap, inputClass } from "./FieldWrap";
 import { uploadImage } from "@/lib/actions/upload";
+import { compressImage } from "@/lib/media/compress";
 import { cn } from "@/lib/utils";
-
-/** Longest edge kept after compression. */
-const MAX_EDGE = 2000;
-/** WebP quality — visually lossless for photos at this size. */
-const QUALITY = 0.82;
-/** Below this, re-encoding usually costs more than it saves. */
-const SKIP_BELOW = 400 * 1024;
 
 const fmt = (bytes: number) =>
   bytes >= 1024 * 1024
     ? `${(bytes / 1024 / 1024).toFixed(1)} MB`
     : `${Math.round(bytes / 1024)} KB`;
-
-/**
- * Downscale + re-encode in the browser before upload.
- *
- * The bucket has a 10 MB per-file limit and a finite quota, so a 4 MB camera
- * JPEG is wasteful. SVG and GIF are passed through untouched (vector /
- * animation), and anything already small is left alone.
- */
-async function compressImage(file: File): Promise<File> {
-  if (!file.type.startsWith("image/")) return file;
-  if (file.type === "image/svg+xml" || file.type === "image/gif") return file;
-  if (file.size < SKIP_BELOW) return file;
-
-  try {
-    const bitmap = await createImageBitmap(file);
-    const scale = Math.min(1, MAX_EDGE / Math.max(bitmap.width, bitmap.height));
-    const width = Math.max(1, Math.round(bitmap.width * scale));
-    const height = Math.max(1, Math.round(bitmap.height * scale));
-
-    const canvas = document.createElement("canvas");
-    canvas.width = width;
-    canvas.height = height;
-    const ctx = canvas.getContext("2d");
-    if (!ctx) return file;
-
-    ctx.imageSmoothingEnabled = true;
-    ctx.imageSmoothingQuality = "high";
-    ctx.drawImage(bitmap, 0, 0, width, height);
-    bitmap.close?.();
-
-    const blob = await new Promise<Blob | null>((resolve) =>
-      canvas.toBlob(resolve, "image/webp", QUALITY)
-    );
-    if (!blob || blob.size >= file.size) return file;
-
-    const name = `${file.name.replace(/\.[^.]+$/, "") || "gambar"}.webp`;
-    return new File([blob], name, { type: "image/webp" });
-  } catch {
-    // Unsupported source (e.g. HEIC) — let the server decide.
-    return file;
-  }
-}
 
 /**
  * Image field: upload to Supabase Storage OR paste a URL.

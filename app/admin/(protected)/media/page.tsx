@@ -17,8 +17,8 @@ export default async function AdminMediaPage() {
           Media
         </h1>
         <p className="mt-2 text-sm leading-relaxed text-ink-soft">
-          Semua berkas di bucket <span className="font-mono text-xs">media</span>. Unggah,
-          salin URL, atau hapus yang sudah tidak dipakai.
+          Semua gambar situs ada di sini. Unggah, salin URL, ganti isi berkas, atau
+          hapus yang sudah tidak dipakai.
         </p>
       </div>
       <MediaLibrary items={items} />

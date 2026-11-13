@@ -45,4 +45,15 @@ code=$(curl -sS -o /tmp/hic-keepalive.json -w '%{http_code}' --max-time 20 \
 
 echo "$(date -Is) HTTP $code $(cat /tmp/hic-keepalive.json 2>/dev/null || true)"
 
+# Nightly bucket snapshot: the media bucket has no versioning, so this is the
+# only restore point. Needs SUPABASE_SECRET_KEY in the env file; skipped
+# otherwise so the keepalive itself never fails because of it.
+SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
+if [ "$code" = "200" ] && [ -n "${SUPABASE_SECRET_KEY:-}" ] && command -v node >/dev/null 2>&1; then
+  node "$SCRIPT_DIR/../scripts/snapshot-media.mjs" \
+    || echo "$(date -Is) WARN: media snapshot failed"
+else
+  echo "$(date -Is) media snapshot skipped (needs SUPABASE_SECRET_KEY + node)"
+fi
+
 [ "$code" = "200" ]
