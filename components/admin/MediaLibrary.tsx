@@ -32,6 +32,19 @@ const fmtDate = (iso: string | null) => {
   }
 };
 
+/**
+ * Domain-branded URL emitted by the copy button: `/media/<bucket-path>`, served
+ * by `app/media/[...path]/route.ts`. Keeps the Supabase project ref out of
+ * shared links. The original absolute Supabase URL stays in the DB; both work.
+ * (Thumbnails above keep using `item.url` so browsing the library talks to
+ * Supabase directly instead of streaming every image through the server.)
+ */
+const domainUrl = (item: MediaItem) => {
+  const origin = typeof window === "undefined" ? "" : window.location.origin;
+  const path = item.path.split("/").map(encodeURIComponent).join("/");
+  return `${origin}/media/${path}`;
+};
+
 export function MediaLibrary({ items }: { items: MediaItem[] }) {
   const router = useRouter();
   const [error, setError] = useState<string | null>(null);
@@ -57,10 +70,10 @@ export function MediaLibrary({ items }: { items: MediaItem[] }) {
     });
   };
 
-  const copy = async (url: string) => {
+  const copy = async (url: string, key: string) => {
     try {
       await navigator.clipboard.writeText(url);
-      setCopied(url);
+      setCopied(key);
       setTimeout(() => setCopied(null), 1500);
     } catch {
       setError("Tidak bisa menyalin ke clipboard.");
@@ -157,15 +170,16 @@ export function MediaLibrary({ items }: { items: MediaItem[] }) {
               <div className="flex items-center gap-2">
                 <button
                   type="button"
-                  onClick={() => copy(it.url)}
+                  onClick={() => copy(domainUrl(it), it.path)}
+                  title={domainUrl(it)}
                   className="inline-flex flex-1 items-center justify-center gap-2 rounded-sm border border-ink/15 px-3 py-2 text-xs font-medium text-ink-soft transition-colors hover:text-ember dark:border-white/15"
                 >
-                  {copied === it.url ? (
+                  {copied === it.path ? (
                     <Check size={14} weight="bold" />
                   ) : (
                     <Copy size={14} weight="bold" />
                   )}
-                  {copied === it.url ? "Tersalin" : "Salin URL"}
+                  {copied === it.path ? "Tersalin" : "Salin URL"}
                 </button>
                 <button
                   type="button"

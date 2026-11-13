@@ -73,3 +73,13 @@ order of reliability:
 first) with size, folder and date, plus copy-URL and permanent delete. Deleting a
 file that a row still references leaves a broken image — the confirm dialog says
 so.
+
+**Copied URLs use the site's own domain.** The button emits
+`https://<site>/media/<bucket-path>`, served by `app/media/[...path]/route.ts`,
+which streams the object from the public bucket with
+`Cache-Control: public, max-age=31536000, immutable` (storage keys end in
+`-<timestamp>` and uploads never overwrite). This keeps the Supabase project ref
+out of shared links. Rows already in the database keep their absolute
+`https://<project>.supabase.co/storage/v1/object/public/media/...` URLs and still
+render — no migration needed. The bucket is public either way, so this hides the
+project ref; it does not add access control.

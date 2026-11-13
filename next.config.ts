@@ -23,7 +23,8 @@ const nextConfig: NextConfig = {
   cacheComponents: true,
   images: {
     remotePatterns: [
-      // Supabase Storage public URLs (uploaded media).
+      // Supabase Storage public URLs (uploaded media, and any older DB rows
+      // that still store an absolute Supabase URL).
       ...(supabaseHost
         ? [{ protocol: "https" as const, hostname: supabaseHost }]
         : []),
