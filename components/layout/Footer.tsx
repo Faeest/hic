@@ -12,17 +12,19 @@ export function Footer({ site, divisi }: { site: Site; divisi: Divisi[] }) {
         <div className="flex flex-col items-start justify-between gap-6 border-b border-ink/10 pb-10 sm:flex-row sm:items-center">
           <div>
             <p className="text-sm font-medium text-ink-faint">
-              Punya prinsip belajar yang sama?
+              {site.footerCopy.eyebrow}
             </p>
             <p className="mt-2 max-w-md font-display text-2xl font-semibold tracking-tight text-ink sm:text-3xl">
-              Mari tumbuh bareng di HIC.
+              {site.footerCopy.title}
             </p>
           </div>
           <Link
-            href="/#gabung"
+            href={site.cta.href}
+            target={site.cta.href.startsWith("http") ? "_blank" : undefined}
+            rel={site.cta.href.startsWith("http") ? "noopener noreferrer" : undefined}
             className="group inline-flex shrink-0 items-center gap-2.5 rounded-sm bg-ember px-6 py-3.5 text-sm font-medium text-white transition-colors duration-300 hover:bg-flare"
           >
-            Gabung HIC
+            {site.cta.label}
             <ArrowUpRight
               size={16}
               weight="bold"

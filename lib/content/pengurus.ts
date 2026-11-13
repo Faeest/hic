@@ -14,12 +14,16 @@ import { bySort, warnFallback } from "./util";
 export type PengurusGroups = {
   pembina: Pengurus | null;
   inti: Pengurus[];
+  /** Functional bodies (humas, pdd, webdev, …). Data-driven — may be empty. */
+  biro: Pengurus[];
+  /** Division coordinators. Appointed by their division, not part of the BPH. */
   koordinator: Pengurus[];
 };
 
 export const seedPengurus: PengurusGroups = {
   pembina: seedPembina,
   inti: seedInti,
+  biro: [],
   koordinator: seedKoordinator,
 };
 
@@ -30,7 +34,9 @@ function toApp(row: PengurusRow): Pengurus {
     deskripsi: row.deskripsi,
     inisial: row.inisial,
     gradien: row.gradien,
-    foto: row.foto ?? undefined,
+    foto: row.foto || undefined,
+    unit: row.unit || undefined,
+    periode: row.periode || undefined,
   };
 }
 
@@ -54,6 +60,7 @@ export async function getPengurus(): Promise<PengurusGroups> {
     return {
       pembina: pick("pembina")[0] ?? null,
       inti: pick("inti"),
+      biro: pick("biro"),
       koordinator: pick("koordinator"),
     };
   } catch (error) {

@@ -1,0 +1,10 @@
+[Unit]
+Description=HIC — daily Supabase keepalive
+
+[Timer]
+OnCalendar=*-*-* 06:10:00
+Persistent=true
+RandomizedDelaySec=300
+
+[Install]
+WantedBy=timers.target

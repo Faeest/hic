@@ -38,7 +38,7 @@ export default async function AdminEditPostPage({
           <Link
             href={`/blog/${post.slug}`}
             target="_blank"
-            className="inline-flex shrink-0 items-center gap-2 rounded-full border border-ink/15 px-5 py-2.5 text-sm font-medium text-ink-soft transition-colors hover:text-ember dark:border-white/15"
+            className="inline-flex shrink-0 items-center gap-2 rounded-sm border border-ink/15 px-5 py-2.5 text-sm font-medium text-ink-soft transition-colors hover:text-ember dark:border-white/15"
           >
             <ArrowSquareOut size={16} weight="bold" />
             Lihat

@@ -3,7 +3,7 @@
 import { assertAdmin } from "@/lib/auth/dal";
 import { createClient } from "@/lib/supabase/server";
 import { revalidatePublic } from "@/lib/actions/revalidate";
-import type { PilarMisi, Sosial, Statistik } from "@/lib/types";
+import type { PilarMisi, Sosial, Statistik, Testimoni } from "@/lib/types";
 
 export type ActionResult = { ok: true } | { ok: false; error: string };
 
@@ -49,9 +49,20 @@ export async function updateSite(formData: FormData): Promise<ActionResult> {
     tentang_tags: jsonArray<string>(formData.get("tentangTags")),
     logo_light_url: str(formData, "logoLightUrl"),
     logo_dark_url: str(formData, "logoDarkUrl"),
-    testimoni_nama: str(formData, "testimoniNama"),
-    testimoni_teks: str(formData, "testimoniTeks"),
-    testimoni_peran: str(formData, "testimoniPeran"),
+    cta_label: str(formData, "ctaLabel") || "Gabung HIC",
+    cta_href: str(formData, "ctaHref") || "/#gabung",
+    hero_cta_primary_label: str(formData, "heroCtaPrimaryLabel") || "Jelajahi Divisi",
+    hero_cta_primary_href: str(formData, "heroCtaPrimaryHref") || "/#divisi",
+    hero_cta_secondary_label: str(formData, "heroCtaSecondaryLabel") || "Tentang HIC",
+    hero_cta_secondary_href: str(formData, "heroCtaSecondaryHref") || "/#tentang",
+    gabung_body: str(formData, "gabungBody"),
+    gabung_primary_label: str(formData, "gabungPrimaryLabel") || "Hubungi kami",
+    gabung_primary_href: str(formData, "gabungPrimaryHref"),
+    gabung_secondary_label: str(formData, "gabungSecondaryLabel") || "Kirim formulir minat",
+    gabung_secondary_href: str(formData, "gabungSecondaryHref"),
+    footer_eyebrow: str(formData, "footerEyebrow"),
+    footer_title: str(formData, "footerTitle"),
+    testimoni_items: jsonArray<Testimoni>(formData.get("testimoniItems")),
     marquee_items: jsonArray<string>(formData.get("marqueeItems")),
     tahun_berdiri: str(formData, "tahunBerdiri"),
     periode_kepengurusan: str(formData, "periodeKepengurusan"),

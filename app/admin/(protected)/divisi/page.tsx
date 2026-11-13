@@ -43,7 +43,7 @@ export default async function AdminDivisiPage() {
           <Link
             key={d.id}
             href={`/admin/divisi/${d.id}`}
-            className="glass-panel flex items-center justify-between gap-4 rounded-3xl p-5 transition-transform duration-300 hover:-translate-y-0.5"
+            className="glass-panel flex items-center justify-between gap-4 rounded-sm p-5 transition-transform duration-300 hover:-translate-y-0.5"
           >
             <div>
               <p className="font-display text-lg font-semibold text-ink">

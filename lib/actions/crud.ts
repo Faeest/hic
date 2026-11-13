@@ -55,7 +55,17 @@ function buildPayload(table: CrudTable, fd: FormData): Record<string, unknown> {
     ],
     kurikulum: ["nomor", "judul", "durasi", "deskripsi"],
     mentor: ["nama", "fokus"],
-    pengurus: ["nama", "jabatan", "deskripsi", "inisial", "gradien", "kategori"],
+    pengurus: [
+      "nama",
+      "jabatan",
+      "deskripsi",
+      "inisial",
+      "gradien",
+      "kategori",
+      "foto",
+      "unit",
+      "periode",
+    ],
     proker: [
       "judul",
       "kategori",

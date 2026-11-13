@@ -21,7 +21,7 @@ export function LoginForm() {
           type="email"
           autoComplete="email"
           required
-          className="rounded-2xl border border-ink/15 bg-white px-4 py-3 text-base text-ink outline-none transition-colors focus:border-ember dark:border-white/15 dark:bg-white/[0.04]"
+          className="rounded-sm border border-ink/15 bg-white px-4 py-3 text-base text-ink outline-none transition-colors focus:border-ember dark:border-white/15 dark:bg-white/[0.04]"
         />
       </div>
 
@@ -35,14 +35,14 @@ export function LoginForm() {
           type="password"
           autoComplete="current-password"
           required
-          className="rounded-2xl border border-ink/15 bg-white px-4 py-3 text-base text-ink outline-none transition-colors focus:border-ember dark:border-white/15 dark:bg-white/[0.04]"
+          className="rounded-sm border border-ink/15 bg-white px-4 py-3 text-base text-ink outline-none transition-colors focus:border-ember dark:border-white/15 dark:bg-white/[0.04]"
         />
       </div>
 
       {state?.error && (
         <p
           role="alert"
-          className="rounded-2xl border border-red-500/30 bg-red-500/10 px-4 py-3 text-sm text-red-600 dark:text-red-400"
+          className="rounded-sm border border-red-500/30 bg-red-500/10 px-4 py-3 text-sm text-red-600 dark:text-red-400"
         >
           {state.error}
         </p>
@@ -51,7 +51,7 @@ export function LoginForm() {
       <button
         type="submit"
         disabled={pending}
-        className="mt-1 rounded-full bg-ember px-6 py-3.5 text-base font-medium text-white transition-colors hover:bg-flare disabled:opacity-60"
+        className="mt-1 rounded-sm bg-ember px-6 py-3.5 text-base font-medium text-white transition-colors hover:bg-flare disabled:opacity-60"
       >
         {pending ? "Memproses…" : "Masuk"}
       </button>

@@ -89,7 +89,7 @@ export function RepeaterField({
 
       <div className="flex flex-col gap-3">
         {rows.length === 0 && (
-          <p className="rounded-2xl border border-dashed border-ink/15 px-4 py-3 text-sm text-ink-faint dark:border-white/15">
+          <p className="rounded-sm border border-dashed border-ink/15 px-4 py-3 text-sm text-ink-faint dark:border-white/15">
             Belum ada {itemLabel.toLowerCase()}.
           </p>
         )}
@@ -97,7 +97,7 @@ export function RepeaterField({
         {rows.map((row, i) => (
           <div
             key={i}
-            className="rounded-2xl border border-ink/10 bg-white/60 p-3 dark:border-white/10 dark:bg-white/[0.03]"
+            className="rounded-sm border border-ink/10 bg-white/60 p-3 dark:border-white/10 dark:bg-white/[0.03]"
           >
             <div className="flex items-start gap-2">
               <div className="flex min-w-0 flex-1 flex-col gap-2">
@@ -140,7 +140,7 @@ export function RepeaterField({
                   onClick={() => move(i, -1)}
                   disabled={i === 0}
                   aria-label="Naikkan"
-                  className="grid h-7 w-7 place-items-center rounded-lg text-ink-faint transition-colors hover:text-ember disabled:opacity-30"
+                  className="grid h-7 w-7 place-items-center rounded-sm text-ink-faint transition-colors hover:text-ember disabled:opacity-30"
                 >
                   <ArrowUp size={14} weight="bold" />
                 </button>
@@ -149,7 +149,7 @@ export function RepeaterField({
                   onClick={() => move(i, 1)}
                   disabled={i === rows.length - 1}
                   aria-label="Turunkan"
-                  className="grid h-7 w-7 place-items-center rounded-lg text-ink-faint transition-colors hover:text-ember disabled:opacity-30"
+                  className="grid h-7 w-7 place-items-center rounded-sm text-ink-faint transition-colors hover:text-ember disabled:opacity-30"
                 >
                   <ArrowDown size={14} weight="bold" />
                 </button>
@@ -157,7 +157,7 @@ export function RepeaterField({
                   type="button"
                   onClick={() => remove(i)}
                   aria-label="Hapus"
-                  className="grid h-7 w-7 place-items-center rounded-lg text-ink-faint transition-colors hover:text-red-500"
+                  className="grid h-7 w-7 place-items-center rounded-sm text-ink-faint transition-colors hover:text-red-500"
                 >
                   <Trash size={14} weight="bold" />
                 </button>
@@ -169,7 +169,7 @@ export function RepeaterField({
         <button
           type="button"
           onClick={add}
-          className="inline-flex w-fit items-center gap-2 rounded-full border border-ink/15 px-4 py-2 text-sm font-medium text-ink-soft transition-colors hover:text-ember dark:border-white/15"
+          className="inline-flex w-fit items-center gap-2 rounded-sm border border-ink/15 px-4 py-2 text-sm font-medium text-ink-soft transition-colors hover:text-ember dark:border-white/15"
         >
           <Plus size={16} weight="bold" />
           Tambah {itemLabel.toLowerCase()}

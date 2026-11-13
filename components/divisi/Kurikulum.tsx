@@ -11,7 +11,7 @@ export function Kurikulum({ d }: { d: Divisi }) {
   return (
     <section
       id="kurikulum"
-      className="relative scroll-mt-24 bg-paper py-24 sm:py-32"
+      className="relative scroll-mt-24 bg-paper pt-24 pb-10 sm:pt-32 sm:pb-12"
       style={divisiVars(d)}
     >
       <div className="mx-auto max-w-7xl px-5 sm:px-8">

@@ -19,13 +19,13 @@ export function SiteForm({ site }: { site: Site }) {
   return (
     <form action={action} className="flex flex-col gap-10">
       {state?.ok && (
-        <p className="flex items-center gap-2 rounded-2xl border border-green-500/30 bg-green-500/10 px-4 py-3 text-sm text-green-700 dark:text-green-400">
+        <p className="flex items-center gap-2 rounded-sm border border-green-500/30 bg-green-500/10 px-4 py-3 text-sm text-green-700 dark:text-green-400">
           <CheckCircle size={18} weight="fill" />
           Tersimpan. Perubahan langsung tampil di situs.
         </p>
       )}
       {state && !state.ok && (
-        <p className="rounded-2xl border border-red-500/30 bg-red-500/10 px-4 py-3 text-sm text-red-600 dark:text-red-400">
+        <p className="rounded-sm border border-red-500/30 bg-red-500/10 px-4 py-3 text-sm text-red-600 dark:text-red-400">
           {state.error}
         </p>
       )}
@@ -62,6 +62,18 @@ export function SiteForm({ site }: { site: Site }) {
         </div>
       </Section>
 
+      <Section title="Tombol utama (CTA)">
+        <div className="grid gap-5 sm:grid-cols-2">
+          <TextField label="Teks tombol" name="ctaLabel" defaultValue={site.cta.label} />
+          <TextField
+            label="Tujuan tombol"
+            name="ctaHref"
+            defaultValue={site.cta.href}
+            hint="Boleh tautan internal (/#gabung) atau URL lengkap (https://form…)."
+          />
+        </div>
+      </Section>
+
       <Section title="Hero">
         <RepeaterField
           label="Judul hero (per kata)"
@@ -71,6 +83,28 @@ export function SiteForm({ site }: { site: Site }) {
           hint="Tiap baris menjadi satu kata besar di hero."
         />
         <TextArea label="Subjudul hero" name="heroSubcopy" defaultValue={site.heroSubcopy} rows={3} />
+        <div className="grid gap-5 sm:grid-cols-2">
+          <TextField
+            label="Tombol 1 — teks"
+            name="heroCtaPrimaryLabel"
+            defaultValue={site.ctaHero.primaryLabel}
+          />
+          <TextField
+            label="Tombol 1 — tujuan"
+            name="heroCtaPrimaryHref"
+            defaultValue={site.ctaHero.primaryHref}
+          />
+          <TextField
+            label="Tombol 2 — teks"
+            name="heroCtaSecondaryLabel"
+            defaultValue={site.ctaHero.secondaryLabel}
+          />
+          <TextField
+            label="Tombol 2 — tujuan"
+            name="heroCtaSecondaryHref"
+            defaultValue={site.ctaHero.secondaryHref}
+          />
+        </div>
       </Section>
 
       <Section title="Tentang">
@@ -143,16 +177,69 @@ export function SiteForm({ site }: { site: Site }) {
         />
       </Section>
 
-      <Section title="Testimoni">
-        <TextArea label="Kutipan" name="testimoniTeks" defaultValue={site.testimoni.teks} rows={2} />
+      <Section title="Seksi Gabung">
+        <TextArea
+          label="Paragraf pembuka"
+          name="gabungBody"
+          defaultValue={site.ctaGabung.body}
+          rows={3}
+        />
         <div className="grid gap-5 sm:grid-cols-2">
-          <TextField label="Nama" name="testimoniNama" defaultValue={site.testimoni.nama} />
-          <TextField label="Peran" name="testimoniPeran" defaultValue={site.testimoni.peran} />
+          <TextField
+            label="Tombol 1 — teks"
+            name="gabungPrimaryLabel"
+            defaultValue={site.ctaGabung.primaryLabel}
+          />
+          <TextField
+            label="Tombol 1 — tujuan"
+            name="gabungPrimaryHref"
+            defaultValue={site.ctaGabung.primaryHref}
+            hint="Kosongkan untuk mailto ke email kontak."
+          />
+          <TextField
+            label="Tombol 2 — teks"
+            name="gabungSecondaryLabel"
+            defaultValue={site.ctaGabung.secondaryLabel}
+          />
+          <TextField
+            label="Tombol 2 — tujuan"
+            name="gabungSecondaryHref"
+            defaultValue={site.ctaGabung.secondaryHref}
+            hint="Kosongkan untuk mailto formulir minat."
+          />
         </div>
       </Section>
 
+      <Section title="Footer">
+        <TextField
+          label="Kalimat pembuka"
+          name="footerEyebrow"
+          defaultValue={site.footerCopy.eyebrow}
+        />
+        <TextField
+          label="Judul ajakan"
+          name="footerTitle"
+          defaultValue={site.footerCopy.title}
+        />
+      </Section>
+
+      <Section title="Testimoni">
+        <RepeaterField
+          label="Kutipan anggota"
+          name="testimoniItems"
+          defaultValue={site.testimoni}
+          itemLabel="Testimoni"
+          hint="Boleh satu, boleh beberapa. Urutannya mengikuti daftar ini."
+          fields={[
+            { key: "teks", label: "Kutipan", type: "textarea" },
+            { key: "nama", label: "Nama" },
+            { key: "peran", label: "Peran / angkatan" },
+          ]}
+        />
+      </Section>
+
       <div className="sticky bottom-4 z-10">
-        <div className="glass-panel flex items-center justify-end rounded-full px-4 py-3">
+        <div className="glass-panel flex items-center justify-end rounded-sm px-4 py-3">
           <SubmitButton>Simpan perubahan</SubmitButton>
         </div>
       </div>
@@ -168,7 +255,7 @@ function Section({
   children: React.ReactNode;
 }) {
   return (
-    <section className="glass-panel rounded-[2rem] p-6 sm:p-8">
+    <section className="glass-panel rounded-sm p-6 sm:p-8">
       <h2 className="font-display text-xl font-semibold tracking-tight text-ink">
         {title}
       </h2>

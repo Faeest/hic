@@ -77,9 +77,13 @@ export type Pengurus = {
   gradien: string;
   /** Real portrait, when we have one. Missing → typographic treatment. */
   foto?: string;
+  /** Link key: divisi slug for a PJ, free label for a biro. */
+  unit?: string;
+  /** Kepengurusan period, e.g. "2025/2026". Empty = always shown. */
+  periode?: string;
 };
 
-export type KategoriPengurus = "pembina" | "inti" | "koordinator";
+export type KategoriPengurus = "pembina" | "inti" | "biro" | "koordinator";
 
 export type Proker = {
   judul: string;
@@ -135,7 +139,22 @@ export type Site = {
   tentangTags: string[];
   logoLightUrl: string;
   logoDarkUrl: string;
-  testimoni: Testimoni;
+  cta: { label: string; href: string };
+  ctaHero: {
+    primaryLabel: string;
+    primaryHref: string;
+    secondaryLabel: string;
+    secondaryHref: string;
+  };
+  ctaGabung: {
+    body: string;
+    primaryLabel: string;
+    primaryHref: string;
+    secondaryLabel: string;
+    secondaryHref: string;
+  };
+  footerCopy: { eyebrow: string; title: string };
+  testimoni: Testimoni[];
   marqueeItems: string[];
   tahunBerdiri: string;
   periodeKepengurusan: string;
@@ -178,6 +197,21 @@ export type SiteSettingsRow = {
   tentang_tags: string[];
   logo_light_url: string;
   logo_dark_url: string;
+  cta_label: string;
+  cta_href: string;
+  hero_cta_primary_label: string;
+  hero_cta_primary_href: string;
+  hero_cta_secondary_label: string;
+  hero_cta_secondary_href: string;
+  gabung_body: string;
+  gabung_primary_label: string;
+  gabung_primary_href: string;
+  gabung_secondary_label: string;
+  gabung_secondary_href: string;
+  footer_eyebrow: string;
+  footer_title: string;
+  testimoni_items: Testimoni[];
+  /** Legacy single-quote columns — superseded by `testimoni_items`. */
   testimoni_nama: string;
   testimoni_teks: string;
   testimoni_peran: string;
@@ -240,6 +274,8 @@ export type PengurusRow = {
   inisial: string;
   gradien: string;
   foto?: string | null;
+  unit?: string | null;
+  periode?: string | null;
   kategori: KategoriPengurus;
   sort: number;
   published: boolean;

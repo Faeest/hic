@@ -52,7 +52,7 @@ export const pengurusConfig: ResourceConfig = {
   createLabel: "Tambah pengurus",
   fields: [
     { kind: "text", name: "nama", label: "Nama", required: true },
-    { kind: "text", name: "jabatan", label: "Jabatan" },
+    { kind: "text", name: "jabatan", label: "Jabatan", hint: "mis. Ketua Umum, Kepala Biro Humas, PJ Divisi Web." },
     {
       kind: "select",
       name: "kategori",
@@ -60,10 +60,19 @@ export const pengurusConfig: ResourceConfig = {
       options: [
         { value: "pembina", label: "Dosen Pembina" },
         { value: "inti", label: "BPH / Inti" },
+        { value: "biro", label: "Biro" },
         { value: "koordinator", label: "PJ Divisi" },
       ],
     },
+    {
+      kind: "text",
+      name: "unit",
+      label: "Unit / Divisi",
+      hint: "PJ divisi: pakai slug divisi (web, uiux, robotics) agar muncul di halaman divisi itu. Biro: bebas (humas, pdd, webdev).",
+    },
+    { kind: "text", name: "periode", label: "Periode", hint: "mis. 2025/2026. Kosongkan agar selalu tampil." },
     { kind: "textarea", name: "deskripsi", label: "Deskripsi", rows: 2 },
+    { kind: "image", name: "foto", label: "Foto", folder: "pengurus", hint: "Kosongkan untuk memakai inisial." },
     { kind: "text", name: "inisial", label: "Inisial", hint: "mis. MI" },
     { kind: "color", name: "gradien", label: "Warna avatar" },
     { kind: "number", name: "sort", label: "Urutan" },

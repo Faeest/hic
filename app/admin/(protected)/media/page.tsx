@@ -1,12 +1,15 @@
 import type { Metadata } from "next";
-import { MediaUploader } from "@/components/admin/MediaUploader";
+import { MediaLibrary } from "@/components/admin/MediaLibrary";
+import { listMedia } from "@/lib/admin/media";
 
 export const metadata: Metadata = {
   title: "Media — Admin HIC",
   robots: { index: false, follow: false },
 };
 
-export default function AdminMediaPage() {
+export default async function AdminMediaPage() {
+  const items = await listMedia();
+
   return (
     <div className="flex flex-col gap-6">
       <div>
@@ -14,10 +17,11 @@ export default function AdminMediaPage() {
           Media
         </h1>
         <p className="mt-2 text-sm leading-relaxed text-ink-soft">
-          Unggah gambar lalu salin URL-nya untuk dipakai di kolom gambar mana pun.
+          Semua berkas di bucket <span className="font-mono text-xs">media</span>. Unggah,
+          salin URL, atau hapus yang sudah tidak dipakai.
         </p>
       </div>
-      <MediaUploader />
+      <MediaLibrary items={items} />
     </div>
   );
 }

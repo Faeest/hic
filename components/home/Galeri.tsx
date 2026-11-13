@@ -87,7 +87,7 @@ export function Galeri({
 
       <div className="mx-auto max-w-7xl px-5 pt-6 sm:px-8">
         <p className="text-sm text-ink-faint">
-          {galeri.length} foto · DITKOM 2024, DITKOM 2025, dan hari biasa di sekret
+          {galeri.length} foto
         </p>
       </div>
     </section>

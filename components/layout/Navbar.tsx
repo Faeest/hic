@@ -132,29 +132,21 @@ export function Navbar({ site }: { site: Site; divisi?: Divisi[] }) {
               onClick={(e) => scrollToSection(e, "beranda")}
               className="group flex items-center gap-2.5 font-display text-xl font-bold tracking-tight text-ink"
             >
-              <span className="relative grid h-10 w-10 shrink-0 place-items-center overflow-hidden rounded-xs border border-ink/12 bg-white p-1 transition-transform duration-300 group-hover:rotate-[8deg] dark:border-white/15 dark:bg-[#1b1815]">
-                <span className="relative h-full w-full">
-                  <Image
-                    src={site.logoLightUrl}
-                    alt="Logo HIC"
-                    fill
-                    sizes="32px"
-                    className="object-contain object-center dark:hidden"
-                  />
-                  <Image
-                    src={site.logoDarkUrl}
-                    alt="Logo HIC"
-                    fill
-                    sizes="32px"
-                    className="hidden object-contain object-center dark:block"
-                  />
-                </span>
-              </span>
-              <span className="flex items-baseline gap-1.5">
-                {site.nama}
-                <span className="hidden font-sans text-[11px] font-medium tracking-wide text-ink-soft sm:inline">
-                  STIKI
-                </span>
+              <span className="relative block h-10 w-10 shrink-0 overflow-hidden transition-transform duration-300 group-hover:rotate-[8deg]">
+                <Image
+                  src={site.logoLightUrl}
+                  alt="Logo HIC"
+                  fill
+                  sizes="40px"
+                  className="object-contain object-center dark:hidden"
+                />
+                <Image
+                  src={site.logoDarkUrl}
+                  alt="Logo HIC"
+                  fill
+                  sizes="40px"
+                  className="hidden object-contain object-center dark:block"
+                />
               </span>
             </Link>
           </motion.div>
@@ -208,10 +200,12 @@ export function Navbar({ site }: { site: Site; divisi?: Divisi[] }) {
               <span className="relative z-10">{blogLink.label}</span>
             </Link>
             <Link
-              href="/#gabung"
+              href={site.cta.href}
+              target={site.cta.href.startsWith("http") ? "_blank" : undefined}
+              rel={site.cta.href.startsWith("http") ? "noopener noreferrer" : undefined}
               className="ml-2 rounded-sm bg-ember px-4 py-2 text-sm font-medium text-white transition-colors duration-300 hover:bg-flare"
             >
-              Gabung HIC
+              {site.cta.label}
             </Link>
           </motion.div>
 
@@ -333,11 +327,11 @@ export function Navbar({ site }: { site: Site; divisi?: Divisi[] }) {
               className="flex items-center justify-between"
             >
               <Link
-                href="/#gabung"
+                href={site.cta.href}
                 onClick={() => setOpen(false)}
                 className="rounded-sm bg-ember px-6 py-3.5 text-base font-medium text-white"
               >
-                Gabung HIC
+                {site.cta.label}
               </Link>
               <span className="font-mono text-xs text-ink-faint">
                 UC • {site.tahunBerdiri}

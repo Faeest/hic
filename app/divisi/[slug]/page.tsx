@@ -2,9 +2,11 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { getAllDivisi, getDivisi } from "@/lib/content/divisi";
 import { getProkerByDivisi } from "@/lib/content/proker";
+import { getPengurus } from "@/lib/content/pengurus";
 import { getSite } from "@/lib/content/site";
 import { DivisiHero } from "@/components/divisi/DivisiHero";
 import { Kurikulum } from "@/components/divisi/Kurikulum";
+import { DivisiPj } from "@/components/divisi/DivisiPj";
 import { MentorSection } from "@/components/divisi/MentorSection";
 import { DivisiProker } from "@/components/divisi/DivisiKarya";
 import { DivisiNav } from "@/components/divisi/DivisiNav";
@@ -45,6 +47,8 @@ export default async function DivisiPage({
   if (!d) notFound();
 
   const proker = await getProkerByDivisi(slug);
+  const { koordinator } = await getPengurus();
+  const pj = koordinator.find((p) => p.unit === d.slug);
 
   return (
     <>
@@ -52,6 +56,7 @@ export default async function DivisiPage({
       <main>
         <DivisiHero d={d} />
         <Kurikulum d={d} />
+        <DivisiPj d={d} pj={pj} />
         <MentorSection d={d} />
         <DivisiProker d={d} items={proker} />
         <DivisiNav current={d} all={all} />

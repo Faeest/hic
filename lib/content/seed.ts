@@ -32,11 +32,31 @@ export const seedSite: Site = {
   ],
   logoLightUrl: "/variant_logo-hic/Logogram ORANGE BLACK.png",
   logoDarkUrl: "/variant_logo-hic/Logogram ORANGE WHITE.png",
-  testimoni: {
-    nama: "Dimas Arya",
-    teks: "Di sini saya belajar React dari teman sekamar, bukan dari dosen.",
-    peran: "Alumnus Divisi Web",
+  cta: { label: "Gabung HIC", href: "/#gabung" },
+  ctaHero: {
+    primaryLabel: "Jelajahi Divisi",
+    primaryHref: "/#divisi",
+    secondaryLabel: "Tentang HIC",
+    secondaryHref: "/#tentang",
   },
+  ctaGabung: {
+    body: "Tidak perlu jadi jagoan lebih dulu — di HIC semua orang sedang belajar. Datanglah ke sekret, ikut kelas perdana, dan lihat sendiri dari dekat.",
+    primaryLabel: "Hubungi kami",
+    primaryHref: "",
+    secondaryLabel: "Kirim formulir minat",
+    secondaryHref: "",
+  },
+  footerCopy: {
+    eyebrow: "Punya prinsip belajar yang sama?",
+    title: "Mari tumbuh bareng di HIC.",
+  },
+  testimoni: [
+    {
+      nama: "Dimas Arya",
+      teks: "Di sini saya belajar React dari teman sekamar, bukan dari dosen.",
+      peran: "Alumnus Divisi Web",
+    },
+  ],
   marqueeItems: [
     "Hardware Interactive Club",
     "Web Development",

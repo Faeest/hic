@@ -17,7 +17,7 @@ export default async function AdminPengurusPage() {
           Pengurus
         </h1>
         <p className="mt-2 text-sm leading-relaxed text-ink-soft">
-          Dosen pembina, BPH, dan penanggung jawab divisi.
+          Dosen pembina, BPH, biro, dan penanggung jawab divisi.
         </p>
       </div>
       <ResourceManager config={pengurusConfig} rows={rows} />

@@ -7,6 +7,60 @@ import { FieldWrap, inputClass } from "./FieldWrap";
 import { uploadImage } from "@/lib/actions/upload";
 import { cn } from "@/lib/utils";
 
+/** Longest edge kept after compression. */
+const MAX_EDGE = 2000;
+/** WebP quality — visually lossless for photos at this size. */
+const QUALITY = 0.82;
+/** Below this, re-encoding usually costs more than it saves. */
+const SKIP_BELOW = 400 * 1024;
+
+const fmt = (bytes: number) =>
+  bytes >= 1024 * 1024
+    ? `${(bytes / 1024 / 1024).toFixed(1)} MB`
+    : `${Math.round(bytes / 1024)} KB`;
+
+/**
+ * Downscale + re-encode in the browser before upload.
+ *
+ * The bucket has a 10 MB per-file limit and a finite quota, so a 4 MB camera
+ * JPEG is wasteful. SVG and GIF are passed through untouched (vector /
+ * animation), and anything already small is left alone.
+ */
+async function compressImage(file: File): Promise<File> {
+  if (!file.type.startsWith("image/")) return file;
+  if (file.type === "image/svg+xml" || file.type === "image/gif") return file;
+  if (file.size < SKIP_BELOW) return file;
+
+  try {
+    const bitmap = await createImageBitmap(file);
+    const scale = Math.min(1, MAX_EDGE / Math.max(bitmap.width, bitmap.height));
+    const width = Math.max(1, Math.round(bitmap.width * scale));
+    const height = Math.max(1, Math.round(bitmap.height * scale));
+
+    const canvas = document.createElement("canvas");
+    canvas.width = width;
+    canvas.height = height;
+    const ctx = canvas.getContext("2d");
+    if (!ctx) return file;
+
+    ctx.imageSmoothingEnabled = true;
+    ctx.imageSmoothingQuality = "high";
+    ctx.drawImage(bitmap, 0, 0, width, height);
+    bitmap.close?.();
+
+    const blob = await new Promise<Blob | null>((resolve) =>
+      canvas.toBlob(resolve, "image/webp", QUALITY)
+    );
+    if (!blob || blob.size >= file.size) return file;
+
+    const name = `${file.name.replace(/\.[^.]+$/, "") || "gambar"}.webp`;
+    return new File([blob], name, { type: "image/webp" });
+  } catch {
+    // Unsupported source (e.g. HEIC) — let the server decide.
+    return file;
+  }
+}
+
 /**
  * Image field: upload to Supabase Storage OR paste a URL.
  * Keeps the resolved URL in a hidden input named `name`.
@@ -26,16 +80,23 @@ export function ImageField({
 }) {
   const [url, setUrl] = useState<string>(defaultValue ?? "");
   const [error, setError] = useState<string | null>(null);
+  const [saved, setSaved] = useState<string | null>(null);
   const [pending, startTransition] = useTransition();
   const fileRef = useRef<HTMLInputElement>(null);
 
   const onPick = (file: File | undefined) => {
     if (!file) return;
     setError(null);
-    const fd = new FormData();
-    fd.set("file", file);
-    fd.set("folder", folder);
+    setSaved(null);
     startTransition(async () => {
+      const compressed = await compressImage(file);
+      if (compressed !== file) {
+        setSaved(`${fmt(file.size)} → ${fmt(compressed.size)}`);
+      }
+
+      const fd = new FormData();
+      fd.set("file", compressed);
+      fd.set("folder", folder);
       const res = await uploadImage(fd);
       if (res.error) setError(res.error);
       else if (res.url) setUrl(res.url);
@@ -48,7 +109,7 @@ export function ImageField({
       <input type="hidden" name={name} value={url} />
 
       <div className="flex flex-col gap-3 sm:flex-row sm:items-start">
-        <div className="relative h-24 w-24 shrink-0 overflow-hidden rounded-2xl border border-ink/10 bg-cream dark:border-white/10 dark:bg-white/[0.03]">
+        <div className="relative h-24 w-24 shrink-0 overflow-hidden rounded-sm border border-ink/10 bg-cream dark:border-white/10 dark:bg-white/[0.03]">
           {url ? (
             <Image
               src={url}
@@ -78,7 +139,7 @@ export function ImageField({
               type="button"
               onClick={() => fileRef.current?.click()}
               disabled={pending}
-              className="inline-flex items-center gap-2 rounded-full border border-ink/15 px-4 py-2 text-sm font-medium text-ink-soft transition-colors hover:text-ember disabled:opacity-60 dark:border-white/15"
+              className="inline-flex items-center gap-2 rounded-sm border border-ink/15 px-4 py-2 text-sm font-medium text-ink-soft transition-colors hover:text-ember disabled:opacity-60 dark:border-white/15"
             >
               {pending ? (
                 <Spinner size={16} className="animate-spin" />
@@ -91,7 +152,7 @@ export function ImageField({
               <button
                 type="button"
                 onClick={() => setUrl("")}
-                className="inline-flex items-center gap-2 rounded-full border border-ink/15 px-4 py-2 text-sm font-medium text-ink-soft transition-colors hover:text-red-500 dark:border-white/15"
+                className="inline-flex items-center gap-2 rounded-sm border border-ink/15 px-4 py-2 text-sm font-medium text-ink-soft transition-colors hover:text-red-500 dark:border-white/15"
               >
                 <Trash size={16} weight="bold" />
                 Hapus
@@ -105,6 +166,9 @@ export function ImageField({
             className="hidden"
             onChange={(e) => onPick(e.target.files?.[0])}
           />
+          {saved && (
+            <p className="text-xs text-ink-faint">Dikompres: {saved}</p>
+          )}
           {error && (
             <p className="text-xs text-red-600 dark:text-red-400">{error}</p>
           )}

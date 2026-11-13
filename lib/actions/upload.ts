@@ -2,6 +2,7 @@
 
 import { assertAdmin } from "@/lib/auth/dal";
 import { createClient } from "@/lib/supabase/server";
+import { revalidatePublic } from "@/lib/actions/revalidate";
 
 const MAX_BYTES = 10 * 1024 * 1024; // matches the `media` bucket limit
 const ALLOWED = [
@@ -68,4 +69,27 @@ export async function uploadImage(
 
   const { data } = supabase.storage.from("media").getPublicUrl(path);
   return { url: data.publicUrl };
+}
+
+/**
+ * Permanently remove one object from the `media` bucket.
+ *
+ * Deleting a file that a row still points at leaves a broken image, so the UI
+ * warns before calling this.
+ */
+export async function deleteMedia(path: string): Promise<UploadResult> {
+  try {
+    await assertAdmin();
+  } catch {
+    return { error: "Tidak diizinkan." };
+  }
+
+  if (!path || path.includes("..")) return { error: "Path tidak valid." };
+
+  const supabase = await createClient();
+  const { error } = await supabase.storage.from("media").remove([path]);
+  if (error) return { error: error.message };
+
+  revalidatePublic();
+  return { url: undefined };
 }

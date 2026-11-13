@@ -4,6 +4,7 @@ import { motion } from "framer-motion";
 import { ArrowUpRight, ChatCircleDots } from "@phosphor-icons/react";
 import { Reveal } from "@/components/ui/Reveal";
 import type { Section, Site } from "@/lib/types";
+import { cn } from "@/lib/utils";
 
 export function Gabung({
   id,
@@ -40,9 +41,7 @@ export function Gabung({
                 {section.title}
               </h2>
               <p className="mt-6 max-w-xl text-lg leading-relaxed text-white/85">
-                Tidak perlu jadi jagoan lebih dulu — di HIC semua orang sedang
-                belajar. Datanglah ke sekret, ikut kelas perdana, dan lihat
-                sendiri dari dekat.
+                {site.ctaGabung.body}
               </p>
             </motion.div>
 
@@ -54,10 +53,10 @@ export function Gabung({
               className="mt-10 flex flex-wrap items-center gap-4"
             >
               <a
-                href={`mailto:${site.kontak.email}`}
+                href={site.ctaGabung.primaryHref || `mailto:${site.kontak.email}`}
                 className="group inline-flex items-center gap-2.5 rounded-sm bg-white px-8 py-4 text-base font-semibold text-ember transition-colors duration-300 hover:bg-peach"
               >
-                Hubungi kami
+                {site.ctaGabung.primaryLabel}
                 <ArrowUpRight
                   size={18}
                   weight="bold"
@@ -65,35 +64,46 @@ export function Gabung({
                 />
               </a>
               <a
-                href={`mailto:${site.kontak.email}?subject=Pendaftaran%20anggota%20HIC`}
+                href={
+                  site.ctaGabung.secondaryHref ||
+                  `mailto:${site.kontak.email}?subject=Pendaftaran%20anggota%20HIC`
+                }
                 className="inline-flex items-center gap-2.5 rounded-sm border border-white/50 px-8 py-4 text-base font-medium text-white transition-colors duration-300 hover:border-white hover:bg-white/10"
               >
                 <ChatCircleDots size={18} weight="duotone" />
-                Kirim formulir minat
+                {site.ctaGabung.secondaryLabel}
               </a>
             </motion.div>
           </div>
         </div>
       </div>
 
-      {/* Opini strip */}
-      <Reveal className="mx-auto mt-8 max-w-7xl px-5 sm:px-8">
-        <div className="surface flex flex-col items-center justify-between gap-6 bg-paper px-8 py-10 text-center sm:flex-row sm:text-left">
-          <div>
-            <p className="font-display text-xl font-semibold text-ink sm:text-2xl">
-              “{site.testimoni.teks}”
-            </p>
-            <p className="mt-2 text-sm text-ink-faint">
-              {site.testimoni.nama} · {site.testimoni.peran}
-            </p>
+      {/* Testimoni — one quote or several, same block */}
+      {site.testimoni.length > 0 && (
+        <Reveal className="mx-auto mt-8 max-w-7xl px-5 sm:px-8">
+          <div className="border-t border-ink/12 pt-6">
+            <p className="text-sm text-ink-faint">Testimoni anggota</p>
+            <div
+              className={cn(
+                "mt-5 grid gap-x-8 gap-y-6",
+                site.testimoni.length > 1 && "sm:grid-cols-2 lg:grid-cols-3"
+              )}
+            >
+              {site.testimoni.map((t, i) => (
+                <figure key={`${t.nama}-${i}`} className="border-l-2 border-ember/30 pl-4">
+                  <blockquote className="font-display text-lg leading-snug text-ink">
+                    “{t.teks}”
+                  </blockquote>
+                  <figcaption className="mt-2 text-sm text-ink-faint">
+                    {t.nama}
+                    {t.peran ? ` · ${t.peran}` : ""}
+                  </figcaption>
+                </figure>
+              ))}
+            </div>
           </div>
-          <div className="shrink-0">
-            <p className="text-sm text-ink-faint">
-              Testimoni anggota
-            </p>
-          </div>
-        </div>
-      </Reveal>
+        </Reveal>
+      )}
     </section>
   );
 }

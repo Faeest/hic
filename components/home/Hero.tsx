@@ -3,6 +3,7 @@
 import { useRef } from "react";
 import { motion, useScroll, useTransform, type MotionValue } from "framer-motion";
 import { ArrowDownRight, ArrowUpRight } from "@phosphor-icons/react";
+import { HeroCanvas } from "./HeroCanvas";
 import type { Site } from "@/lib/types";
 
 const EASE = [0.16, 1, 0.3, 1] as const;
@@ -41,24 +42,17 @@ export function Hero({ id, site }: { id: string; site: Site }) {
     target: secRef,
     offset: ["start start", "end start"],
   });
-  const contentOpacity = useTransform(scrollYProgress, [0, 0.75], [1, 0]);
-  const subY = useTransform(scrollYProgress, [0, 1], [0, 64]);
-  const ctaY = useTransform(scrollYProgress, [0, 1], [0, 100]);
-  const statsY = useTransform(scrollYProgress, [0, 1], [0, 150]);
 
   return (
     <section
       id={id}
       ref={secRef}
-      className="relative flex min-h-[100dvh] flex-col overflow-hidden"
+      className="relative flex min-h-[100svh] flex-col overflow-hidden"
     >
       <div className="mesh-orange absolute inset-0" aria-hidden />
-      <div aria-hidden className="hero-rules pointer-events-none absolute inset-0" />
+      <HeroCanvas />
 
-      <motion.div
-        style={{ opacity: contentOpacity }}
-        className="relative mx-auto flex w-full max-w-7xl flex-1 flex-col justify-center px-5 pb-16 pt-32 sm:px-8 lg:pt-36"
-      >
+      <div className="relative mx-auto flex w-full max-w-7xl flex-1 flex-col justify-center px-5 pb-16 pt-32 sm:px-8 lg:pt-36">
         <h1 className="font-display text-[13vw] font-semibold leading-[0.94] tracking-tight text-ink sm:text-[10vw] lg:text-[8.2rem]">
           {headline.map((w, i) => (
             <Word key={w} i={i} progress={scrollYProgress}>
@@ -67,29 +61,26 @@ export function Hero({ id, site }: { id: string; site: Site }) {
           ))}
         </h1>
 
-        <motion.div style={{ y: subY }}>
-          <motion.p
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.9, ease: EASE }}
-            className="mt-8 max-w-xl text-lg leading-relaxed text-ink-soft sm:text-xl"
-          >
-            {site.heroSubcopy}
-          </motion.p>
-        </motion.div>
+        <motion.p
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, delay: 0.9, ease: EASE }}
+          className="mt-8 max-w-xl text-lg leading-relaxed text-ink-soft sm:text-xl"
+        >
+          {site.heroSubcopy}
+        </motion.p>
 
-        <motion.div style={{ y: ctaY }}>
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 1.05, ease: EASE }}
-            className="mt-10 flex flex-wrap items-center gap-4"
-          >
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, delay: 1.05, ease: EASE }}
+          className="mt-10 flex flex-wrap items-center gap-4"
+        >
           <a
-            href="#divisi"
+            href={site.ctaHero.primaryHref}
             className="group inline-flex items-center gap-2.5 rounded-sm bg-ember px-7 py-4 text-base font-medium text-white transition-colors duration-300 hover:bg-flare"
           >
-            Jelajahi Divisi
+            {site.ctaHero.primaryLabel}
             <ArrowDownRight
               size={18}
               weight="bold"
@@ -97,10 +88,10 @@ export function Hero({ id, site }: { id: string; site: Site }) {
             />
           </a>
           <a
-            href="#tentang"
+            href={site.ctaHero.secondaryHref}
             className="group inline-flex items-center gap-2.5 rounded-sm border border-ink/15 px-7 py-4 text-base font-medium text-ink transition-colors duration-300 hover:border-ember hover:text-ember"
           >
-            Tentang HIC
+            {site.ctaHero.secondaryLabel}
             <ArrowUpRight
               size={18}
               weight="bold"
@@ -108,16 +99,14 @@ export function Hero({ id, site }: { id: string; site: Site }) {
             />
           </a>
         </motion.div>
-        </motion.div>
 
         {/* stats strip */}
-        <motion.div style={{ y: statsY }}>
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.9, delay: 1.2, ease: EASE }}
-            className="my-16 grid grid-cols-2 gap-px overflow-hidden border-y border-ink/10 bg-ink/10 sm:grid-cols-4"
-          >
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.9, delay: 1.2, ease: EASE }}
+          className="my-16 grid grid-cols-2 gap-px overflow-hidden border-y border-ink/10 bg-ink/10 sm:grid-cols-4"
+        >
           {site.statistik.map((s) => (
             <div
               key={s.label}
@@ -131,9 +120,8 @@ export function Hero({ id, site }: { id: string; site: Site }) {
               </span>
             </div>
           ))}
-          </motion.div>
         </motion.div>
-      </motion.div>
+      </div>
     </section>
   );
 }

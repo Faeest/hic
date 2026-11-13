@@ -89,7 +89,7 @@ function NavItem({
       onClick={onNavigate}
       aria-current={active ? "page" : undefined}
       className={cn(
-        "flex items-center gap-3 rounded-2xl px-4 py-2.5 text-sm font-medium transition-colors",
+        "flex items-center gap-3 rounded-sm px-4 py-2.5 text-sm font-medium transition-colors",
         active
           ? "bg-ember text-white"
           : "text-ink-soft hover:bg-ink/5 hover:text-ink dark:hover:bg-white/5",
@@ -135,14 +135,14 @@ export function AdminShell({
   return (
     <div className="min-h-dvh bg-cream dark:bg-[#14120f]">
       {/* Top bar */}
-      <header className="sticky top-0 z-40 border-b border-ink/10 bg-cream/90 backdrop-blur dark:border-white/10 dark:bg-[#14120f]/90">
+      <header className="sticky top-0 z-40 border-b border-ink/12 bg-cream dark:border-white/10 dark:bg-[#14120f]">
         <div className="mx-auto flex max-w-7xl items-center justify-between gap-4 px-5 py-3 sm:px-8">
           <div className="flex items-center gap-3">
             <button
               type="button"
               onClick={() => setOpen((v) => !v)}
               aria-label={open ? "Tutup menu" : "Buka menu"}
-              className="grid h-10 w-10 place-items-center rounded-full border border-ink/15 lg:hidden"
+              className="grid h-10 w-10 place-items-center rounded-sm border border-ink/15 lg:hidden"
             >
               {open ? <X size={18} weight="bold" /> : <List size={18} weight="bold" />}
             </button>
@@ -156,14 +156,14 @@ export function AdminShell({
             <Link
               href="/"
               target="_blank"
-              className="hidden rounded-full border border-ink/15 px-4 py-2 text-sm font-medium text-ink-soft transition-colors hover:text-ember sm:inline-block"
+              className="hidden rounded-sm border border-ink/15 px-4 py-2 text-sm font-medium text-ink-soft transition-colors hover:text-ember sm:inline-block"
             >
               Lihat situs
             </Link>
             <form action={signOut}>
               <button
                 type="submit"
-                className="flex items-center gap-2 rounded-full bg-ink/5 px-4 py-2 text-sm font-medium text-ink-soft transition-colors hover:bg-ink/10 hover:text-ink dark:bg-white/5 dark:hover:bg-white/10"
+                className="flex items-center gap-2 rounded-sm bg-ink/5 px-4 py-2 text-sm font-medium text-ink-soft transition-colors hover:bg-ink/10 hover:text-ink dark:bg-white/5 dark:hover:bg-white/10"
               >
                 <SignOut size={16} weight="bold" />
                 <span className="hidden sm:inline">Keluar</span>

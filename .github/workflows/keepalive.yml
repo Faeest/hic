@@ -1,0 +1,52 @@
+name: Supabase keepalive
+
+# Free Supabase projects pause after ~7 days with no activity. This runs on
+# GitHub's infrastructure, so it keeps the database awake even when the VPS that
+# hosts the site is down.
+#
+# Required repository secrets (Settings → Secrets and variables → Actions):
+#   SUPABASE_URL       e.g. https://abcdefgh.supabase.co
+#   SUPABASE_ANON_KEY  the publishable/anon key
+#
+# Note: GitHub disables scheduled workflows after ~60 days without repository
+# activity. Push something (or run this manually) periodically.
+
+on:
+  schedule:
+    # 03:17 UTC daily — off the hour to avoid the scheduled-workflow stampede.
+    - cron: "17 3 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  ping:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Query Supabase
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_ANON_KEY }}
+        run: |
+          set -euo pipefail
+          if [ -z "${SUPABASE_URL:-}" ] || [ -z "${SUPABASE_ANON_KEY:-}" ]; then
+            echo "::error::Add SUPABASE_URL and SUPABASE_ANON_KEY to the repository secrets."
+            exit 1
+          fi
+
+          url="${SUPABASE_URL%/}/rest/v1/site_settings?select=id&limit=1"
+          code=$(curl -sS -o /tmp/keepalive.json -w '%{http_code}' --max-time 30 \
+            "$url" \
+            -H "apikey: $SUPABASE_ANON_KEY" \
+            -H "Authorization: Bearer $SUPABASE_ANON_KEY")
+
+          echo "HTTP $code"
+          cat /tmp/keepalive.json || true
+          echo
+
+          if [ "$code" != "200" ]; then
+            echo "::error::Supabase keepalive failed with HTTP $code"
+            exit 1
+          fi

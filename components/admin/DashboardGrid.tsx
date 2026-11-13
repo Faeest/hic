@@ -29,9 +29,9 @@ export function DashboardGrid({ counts }: { counts: Record<string, number | null
     <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
       <Link
         href="/admin/site"
-        className="glass-panel group flex items-center gap-4 rounded-3xl p-6 transition-transform duration-300 hover:-translate-y-0.5 sm:col-span-2 lg:col-span-3"
+        className="glass-panel group flex items-center gap-4 rounded-sm p-6 transition-transform duration-300 hover:-translate-y-0.5 sm:col-span-2 lg:col-span-3"
       >
-        <span className="grid h-12 w-12 shrink-0 place-items-center rounded-2xl bg-ember text-white">
+        <span className="grid h-12 w-12 shrink-0 place-items-center rounded-sm bg-ember text-white">
           <GearSix size={24} weight="duotone" />
         </span>
         <div>
@@ -48,9 +48,9 @@ export function DashboardGrid({ counts }: { counts: Record<string, number | null
         <Link
           key={c.key}
           href={c.href}
-          className="glass-panel group flex items-center gap-4 rounded-3xl p-6 transition-transform duration-300 hover:-translate-y-0.5"
+          className="glass-panel group flex items-center gap-4 rounded-sm p-6 transition-transform duration-300 hover:-translate-y-0.5"
         >
-          <span className="grid h-11 w-11 shrink-0 place-items-center rounded-2xl bg-peach text-ember">
+          <span className="grid h-11 w-11 shrink-0 place-items-center rounded-sm bg-peach text-ember">
             <c.icon size={22} weight="duotone" />
           </span>
           <div>

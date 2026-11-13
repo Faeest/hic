@@ -46,6 +46,8 @@ export const koordinatorDivisi: Pengurus[] = [
     deskripsi: "Memandu kurikulum dan mentoring untuk jalur web development.",
     inisial: "SG",
     gradien: "#d45311",
+    unit: "web",
+    periode: "2025/2026",
   },
   {
     nama: "Muhammad Dimas Cahyo",
@@ -53,6 +55,8 @@ export const koordinatorDivisi: Pengurus[] = [
     deskripsi: "Menjaga kualitas riset, desain, dan evaluasi antarmuka.",
     inisial: "MD",
     gradien: "#fb9606",
+    unit: "uiux",
+    periode: "2025/2026",
   },
   {
     nama: "Zulhan Arif Fasya",
@@ -60,5 +64,7 @@ export const koordinatorDivisi: Pengurus[] = [
     deskripsi: "Merawat eksperimen robotik dan proyek perangkat fisik.",
     inisial: "ZA",
     gradien: "#f67f1e",
+    unit: "robotics",
+    periode: "2025/2026",
   },
 ];

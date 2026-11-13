@@ -37,17 +37,17 @@ export function PostEditor({ post }: { post: Post | null }) {
   return (
     <form action={action} className="flex flex-col gap-6">
       {state && !state.ok && (
-        <p className="rounded-2xl border border-red-500/30 bg-red-500/10 px-4 py-3 text-sm text-red-600 dark:text-red-400">
+        <p className="rounded-sm border border-red-500/30 bg-red-500/10 px-4 py-3 text-sm text-red-600 dark:text-red-400">
           {state.error}
         </p>
       )}
       {state?.ok && (
-        <p className="flex items-center gap-2 rounded-2xl border border-green-500/30 bg-green-500/10 px-4 py-3 text-sm text-green-700 dark:text-green-400">
+        <p className="flex items-center gap-2 rounded-sm border border-green-500/30 bg-green-500/10 px-4 py-3 text-sm text-green-700 dark:text-green-400">
           <CheckCircle size={18} weight="fill" /> Tersimpan
         </p>
       )}
 
-      <div className="glass-panel flex flex-col gap-5 rounded-[2rem] p-6 sm:p-8">
+      <div className="glass-panel flex flex-col gap-5 rounded-sm p-6 sm:p-8">
         <TextField label="Judul" name="title" defaultValue={post?.title ?? ""} required />
         <TextField
           label="Slug"
@@ -78,7 +78,7 @@ export function PostEditor({ post }: { post: Post | null }) {
             value={tags}
             onChange={(e) => setTags(e.target.value)}
             placeholder="web, tutorial"
-            className="w-full rounded-2xl border border-ink/15 bg-white px-4 py-2.5 text-base text-ink outline-none transition-colors focus:border-ember dark:border-white/15 dark:bg-white/[0.04]"
+            className="w-full rounded-sm border border-ink/15 bg-white px-4 py-2.5 text-base text-ink outline-none transition-colors focus:border-ember dark:border-white/15 dark:bg-white/[0.04]"
           />
           <p className="text-xs leading-relaxed text-ink-faint">
             Pisahkan dengan koma. mis. web, tutorial
@@ -100,12 +100,12 @@ export function PostEditor({ post }: { post: Post | null }) {
       </div>
 
       {/* Markdown body */}
-      <div className="glass-panel flex flex-col gap-4 rounded-[2rem] p-6 sm:p-8">
+      <div className="glass-panel flex flex-col gap-4 rounded-sm p-6 sm:p-8">
         <div className="flex items-center justify-between gap-4">
           <h2 className="font-display text-xl font-semibold tracking-tight text-ink">
             Isi artikel
           </h2>
-          <div className="flex items-center gap-1 rounded-full border border-ink/15 p-1 dark:border-white/15">
+          <div className="flex items-center gap-1 rounded-sm border border-ink/15 p-1 dark:border-white/15">
             <TabButton active={tab === "write"} onClick={() => setTab("write")} icon={<PencilSimple size={14} weight="bold" />}>
               Tulis
             </TabButton>
@@ -121,10 +121,10 @@ export function PostEditor({ post }: { post: Post | null }) {
             onChange={(e) => setBody(e.target.value)}
             rows={20}
             placeholder={"# Judul\n\nTulis dalam **Markdown**…"}
-            className="w-full resize-y rounded-2xl border border-ink/15 bg-white px-4 py-3 font-mono text-sm leading-relaxed text-ink outline-none transition-colors focus:border-ember dark:border-white/15 dark:bg-white/[0.04]"
+            className="w-full resize-y rounded-sm border border-ink/15 bg-white px-4 py-3 font-mono text-sm leading-relaxed text-ink outline-none transition-colors focus:border-ember dark:border-white/15 dark:bg-white/[0.04]"
           />
         ) : (
-          <div className="min-h-[20rem] rounded-2xl border border-ink/10 bg-cream p-5 dark:border-white/10 dark:bg-white/[0.02]">
+          <div className="min-h-[20rem] rounded-sm border border-ink/10 bg-cream p-5 dark:border-white/10 dark:bg-white/[0.02]">
             {body.trim() ? (
               <Markdown>{body}</Markdown>
             ) : (
@@ -136,7 +136,7 @@ export function PostEditor({ post }: { post: Post | null }) {
       </div>
 
       <div className="sticky bottom-4 z-10">
-        <div className="glass-panel flex items-center justify-end gap-3 rounded-full px-4 py-3">
+        <div className="glass-panel flex items-center justify-end gap-3 rounded-sm px-4 py-3">
           <SubmitButton>{post ? "Simpan" : "Buat artikel"}</SubmitButton>
         </div>
       </div>
@@ -160,7 +160,7 @@ function TabButton({
       type="button"
       onClick={onClick}
       className={cn(
-        "inline-flex items-center gap-1.5 rounded-full px-3.5 py-1.5 text-sm font-medium transition-colors",
+        "inline-flex items-center gap-1.5 rounded-sm px-3.5 py-1.5 text-sm font-medium transition-colors",
         active ? "bg-ember text-white" : "text-ink-soft hover:text-ink"
       )}
     >

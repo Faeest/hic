@@ -37,7 +37,7 @@ export default async function AdminPostsPage() {
         </div>
         <Link
           href="/admin/posts/new"
-          className="inline-flex shrink-0 items-center gap-2 rounded-full bg-ember px-5 py-2.5 text-sm font-medium text-white transition-colors hover:bg-flare"
+          className="inline-flex shrink-0 items-center gap-2 rounded-sm bg-ember px-5 py-2.5 text-sm font-medium text-white transition-colors hover:bg-flare"
         >
           <Plus size={16} weight="bold" />
           Artikel baru
@@ -46,13 +46,13 @@ export default async function AdminPostsPage() {
 
       <div className="flex flex-col gap-3">
         {posts.length === 0 && (
-          <p className="rounded-2xl border border-dashed border-ink/15 px-4 py-8 text-center text-sm text-ink-faint dark:border-white/15">
+          <p className="rounded-sm border border-dashed border-ink/15 px-4 py-8 text-center text-sm text-ink-faint dark:border-white/15">
             Belum ada artikel. Klik &ldquo;Artikel baru&rdquo; untuk mulai menulis.
           </p>
         )}
 
         {posts.map((p) => (
-          <div key={p.id} className="glass-panel flex items-center gap-4 rounded-3xl p-5">
+          <div key={p.id} className="glass-panel flex items-center gap-4 rounded-sm p-5">
             <div className="min-w-0 flex-1">
               <div className="flex items-center gap-2.5">
                 <p className="truncate font-display text-lg font-semibold text-ink">
@@ -61,8 +61,8 @@ export default async function AdminPostsPage() {
                 <span
                   className={
                     p.published
-                      ? "shrink-0 rounded-full bg-green-500/15 px-2.5 py-1 text-xs font-medium text-green-700 dark:text-green-400"
-                      : "shrink-0 rounded-full bg-ink/10 px-2.5 py-1 text-xs font-medium text-ink-soft dark:bg-white/10"
+                      ? "shrink-0 rounded-sm bg-green-500/15 px-2.5 py-1 text-xs font-medium text-green-700 dark:text-green-400"
+                      : "shrink-0 rounded-sm bg-ink/10 px-2.5 py-1 text-xs font-medium text-ink-soft dark:bg-white/10"
                   }
                 >
                   {p.published ? "Terbit" : "Draf"}

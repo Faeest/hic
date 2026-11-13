@@ -23,4 +23,4 @@ export function FieldWrap({ label, name, hint, className, children }: FieldWrapP
 }
 
 export const inputClass =
-  "w-full rounded-2xl border border-ink/15 bg-white px-4 py-2.5 text-base text-ink outline-none transition-colors focus:border-ember dark:border-white/15 dark:bg-white/[0.04]";
+  "w-full rounded-sm border border-ink/15 bg-white px-4 py-2.5 text-base text-ink outline-none transition-colors focus:border-ember dark:border-white/15 dark:bg-white/[0.04]";

@@ -36,7 +36,7 @@ export function PostListActions({
           href={`/blog/${slug}`}
           target="_blank"
           aria-label="Lihat"
-          className="grid h-9 w-9 place-items-center rounded-full border border-ink/15 text-ink-soft transition-colors hover:text-ember dark:border-white/15"
+          className="grid h-9 w-9 place-items-center rounded-sm border border-ink/15 text-ink-soft transition-colors hover:text-ember dark:border-white/15"
         >
           <ArrowSquareOut size={16} weight="bold" />
         </Link>
@@ -44,7 +44,7 @@ export function PostListActions({
       <Link
         href={`/admin/posts/${id}`}
         aria-label="Ubah"
-        className="grid h-9 w-9 place-items-center rounded-full border border-ink/15 text-ink-soft transition-colors hover:text-ember dark:border-white/15"
+        className="grid h-9 w-9 place-items-center rounded-sm border border-ink/15 text-ink-soft transition-colors hover:text-ember dark:border-white/15"
       >
         <PencilSimple size={16} weight="bold" />
       </Link>
@@ -53,7 +53,7 @@ export function PostListActions({
         onClick={onDelete}
         disabled={pending}
         aria-label="Hapus"
-        className="grid h-9 w-9 place-items-center rounded-full border border-ink/15 text-ink-soft transition-colors hover:text-red-500 disabled:opacity-50 dark:border-white/15"
+        className="grid h-9 w-9 place-items-center rounded-sm border border-ink/15 text-ink-soft transition-colors hover:text-red-500 disabled:opacity-50 dark:border-white/15"
       >
         <Trash size={16} weight="bold" />
       </button>

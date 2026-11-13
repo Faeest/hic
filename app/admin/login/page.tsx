@@ -11,8 +11,8 @@ export default function AdminLoginPage() {
   return (
     <main className="flex min-h-dvh items-center justify-center bg-cream px-5 py-16 dark:bg-[#14120f]">
       <div className="w-full max-w-md">
-        <div className="glass-panel rounded-[2rem] p-8 sm:p-10">
-          <p className="font-mono text-xs uppercase tracking-[0.2em] text-ink-faint">
+        <div className="glass-panel rounded-sm p-8 sm:p-10">
+          <p className="text-sm text-ink-faint">
             Admin HIC
           </p>
           <h1 className="mt-3 font-display text-3xl font-semibold tracking-tight text-ink">
