@@ -198,7 +198,7 @@ export function Pengurus({
             <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
               {biro.map((p, i) => (
                 <motion.div
-                  key={p.nama}
+                  key={`${p.nama}-${p.jabatan}`}
                   {...FADE}
                   transition={{ duration: 0.4, ease: "easeOut", delay: i * 0.04 }}
                   className="flex items-start gap-4 border-t border-ink/12 pt-4"
