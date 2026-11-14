@@ -49,7 +49,7 @@ export function GaleriLightbox({
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 0.18, ease: "easeOut" }}
-      className="fixed inset-0 z-50 flex flex-col bg-ink/95 backdrop-blur-sm"
+      className="fixed inset-0 z-50 flex flex-col bg-ink"
       role="dialog"
       aria-modal="true"
       aria-label={item.judul}
