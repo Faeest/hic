@@ -1,7 +1,8 @@
 "use client";
 
-import { useActionState, useState } from "react";
+import { useActionState, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import { Reorder, useDragControls } from "framer-motion";
 import {
   Plus,
   Pencil,
@@ -10,6 +11,7 @@ import {
   ArrowDown,
   CheckCircle,
   X,
+  DotsSixVertical,
 } from "@phosphor-icons/react";
 import { cn } from "@/lib/utils";
 import { TextField } from "./fields/TextField";
@@ -50,13 +52,57 @@ export function ResourceManager({
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
+  /**
+   * Reordering is local until "Simpan urutan". `orderKey` is the server's id
+   * sequence; when it changes (create, delete, refresh) the local order resyncs.
+   */
+  const orderKey = rows.map((r) => String(r.id)).join("|");
+  const [order, setOrder] = useState<string[]>(() =>
+    rows.map((r) => String(r.id))
+  );
+  const [syncedKey, setSyncedKey] = useState(orderKey);
+
+  // Adjust during render (not in an effect) when the server's id sequence
+  // changes — the documented pattern for state derived from props.
+  if (orderKey !== syncedKey) {
+    setSyncedKey(orderKey);
+    setOrder(orderKey ? orderKey.split("|") : []);
+  }
+
+  const dirty = order.join("|") !== orderKey;
+
+  // A refresh or tab close would silently drop the unsaved order.
+  useEffect(() => {
+    if (!dirty) return;
+    const warn = (event: BeforeUnloadEvent) => {
+      event.preventDefault();
+      event.returnValue = "";
+    };
+    window.addEventListener("beforeunload", warn);
+    return () => window.removeEventListener("beforeunload", warn);
+  }, [dirty]);
+
+  const byId = new Map(rows.map((r) => [String(r.id), r]));
+  const orderedRows = order
+    .map((id) => byId.get(id))
+    .filter((r): r is Row => Boolean(r));
+
   const close = () => {
     setEditing(null);
     setCreating(false);
     setError(null);
   };
 
+  /** Any action that refreshes the list would drop an unsaved order. */
+  const discardOrderIfNeeded = () => {
+    if (!dirty) return true;
+    if (!confirm("Urutan belum disimpan. Buang perubahan urutan?")) return false;
+    setOrder(orderKey ? orderKey.split("|") : []);
+    return true;
+  };
+
   const onDelete = async (row: Row) => {
+    if (!discardOrderIfNeeded()) return;
     if (!confirm(`Hapus "${String(row[config.titleKey])}"?`)) return;
     setBusy(true);
     const res = await withToast(deleteRow(config.table, String(row.id)), {
@@ -68,20 +114,32 @@ export function ResourceManager({
     else router.refresh();
   };
 
-  const move = async (index: number, dir: -1 | 1) => {
+  const move = (index: number, dir: -1 | 1) => {
     const j = index + dir;
-    if (j < 0 || j >= rows.length) return;
-    const ids = rows.map((r) => String(r.id));
-    [ids[index], ids[j]] = [ids[j], ids[index]];
+    if (j < 0 || j >= order.length) return;
+    setOrder((current) => {
+      const next = [...current];
+      [next[index], next[j]] = [next[j], next[index]];
+      return next;
+    });
+  };
+
+  const saveOrder = async () => {
     setBusy(true);
-    const res = await withToast(reorderRows(config.table, ids), {
-      loading: "Menyusun ulang…",
+    const res = await withToast(reorderRows(config.table, order), {
+      loading: "Menyimpan urutan…",
       success: "Urutan disimpan.",
     });
     setBusy(false);
-    if (!res.ok) setError(res.error);
-    else router.refresh();
+    if (!res.ok) {
+      setError(res.error);
+      return;
+    }
+    setSyncedKey(order.join("|"));
+    router.refresh();
   };
+
+  const cancelOrder = () => setOrder(orderKey ? orderKey.split("|") : []);
 
   const showForm = creating || editing !== null;
 
@@ -94,10 +152,19 @@ export function ResourceManager({
       )}
 
       <div className="flex items-center justify-between gap-4">
-        <p className="text-sm text-ink-faint">{rows.length} item</p>
+        <p className="text-sm text-ink-faint">
+          {rows.length} item
+          {rows.length > 1 && (
+            <span className="hidden sm:inline">
+              {" "}
+              · geser atau pakai panah, lalu Simpan urutan
+            </span>
+          )}
+        </p>
         <button
           type="button"
           onClick={() => {
+            if (!discardOrderIfNeeded()) return;
             setEditing(null);
             setCreating(true);
           }}
@@ -144,68 +211,134 @@ export function ResourceManager({
           </p>
         )}
 
-        {rows.map((row, i) => (
-          <div
-            key={String(row.id)}
-            className="glass-panel flex items-center gap-4 rounded-sm p-4 sm:p-5"
-          >
-            <div className="flex shrink-0 flex-col gap-1">
-              <button
-                type="button"
-                onClick={() => move(i, -1)}
-                disabled={i === 0 || busy}
-                aria-label="Naikkan"
-                className="grid h-7 w-7 place-items-center rounded-sm text-ink-faint transition-colors hover:text-ember disabled:opacity-30"
-              >
-                <ArrowUp size={14} weight="bold" />
-              </button>
-              <button
-                type="button"
-                onClick={() => move(i, 1)}
-                disabled={i === rows.length - 1 || busy}
-                aria-label="Turunkan"
-                className="grid h-7 w-7 place-items-center rounded-sm text-ink-faint transition-colors hover:text-ember disabled:opacity-30"
-              >
-                <ArrowDown size={14} weight="bold" />
-              </button>
-            </div>
+        <Reorder.Group
+          axis="y"
+          values={order}
+          onReorder={setOrder}
+          className="flex flex-col gap-3"
+        >
+          {orderedRows.map((row, i) => (
+            <SortableRow key={String(row.id)} id={String(row.id)}>
+              <div className="flex shrink-0 flex-col gap-1">
+                <button
+                  type="button"
+                  onClick={() => move(i, -1)}
+                  disabled={i === 0 || busy}
+                  aria-label="Naikkan"
+                  className="grid h-7 w-7 place-items-center rounded-sm text-ink-faint transition-colors hover:text-ember disabled:opacity-30"
+                >
+                  <ArrowUp size={14} weight="bold" />
+                </button>
+                <button
+                  type="button"
+                  onClick={() => move(i, 1)}
+                  disabled={i === orderedRows.length - 1 || busy}
+                  aria-label="Turunkan"
+                  className="grid h-7 w-7 place-items-center rounded-sm text-ink-faint transition-colors hover:text-ember disabled:opacity-30"
+                >
+                  <ArrowDown size={14} weight="bold" />
+                </button>
+              </div>
 
-            <div className="min-w-0 flex-1">
-              <p className="truncate font-display text-lg font-semibold text-ink">
-                {String(row[config.titleKey] ?? "—")}
-              </p>
-              {config.subtitleKey && (
-                <p className="truncate text-sm text-ink-soft">
-                  {String(row[config.subtitleKey] ?? "")}
+              <div className="min-w-0 flex-1">
+                <p className="truncate font-display text-lg font-semibold text-ink">
+                  {String(row[config.titleKey] ?? "—")}
                 </p>
-              )}
-            </div>
+                {config.subtitleKey && (
+                  <p className="truncate text-sm text-ink-soft">
+                    {String(row[config.subtitleKey] ?? "")}
+                  </p>
+                )}
+              </div>
 
-            <div className="flex shrink-0 items-center gap-2">
+              <div className="flex shrink-0 items-center gap-2">
+                <button
+                  type="button"
+                  onClick={() => {
+                    setCreating(false);
+                    setEditing(row);
+                  }}
+                  aria-label="Ubah"
+                  className="grid h-9 w-9 place-items-center rounded-sm border border-ink/15 text-ink-soft transition-colors hover:text-ember dark:border-white/15"
+                >
+                  <Pencil size={16} weight="bold" />
+                </button>
+                <button
+                  type="button"
+                  onClick={() => onDelete(row)}
+                  aria-label="Hapus"
+                  className="grid h-9 w-9 place-items-center rounded-sm border border-ink/15 text-ink-soft transition-colors hover:text-red-500 dark:border-white/15"
+                >
+                  <Trash size={16} weight="bold" />
+                </button>
+              </div>
+            </SortableRow>
+          ))}
+        </Reorder.Group>
+      </div>
+
+      {dirty && (
+        <div className="sticky bottom-4 z-10">
+          <div className="glass-panel flex flex-wrap items-center justify-between gap-3 rounded-sm px-4 py-3">
+            <p className="text-sm text-ink-soft">
+              Urutan berubah — belum disimpan.
+            </p>
+            <div className="flex items-center gap-2">
               <button
                 type="button"
-                onClick={() => {
-                  setCreating(false);
-                  setEditing(row);
-                }}
-                aria-label="Ubah"
-                className="grid h-9 w-9 place-items-center rounded-sm border border-ink/15 text-ink-soft transition-colors hover:text-ember dark:border-white/15"
+                onClick={cancelOrder}
+                disabled={busy}
+                className="rounded-sm border border-ink/15 px-4 py-2 text-sm text-ink-soft transition-colors hover:text-ink disabled:opacity-50 dark:border-white/15"
               >
-                <Pencil size={16} weight="bold" />
+                Batalkan
               </button>
               <button
                 type="button"
-                onClick={() => onDelete(row)}
-                aria-label="Hapus"
-                className="grid h-9 w-9 place-items-center rounded-sm border border-ink/15 text-ink-soft transition-colors hover:text-red-500 dark:border-white/15"
+                onClick={saveOrder}
+                disabled={busy}
+                className="rounded-sm bg-ember px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-flare disabled:opacity-60"
               >
-                <Trash size={16} weight="bold" />
+                Simpan urutan
               </button>
             </div>
           </div>
-        ))}
-      </div>
+        </div>
+      )}
     </div>
+  );
+}
+
+/**
+ * One draggable row. Dragging starts only from the grip handle, so the arrow,
+ * edit and delete buttons keep working as plain clicks.
+ */
+function SortableRow({
+  id,
+  children,
+}: {
+  id: string;
+  children: React.ReactNode;
+}) {
+  const controls = useDragControls();
+  return (
+    <Reorder.Item
+      as="div"
+      value={id}
+      dragListener={false}
+      dragControls={controls}
+      whileDrag={{ scale: 1.01, zIndex: 20 }}
+      className="glass-panel flex items-center gap-3 rounded-sm p-4 sm:gap-4 sm:p-5"
+    >
+      <button
+        type="button"
+        onPointerDown={(event) => controls.start(event)}
+        aria-label="Geser untuk mengubah urutan"
+        className="grid h-9 w-6 shrink-0 cursor-grab touch-none place-items-center rounded-sm text-ink-faint transition-colors hover:text-ember active:cursor-grabbing"
+      >
+        <DotsSixVertical size={18} weight="bold" />
+      </button>
+      {children}
+    </Reorder.Item>
   );
 }
 

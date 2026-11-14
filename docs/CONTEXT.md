@@ -196,6 +196,15 @@ and an **Unggah** button that uploads into the field's folder and selects the ne
 files immediately. `ImageField` (single) and `ImagesField` (multi) both use it, so
 every image field can pick an existing file instead of only uploading.
 
+### Reordering is deferred
+
+`ResourceManager` keeps the list order in local state. Dragging the grip handle
+(framer-motion `Reorder`) or using the arrow buttons only changes that state; a
+sticky **Simpan urutan** bar appears while the order differs from the server and
+writes once via `reorderRows()`. **Batalkan** restores the server order, and a
+`beforeunload` guard warns on refresh/close. Create and delete still write
+immediately, so they ask before discarding an unsaved order.
+
 ### Useful commands
 
 ```bash
