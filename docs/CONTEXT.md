@@ -110,22 +110,46 @@ Founded 26 August 1996, based at Jl. Raya Tidar 100, Malang.
 - Vercel also serves `X-Vercel-Cache: HIT` with `Age`; a fresh deploy replaces the
   prerender, so no manual purge is needed.
 
-### pengurus table
+### kepengurusan (the "loadout") + pengurus
 
-Columns: `id uuid pk`, `nama`, `jabatan`, `deskripsi`, `inisial`, `gradien`,
-`kategori` (`pembina|inti|biro|koordinator`), `unit`, `periode`, `foto`, `sort`,
-`published`, `updated_at`.
+A board is a row in `kepengurusan`, not a free-text period repeated on every
+pengurus row. Exactly one board is `aktif`; that is the one the public site
+renders. Swapping boards is one row update, so the whole section changes without
+touching individual pengurus rows.
+
+`kepengurusan`: `id uuid pk`, `nama`, `periode`, `aktif`, `catatan`, `sort`,
+`updated_at`. A partial unique index (`kepengurusan_satu_aktif`) enforces at most
+one active board.
+
+`pengurus`: `id uuid pk`, `nama`, `jabatan`, `deskripsi`, `inisial`, `gradien`,
+`nrp`, `kategori` (`pembina|inti|biro|koordinator`), `unit`, `foto`, `sort`,
+`published`, `kepengurusan_id` (FK, `on delete cascade`), `updated_at`.
 
 - `unit` = divisi slug for a PJ (`web`/`uiux`/`robotics`), free label for a biro
   (`humas`, `3d`, `keilmuan`, `program-acara`, `website`, `inventaris`).
-- `periode` is filtered client-side in `components/home/Pengurus.tsx` via
-  `periodYears()` (takes the first two 4-digit years, so `2025/2026` and
-  `2025–2026` both normalise to `2025-2026`). Empty `periode` = always shown.
-- The homepage compares against `site_settings.periode_kepengurusan`
-  (currently `2025–2026`).
-- **No NRP column.** NRP is appended to `deskripsi` as `NRP 241111009.`
+- `nrp` is a real column now (migration 0007 promoted it out of `deskripsi`).
+  Empty for the dosen pembina and the external PJs.
+- `pengurus.periode` still exists but is **deprecated** — nothing reads or writes
+  it. It was kept so the build that was live during the 0007 rollout kept working.
+  A later migration can drop it.
+- `site_settings.periode_kepengurusan` is a display string kept in sync by
+  `activate_kepengurusan()`. It is no longer editable in `/admin/site`.
 - Biro cards are keyed `${nama}-${jabatan}` because two people hold two biro roles
   each (Berliani Hana Safira and Deswiryawan Saragih: Humas + Keilmuan).
+
+**Admin flow**
+
+- `/admin/kepengurusan` — list boards, **Aktifkan** (atomic RPC), **Duplikat**
+  (copies every pengurus row into a new board), **Ubah**, **Hapus**. The active
+  board cannot be deleted.
+- `/admin/pengurus?loadout=<id>` — the board switcher plus the normal CRUD list,
+  scoped to that board. New rows inherit `kepengurusan_id` via `fixedValues`.
+- All mutations are Server Actions, so `revalidatePublic()` runs and the live site
+  updates without a rebuild.
+
+**RLS**: anon reads only `kepengurusan.aktif = true` and only pengurus rows whose
+board is active. Authenticated reads/writes everything. `activate_kepengurusan`
+is `security definer`, revoked from `anon`, granted to `authenticated`.
 
 ### Board 2025/2026 as stored (17 rows)
 

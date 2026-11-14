@@ -70,7 +70,7 @@ export const pengurusConfig: ResourceConfig = {
       label: "Unit / Divisi",
       hint: "PJ divisi: pakai slug divisi (web, uiux, robotics) agar muncul di halaman divisi itu. Biro: bebas (humas, pdd, webdev).",
     },
-    { kind: "text", name: "periode", label: "Periode", hint: "mis. 2025/2026. Kosongkan agar selalu tampil." },
+    { kind: "text", name: "nrp", label: "NRP", hint: "Kosongkan untuk dosen pembina atau PJ eksternal." },
     { kind: "textarea", name: "deskripsi", label: "Deskripsi", rows: 2 },
     { kind: "image", name: "foto", label: "Foto", folder: "pengurus", hint: "Kosongkan untuk memakai inisial." },
     { kind: "text", name: "inisial", label: "Inisial", hint: "mis. MI" },

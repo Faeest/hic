@@ -65,7 +65,6 @@ export async function updateSite(formData: FormData): Promise<ActionResult> {
     testimoni_items: jsonArray<Testimoni>(formData.get("testimoniItems")),
     marquee_items: jsonArray<string>(formData.get("marqueeItems")),
     tahun_berdiri: str(formData, "tahunBerdiri"),
-    periode_kepengurusan: str(formData, "periodeKepengurusan"),
   };
 
   const supabase = await createClient();

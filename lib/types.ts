@@ -79,11 +79,26 @@ export type Pengurus = {
   foto?: string;
   /** Link key: divisi slug for a PJ, free label for a biro. */
   unit?: string;
-  /** Kepengurusan period, e.g. "2025/2026". Empty = always shown. */
+  /** NRP / student id. Empty for the dosen pembina and external PJs. */
+  nrp?: string;
+  /** Board period, inherited from the active kepengurusan. Display only. */
   periode?: string;
 };
 
 export type KategoriPengurus = "pembina" | "inti" | "biro" | "koordinator";
+
+/**
+ * A kepengurusan board — the "loadout". Exactly one row is `aktif`; that is the
+ * board the public site renders. `pengurus` rows belong to one board.
+ */
+export type Kepengurusan = {
+  id: string;
+  nama: string;
+  periode: string;
+  aktif: boolean;
+  catatan: string;
+  sort: number;
+};
 
 export type Proker = {
   judul: string;
@@ -273,12 +288,17 @@ export type PengurusRow = {
   deskripsi: string;
   inisial: string;
   gradien: string;
+  nrp: string;
   foto?: string | null;
   unit?: string | null;
-  periode?: string | null;
+  kepengurusan_id: string;
   kategori: KategoriPengurus;
   sort: number;
   published: boolean;
+};
+
+export type KepengurusanRow = Kepengurusan & {
+  updated_at: string;
 };
 
 export type ProkerRow = {
@@ -348,13 +368,19 @@ export type Database = {
       kurikulum: Table<KurikulumRow>;
       mentor: Table<MentorRow>;
       pengurus: Table<PengurusRow>;
+      kepengurusan: Table<KepengurusanRow>;
       proker: Table<ProkerRow>;
       galeri: Table<GaleriRow>;
       faq: Table<FaqRow>;
       posts: Table<PostRow>;
     };
     Views: Record<string, never>;
-    Functions: Record<string, never>;
+    Functions: {
+      activate_kepengurusan: {
+        Args: { p_id: string };
+        Returns: undefined;
+      };
+    };
     Enums: Record<string, never>;
     CompositeTypes: Record<string, never>;
   };

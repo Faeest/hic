@@ -18,10 +18,12 @@ import { createClient } from "@supabase/supabase-js";
 import { club, sosial } from "../data/club";
 import { divisi as divisiSeed } from "../data/divisi";
 import {
+  biroPengurus,
   koordinatorDivisi,
   pembina,
   pengurusInti,
 } from "../data/pengurus";
+import { kepengurusan as kepengurusanSeed } from "../data/kepengurusan";
 import { proker as prokerSeed } from "../data/proker";
 import { galeri as galeriSeed } from "../data/galeri";
 import { faq as faqSeed } from "../data/faq";
@@ -222,11 +224,34 @@ async function main() {
     "id"
   );
 
+  /* ---- kepengurusan (the board / loadout) ---- */
+  console.log("kepengurusan");
+  const boardId = id(`kepengurusan:${kepengurusanSeed.periode}`);
+  await upsert(
+    "kepengurusan",
+    [
+      {
+        id: boardId,
+        nama: kepengurusanSeed.nama,
+        periode: kepengurusanSeed.periode,
+        aktif: kepengurusanSeed.aktif,
+        catatan: kepengurusanSeed.catatan,
+        sort: kepengurusanSeed.sort,
+      },
+    ],
+    "id"
+  );
+
   /* ---- pengurus ---- */
   console.log("pengurus");
   const pengurusRows = [
     { ...pembina, kategori: "pembina" as const, key: "pembina" },
     ...pengurusInti.map((p) => ({ ...p, kategori: "inti" as const, key: p.jabatan })),
+    ...biroPengurus.map((p) => ({
+      ...p,
+      kategori: "biro" as const,
+      key: `${p.jabatan}:${p.nama}`,
+    })),
     ...koordinatorDivisi.map((p) => ({
       ...p,
       kategori: "koordinator" as const,
@@ -239,7 +264,9 @@ async function main() {
     deskripsi: p.deskripsi,
     inisial: p.inisial,
     gradien: p.gradien,
+    nrp: p.nrp ?? "",
     kategori: p.kategori,
+    kepengurusan_id: boardId,
     sort: i,
     published: true,
   }));

@@ -36,11 +36,6 @@ export function SiteForm({ site }: { site: Site }) {
           <TextField label="Nama panjang" name="namaPanjang" defaultValue={site.namaPanjang} />
           <TextField label="Nama lengkap" name="namaLengkap" defaultValue={site.namaLengkap} />
           <TextField label="Tahun berdiri" name="tahunBerdiri" defaultValue={site.tahunBerdiri} />
-          <TextField
-            label="Periode kepengurusan"
-            name="periodeKepengurusan"
-            defaultValue={site.periodeKepengurusan}
-          />
         </div>
         <TextArea label="Tagline" name="tagline" defaultValue={site.tagline} rows={2} />
       </Section>

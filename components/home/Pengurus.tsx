@@ -15,10 +15,13 @@ const FADE = {
   transition: { duration: 0.5, ease: "easeOut" as const },
 };
 
-/** Year range of a period string, tolerant of 2025/2026 and 2025–2026 alike. */
-function periodYears(value?: string): string {
-  const years = (value ?? "").match(/\d{4}/g);
-  return years ? years.slice(0, 2).join("-") : "";
+function Nrp({ p }: { p: PengurusItem }) {
+  if (!p.nrp) return null;
+  return (
+    <p className="mt-0.5 font-mono text-[11px] tracking-tight text-ink-faint">
+      {p.nrp}
+    </p>
+  );
 }
 
 function Portrait({
@@ -84,6 +87,7 @@ function PersonCard({
             {p.nama}
           </h4>
           <p className="mt-0.5 text-xs font-medium text-ember">{p.jabatan}</p>
+          <Nrp p={p} />
           <p className="mt-1 text-xs leading-snug text-ink-soft">{p.deskripsi}</p>
         </div>
       </motion.div>
@@ -103,6 +107,7 @@ function PersonCard({
               {p.jabatan}
             </span>
           </div>
+          <Nrp p={p} />
           <p className="mt-2 text-sm leading-relaxed text-ink-soft">{p.deskripsi}</p>
         </div>
       </div>
@@ -123,16 +128,10 @@ export function Pengurus({
 }) {
   if (!section.visible) return null;
 
-  const current = periodYears(site.periodeKepengurusan);
-  const inPeriod = (p: PengurusItem) => {
-    const years = periodYears(p.periode);
-    return !years || years === current;
-  };
-
-  const pembina = pengurus.pembina && inPeriod(pengurus.pembina) ? pengurus.pembina : null;
-  const inti = pengurus.inti.filter(inPeriod);
-  const biro = pengurus.biro.filter(inPeriod);
-  const koordinator = pengurus.koordinator.filter(inPeriod);
+  const pembina = pengurus.pembina;
+  const inti = pengurus.inti;
+  const biro = pengurus.biro;
+  const koordinator = pengurus.koordinator;
 
   return (
     <section id={id} className="relative scroll-mt-24 bg-paper py-24 sm:py-32">
@@ -211,6 +210,7 @@ export function Pengurus({
                       {p.nama}
                     </h4>
                     <p className="mt-0.5 text-xs font-medium text-ember">{p.jabatan}</p>
+                    <Nrp p={p} />
                     <p className="mt-1 text-xs leading-snug text-ink-soft">{p.deskripsi}</p>
                   </div>
                 </motion.div>

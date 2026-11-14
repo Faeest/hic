@@ -64,7 +64,8 @@ function buildPayload(table: CrudTable, fd: FormData): Record<string, unknown> {
       "kategori",
       "foto",
       "unit",
-      "periode",
+      "nrp",
+      "kepengurusan_id",
     ],
     proker: [
       "judul",
