@@ -2,6 +2,8 @@
 
 import { useEffect } from "react";
 import Image from "next/image";
+import { motion } from "framer-motion";
+import { useLenis } from "lenis/react";
 import { X, CaretLeft, CaretRight } from "@phosphor-icons/react";
 import type { Foto } from "@/lib/types";
 
@@ -24,6 +26,7 @@ export function GaleriLightbox({
   const total = images.length;
   const current = images[Math.min(index, total - 1)];
 
+  const lenis = useLenis();
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
       if (e.key === "Escape") onClose();
@@ -31,16 +34,21 @@ export function GaleriLightbox({
       if (e.key === "ArrowRight") onIndex((index + 1) % total);
     };
     document.addEventListener("keydown", onKey);
+    lenis?.stop();
     const previous = document.body.style.overflow;
     document.body.style.overflow = "hidden";
     return () => {
       document.removeEventListener("keydown", onKey);
       document.body.style.overflow = previous;
+      lenis?.start();
     };
-  }, [index, total, onIndex, onClose]);
+  }, [index, total, onIndex, onClose, lenis]);
 
   return (
-    <div
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 0.18, ease: "easeOut" }}
       className="fixed inset-0 z-50 flex flex-col bg-ink/95 backdrop-blur-sm"
       role="dialog"
       aria-modal="true"
@@ -129,6 +137,6 @@ export function GaleriLightbox({
           ))}
         </div>
       )}
-    </div>
+    </motion.div>
   );
 }

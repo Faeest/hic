@@ -122,34 +122,33 @@ export function ImagesField({
                 </span>
               )}
 
-              <div className="absolute inset-x-0 bottom-0 flex items-center justify-between gap-1 bg-ink/70 px-1 py-1 opacity-0 transition-opacity group-hover:opacity-100 group-focus-within:opacity-100">
-                <div className="flex items-center gap-0.5">
-                  <button
-                    type="button"
-                    onClick={() => move(i, -1)}
-                    disabled={i === 0}
-                    aria-label="Geser kiri"
-                    className="grid h-6 w-6 place-items-center rounded-xs text-white/80 transition-colors hover:text-white disabled:opacity-30"
-                  >
-                    <ArrowLeft size={12} weight="bold" />
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => move(i, 1)}
-                    disabled={i === images.length - 1}
-                    aria-label="Geser kanan"
-                    className="grid h-6 w-6 place-items-center rounded-xs text-white/80 transition-colors hover:text-white disabled:opacity-30"
-                  >
-                    <ArrowRight size={12} weight="bold" />
-                  </button>
-                </div>
+              <button
+                type="button"
+                onClick={() => remove(url)}
+                aria-label="Hapus foto"
+                className="absolute right-1.5 top-1.5 grid h-8 w-8 place-items-center rounded-sm bg-ink/75 text-white shadow-sm backdrop-blur-sm transition-colors hover:bg-red-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
+              >
+                <Trash size={16} weight="fill" />
+              </button>
+
+              <div className="absolute inset-x-0 bottom-0 flex items-center justify-center gap-1 bg-ink/70 px-1 py-1 opacity-100 transition-opacity sm:opacity-0 sm:group-hover:opacity-100 sm:group-focus-within:opacity-100">
                 <button
                   type="button"
-                  onClick={() => remove(url)}
-                  aria-label="Hapus foto"
-                  className="grid h-6 w-6 place-items-center rounded-xs text-white/80 transition-colors hover:text-red-300"
+                  onClick={() => move(i, -1)}
+                  disabled={i === 0}
+                  aria-label="Geser kiri"
+                  className="grid h-7 w-7 place-items-center rounded-xs text-white/90 transition-colors hover:text-white disabled:opacity-30"
                 >
-                  <Trash size={12} weight="bold" />
+                  <ArrowLeft size={14} weight="bold" />
+                </button>
+                <button
+                  type="button"
+                  onClick={() => move(i, 1)}
+                  disabled={i === images.length - 1}
+                  aria-label="Geser kanan"
+                  className="grid h-7 w-7 place-items-center rounded-xs text-white/90 transition-colors hover:text-white disabled:opacity-30"
+                >
+                  <ArrowRight size={14} weight="bold" />
                 </button>
               </div>
             </li>

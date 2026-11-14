@@ -2,6 +2,8 @@
 
 import { useEffect, useMemo, useRef, useState, useTransition } from "react";
 import Image from "next/image";
+import { AnimatePresence, motion } from "framer-motion";
+import { useLenis } from "lenis/react";
 import {
   X,
   MagnifyingGlass,
@@ -76,20 +78,24 @@ export function MediaPicker({
     });
   }, [open, loaded]);
 
-  // Escape closes; lock background scroll while open.
+  // Escape closes; lock background scroll while open. Lenis drives the window
+  // scroll, so `overflow: hidden` alone is not enough — it has to be stopped.
+  const lenis = useLenis();
   useEffect(() => {
     if (!open) return;
     const onKey = (e: KeyboardEvent) => {
       if (e.key === "Escape") onClose();
     };
     document.addEventListener("keydown", onKey);
+    lenis?.stop();
     const previous = document.body.style.overflow;
     document.body.style.overflow = "hidden";
     return () => {
       document.removeEventListener("keydown", onKey);
       document.body.style.overflow = previous;
+      lenis?.start();
     };
-  }, [open, onClose]);
+  }, [open, onClose, lenis]);
 
   const folders = useMemo(() => {
     const set = new Set(items.map((i) => i.folder));
@@ -172,19 +178,30 @@ export function MediaPicker({
     })();
   };
 
-  if (!open) return null;
-
   return (
-    <div
-      className="fixed inset-0 z-50 flex items-center justify-center bg-ink/50 p-4 backdrop-blur-sm"
-      role="dialog"
-      aria-modal="true"
-      aria-label={title}
-      onMouseDown={(e) => {
-        if (e.target === e.currentTarget) onClose();
-      }}
-    >
-      <div className="flex max-h-[85vh] w-full max-w-4xl flex-col overflow-hidden rounded-sm border border-ink/15 bg-paper shadow-[0_24px_60px_-24px_rgba(28,21,18,0.5)] dark:border-white/15">
+    <AnimatePresence>
+      {open && (
+        <motion.div
+          key="media-picker"
+          className="fixed inset-0 z-50 flex items-center justify-center bg-ink/50 p-4 backdrop-blur-sm"
+          role="dialog"
+          aria-modal="true"
+          aria-label={title}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: 0.18, ease: "easeOut" }}
+          onMouseDown={(e) => {
+            if (e.target === e.currentTarget) onClose();
+          }}
+        >
+          <motion.div
+            initial={{ opacity: 0, y: 18, scale: 0.97 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: 10, scale: 0.98 }}
+            transition={{ duration: 0.22, ease: [0.22, 1, 0.36, 1] }}
+            className="flex max-h-[85vh] w-full max-w-4xl flex-col overflow-hidden rounded-sm border border-ink/15 bg-paper shadow-[0_24px_60px_-24px_rgba(28,21,18,0.5)] dark:border-white/15"
+          >
         <div className="flex items-center justify-between gap-4 border-b border-ink/10 px-5 py-4 dark:border-white/10">
           <h2 className="font-display text-lg font-semibold tracking-tight text-ink">
             {title}
@@ -353,7 +370,9 @@ export function MediaPicker({
             )}
           </div>
         </div>
-      </div>
-    </div>
+          </motion.div>
+        </motion.div>
+      )}
+    </AnimatePresence>
   );
 }
