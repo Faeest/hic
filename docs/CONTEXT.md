@@ -16,7 +16,8 @@ Founded 26 August 1996, based at Jl. Raya Tidar 100, Malang.
 - 3 divisi pages: /divisi/web, /divisi/uiux, /divisi/robotics
   (track hero, kurikulum, mentors, program kerja divisi)
   - `/divisi/iot` 307-redirects to `/divisi/robotics` (legacy slug)
-- Pengurus: Dosen Pembina + BPH (Ketua Umum, Sekretaris, Bendahara) +
+- Pengurus: Dosen Pembina + BPH (Ketua Umum, Sekretaris, Bendahara) + Biro
+  (Inventaris, Humas, 3D, Program dan Acara, Website HIC, Keilmuan) +
   Penanggung Jawab Divisi (Web / UI/UX / Robotics)
 
 ## Real content sources
@@ -45,7 +46,8 @@ Founded 26 August 1996, based at Jl. Raya Tidar 100, Malang.
 - Fonts (self-hosted via Fontshare): Clash Display (headers), Satoshi (body),
   JetBrains Mono (labels)
 - Icons: @phosphor-icons/react, strokeWidth 1.5
-- No DB, no auth
+- ~~No DB, no auth~~ — superseded: Supabase (Postgres + Storage) + Supabase
+  Auth admin CMS. See "Deployment, data and cache" below.
 
 ## Visual language — "Colorful glassmorphism × brutalist-modern"
 - LIGHT theme: white base (#ffffff) + warm tints (#fdf9f4, #fff6ec)
@@ -77,3 +79,84 @@ Founded 26 August 1996, based at Jl. Raya Tidar 100, Malang.
 ## Conventions
 - Indonesian (Bahasa) copy throughout
 - REST full keyboard, accessible, no emojis in code/UI
+
+## Deployment, data and cache (verified 2026-11-14)
+
+### Two deployments, one database
+
+| Domain | Host | Updated by |
+| --- | --- | --- |
+| `hic.ubhinus.ac.id` | **Vercel** (project `hic`) | push to GitHub `Faeest/hic` master → auto-build |
+| `hic.faeest.my.id` | VPS `103.169.186.163:25567` (user `lerraf`) | `bash deploy.sh` (git archive HEAD → tar → `npm ci` + `npm run build` + `systemctl --user restart hic.service`) |
+
+- Vercel project id `prj_elmuJQauKOAJNFYGIvZPhBDa2gtN`, team `team_GaiIJssCOqxbyusdBGczIBvm`.
+- VPS app dir `/home/lerraf/hic`, env `/home/lerraf/hic.env`, app port `3100`.
+- **Both point at the same Supabase project** `zluqwvumzzrursptfrod.supabase.co`.
+- `deploy.sh` does NOT update `hic.ubhinus.ac.id`. Editing the VPS is not enough.
+- The VPS checkout is a tar extract, not a git repo (`git log` fails there).
+
+### Content is baked at build time
+
+- `lib/content/*` readers use `"use cache"` + `cacheLife("max")` + a content tag
+  (`lib/cache/tags.ts`).
+- Pages are prerendered: `.next/server/app/index.html` is a static file written by
+  `next build`. Deleting `.next/cache` does **not** refresh it — only a rebuild does.
+- `revalidatePublic()` (`lib/actions/revalidate.ts`) calls `updateTag()` for every
+  content tag plus `revalidatePath("/")`, `/divisi/[slug]`, `/blog`, `/blog/[slug]`.
+  It is only called from admin Server Actions.
+- **Consequence:** a direct SQL/REST write to Supabase is invisible on the live site
+  until either (a) someone saves a row in `/admin/*`, or (b) a new deploy runs.
+  Prefer editing through `/admin` — no rebuild needed.
+- Vercel also serves `X-Vercel-Cache: HIT` with `Age`; a fresh deploy replaces the
+  prerender, so no manual purge is needed.
+
+### pengurus table
+
+Columns: `id uuid pk`, `nama`, `jabatan`, `deskripsi`, `inisial`, `gradien`,
+`kategori` (`pembina|inti|biro|koordinator`), `unit`, `periode`, `foto`, `sort`,
+`published`, `updated_at`.
+
+- `unit` = divisi slug for a PJ (`web`/`uiux`/`robotics`), free label for a biro
+  (`humas`, `3d`, `keilmuan`, `program-acara`, `website`, `inventaris`).
+- `periode` is filtered client-side in `components/home/Pengurus.tsx` via
+  `periodYears()` (takes the first two 4-digit years, so `2025/2026` and
+  `2025–2026` both normalise to `2025-2026`). Empty `periode` = always shown.
+- The homepage compares against `site_settings.periode_kepengurusan`
+  (currently `2025–2026`).
+- **No NRP column.** NRP is appended to `deskripsi` as `NRP 241111009.`
+- Biro cards are keyed `${nama}-${jabatan}` because two people hold two biro roles
+  each (Berliani Hana Safira and Deswiryawan Saragih: Humas + Keilmuan).
+
+### Board 2025/2026 as stored (17 rows)
+
+- `pembina` — Hilman Nuril Hadi, S.Kom., M.Kom
+- `inti` — Muhammad Ilham Wiradisastra (Ketua Umum, 241111009),
+  Maria Dealova Indah Natara (Sekretaris, 241111004),
+  Norbertus Bimantya Abadi (Bendahara, 241111021)
+- `biro` — Fattih Kuwaka Bekti (Inventaris, 241111005),
+  Berliani Hana Safira (Humas, 241131012), Deswiryawan Saragih (Humas, 241111008),
+  Dico Havianto (3D, 241111017), Angie Nabilah Fidela (3D, 242111025),
+  Nanda Rizky Ramadhani Wijaya (Program dan Acara, 241111007),
+  Akhmad Zakariya (Program dan Acara, 241111010),
+  Faiz Ramadhan (Website HIC, 241111011),
+  Berliani Hana Safira (Keilmuan, 241131012),
+  Deswiryawan Saragih (Keilmuan, 241111008)
+- `koordinator` — Satya Garda Prasetyo (web), Muhammad Dimas Cahyo (uiux),
+  Zulhan Arif Fasya (robotics). These are external to the board and kept as-is.
+
+### Useful commands
+
+```bash
+# read pengurus straight from Supabase (secret key bypasses RLS)
+node --env-file=.env.local -e '...'   # or a scratch .mjs using fetch + apikey header
+
+# deploy the VPS copy
+bash deploy.sh
+
+# deploy the public site
+git push origin master                # Vercel builds automatically
+```
+
+`.env.local` keys: `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY`,
+`SUPABASE_SECRET_KEY`. The VPS `hic.env` has no `SUPABASE_SECRET_KEY`, so
+`scripts/snapshot-media.mjs` skips there.
