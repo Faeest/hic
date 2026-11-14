@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { PencilSimple, Trash, ArrowSquareOut } from "@phosphor-icons/react";
 import { deletePost } from "@/lib/actions/posts";
+import { withToast } from "@/lib/admin/toast";
 
 export function PostListActions({
   id,
@@ -22,7 +23,10 @@ export function PostListActions({
   const onDelete = () => {
     if (!confirm("Hapus artikel ini?")) return;
     startTransition(async () => {
-      const res = await deletePost(id);
+      const res = await withToast(deletePost(id), {
+        loading: "Menghapus…",
+        success: "Artikel dihapus.",
+      });
       if (!res.ok) setError(res.error);
       else router.refresh();
     });

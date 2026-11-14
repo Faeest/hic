@@ -28,6 +28,7 @@ import {
   reorderRows,
   type CrudResult,
 } from "@/lib/actions/crud";
+import { withToast } from "@/lib/admin/toast";
 import type { FieldSpec, ResourceConfig } from "@/lib/admin/resource";
 
 type Row = Record<string, unknown>;
@@ -57,7 +58,10 @@ export function ResourceManager({
   const onDelete = async (row: Row) => {
     if (!confirm(`Hapus "${String(row[config.titleKey])}"?`)) return;
     setBusy(true);
-    const res = await deleteRow(config.table, String(row.id));
+    const res = await withToast(deleteRow(config.table, String(row.id)), {
+      loading: "Menghapus…",
+      success: "Terhapus.",
+    });
     setBusy(false);
     if (!res.ok) setError(res.error);
     else router.refresh();
@@ -69,7 +73,10 @@ export function ResourceManager({
     const ids = rows.map((r) => String(r.id));
     [ids[index], ids[j]] = [ids[j], ids[index]];
     setBusy(true);
-    const res = await reorderRows(config.table, ids);
+    const res = await withToast(reorderRows(config.table, ids), {
+      loading: "Menyusun ulang…",
+      success: "Urutan disimpan.",
+    });
     setBusy(false);
     if (!res.ok) setError(res.error);
     else router.refresh();
@@ -218,8 +225,14 @@ function ResourceForm({
         for (const [k, v] of Object.entries(fixedValues)) formData.set(k, v);
       }
       const res = row
-        ? await updateRow(config.table, String(row.id), formData)
-        : await createRow(config.table, formData);
+        ? await withToast(updateRow(config.table, String(row.id), formData), {
+            loading: "Menyimpan…",
+            success: "Perubahan disimpan.",
+          })
+        : await withToast(createRow(config.table, formData), {
+            loading: "Menambahkan…",
+            success: `${config.noun} ditambahkan.`,
+          });
       if (res.ok) onDone();
       return res;
     },

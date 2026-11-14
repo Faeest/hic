@@ -8,11 +8,16 @@ import { ImageField } from "./fields/ImageField";
 import { RepeaterField } from "./fields/RepeaterField";
 import { SubmitButton } from "./fields/SubmitButton";
 import { updateSite, type ActionResult } from "@/lib/actions/site";
+import { withToast } from "@/lib/admin/toast";
 import type { Site } from "@/lib/types";
 
 export function SiteForm({ site }: { site: Site }) {
   const [state, action] = useActionState<ActionResult | undefined, FormData>(
-    async (_prev, formData) => updateSite(formData),
+    async (_prev, formData) =>
+      withToast(updateSite(formData), {
+        loading: "Menyimpan…",
+        success: "Perubahan situs disimpan.",
+      }),
     undefined
   );
 

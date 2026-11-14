@@ -146,6 +146,11 @@ one active board.
   scoped to that board. New rows inherit `kepengurusan_id` via `fixedValues`.
 - All mutations are Server Actions, so `revalidatePublic()` runs and the live site
   updates without a rebuild.
+- Every admin mutation reports through `sonner` toasts: `withToast()` in
+  `lib/admin/toast.ts` turns a `{ ok, error }` action into one toast that starts
+  as a spinner and resolves to success or error. `<AdminToaster />` follows the
+  site's `.dark` class. Media uploads/replaces/deletes call `toast` directly
+  because those actions return `{ error }` rather than `{ ok }`.
 
 **RLS**: anon reads only `kepengurusan.aktif = true` and only pengurus rows whose
 board is active. Authenticated reads/writes everything. `activate_kepengurusan`

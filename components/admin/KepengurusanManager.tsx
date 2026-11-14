@@ -14,6 +14,7 @@ import {
 import { cn } from "@/lib/utils";
 import { TextField } from "./fields/TextField";
 import { TextArea } from "./fields/TextArea";
+import { SelectField } from "./fields/SelectField";
 import { SubmitButton } from "./fields/SubmitButton";
 import {
   activateKepengurusan,
@@ -22,6 +23,7 @@ import {
   duplicateKepengurusan,
   updateKepengurusan,
 } from "@/lib/actions/kepengurusan";
+import { withToast } from "@/lib/admin/toast";
 import type { KepengurusanRow } from "@/lib/types";
 
 type FormState =
@@ -46,10 +48,13 @@ export function KepengurusanManager({
     setError(null);
   };
 
-  const run = async (fn: () => Promise<{ ok: boolean; error?: string }>) => {
+  const run = async (
+    fn: () => Promise<{ ok: boolean; error?: string }>,
+    messages: { loading: string; success: string }
+  ) => {
     setBusy(true);
     setError(null);
-    const res = await fn();
+    const res = await withToast(fn(), messages);
     setBusy(false);
     if (!res.ok) {
       setError(res.error ?? "Gagal menyimpan.");
@@ -60,7 +65,10 @@ export function KepengurusanManager({
   };
 
   const onActivate = (board: KepengurusanRow) =>
-    run(() => activateKepengurusan(board.id));
+    run(() => activateKepengurusan(board.id), {
+      loading: "Mengaktifkan…",
+      success: `${board.nama} sekarang tampil di situs.`,
+    });
 
   const onDelete = async (board: KepengurusanRow) => {
     if (
@@ -69,19 +77,33 @@ export function KepengurusanManager({
       )
     )
       return;
-    await run(() => deleteKepengurusan(board.id));
+    await run(() => deleteKepengurusan(board.id), {
+      loading: "Menghapus…",
+      success: "Kepengurusan dihapus.",
+    });
   };
 
   const onSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     if (!form) return;
     const fd = new FormData(event.currentTarget);
-    const ok = await run(() =>
-      form.kind === "create"
-        ? createKepengurusan(fd)
-        : form.kind === "edit"
-          ? updateKepengurusan(form.board.id, fd)
-          : duplicateKepengurusan(form.board.id, fd)
+    const ok = await run(
+      () =>
+        form.kind === "create"
+          ? createKepengurusan(fd)
+          : form.kind === "edit"
+            ? updateKepengurusan(form.board.id, fd)
+            : duplicateKepengurusan(form.board.id, fd),
+      {
+        loading:
+          form.kind === "duplicate" ? "Menyalin…" : "Menyimpan…",
+        success:
+          form.kind === "create"
+            ? "Kepengurusan dibuat."
+            : form.kind === "edit"
+              ? "Perubahan disimpan."
+              : "Salinan dibuat.",
+      }
     );
     if (ok) close();
   };
@@ -163,25 +185,17 @@ export function KepengurusanManager({
             />
 
             {form.kind === "create" && boards.length > 0 && (
-              <label className="flex flex-col gap-2">
-                <span className="text-sm font-medium text-ink">Salin isi dari</span>
-                <select
-                  name="salin_dari"
-                  defaultValue=""
-                  className="w-full rounded-sm border border-ink/15 bg-white px-4 py-2.5 text-base text-ink outline-none transition-colors focus:border-ember dark:border-white/15 dark:bg-white/[0.04]"
-                >
-                  <option value="">Kosong</option>
-                  {boards.map((board) => (
-                    <option key={board.id} value={board.id}>
-                      {board.nama} ({counts[board.id] ?? 0} pengurus)
-                    </option>
-                  ))}
-                </select>
-                <span className="text-xs text-ink-faint">
-                  Menyalin membuat baris baru, jadi mengubah salinan tidak
-                  menyentuh aslinya.
-                </span>
-              </label>
+              <SelectField
+                label="Salin isi dari"
+                name="salin_dari"
+                defaultValue=""
+                placeholder="Kosong"
+                options={boards.map((board) => ({
+                  value: board.id,
+                  label: `${board.nama} (${counts[board.id] ?? 0} pengurus)`,
+                }))}
+                hint="Menyalin membuat baris baru, jadi mengubah salinan tidak menyentuh aslinya."
+              />
             )}
 
             <div className="flex items-center gap-3 pt-2">

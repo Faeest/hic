@@ -10,6 +10,7 @@ import { ToggleField } from "./fields/ToggleField";
 import { SubmitButton } from "./fields/SubmitButton";
 import { Markdown } from "@/components/blog/Markdown";
 import { createPost, updatePost, type PostResult } from "@/lib/actions/posts";
+import { withToast } from "@/lib/admin/toast";
 import { cn } from "@/lib/utils";
 import type { Post } from "@/lib/types";
 
@@ -26,8 +27,14 @@ export function PostEditor({ post }: { post: Post | null }) {
         tags.split(",").map((t) => t.trim()).filter(Boolean)
       ));
       const res = post
-        ? await updatePost(post.id, formData)
-        : await createPost(formData);
+        ? await withToast(updatePost(post.id, formData), {
+            loading: "Menyimpan…",
+            success: "Artikel disimpan.",
+          })
+        : await withToast(createPost(formData), {
+            loading: "Membuat artikel…",
+            success: "Artikel dibuat.",
+          });
       if (res.ok && !post) router.push("/admin/posts");
       return res;
     },

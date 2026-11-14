@@ -1,5 +1,6 @@
 import { requireAdmin } from "@/lib/auth/dal";
 import { AdminShell } from "@/components/admin/AdminShell";
+import { AdminToaster } from "@/components/admin/AdminToaster";
 
 /**
  * Protected admin layout.
@@ -25,5 +26,10 @@ export default async function AdminProtectedLayout({
   const email =
     typeof session.email === "string" ? session.email : null;
 
-  return <AdminShell email={email}>{children}</AdminShell>;
+  return (
+    <AdminShell email={email}>
+      {children}
+      <AdminToaster />
+    </AdminShell>
+  );
 }

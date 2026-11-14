@@ -13,6 +13,7 @@ import {
 } from "@phosphor-icons/react";
 import { uploadImage, deleteMedia, replaceMedia } from "@/lib/actions/upload";
 import { compressKeepingType } from "@/lib/media/compress";
+import { toast } from "sonner";
 import type { MediaItem } from "@/lib/admin/media";
 import { cn } from "@/lib/utils";
 
@@ -75,13 +76,19 @@ export function MediaLibrary({ items }: { items: MediaItem[] }) {
     setError(null);
     setReplacing(target.path);
     startTransition(async () => {
+      const toastId = toast.loading(`Mengganti ${target.name}…`);
       const prepared = await compressKeepingType(file, target.path);
       const fd = new FormData();
       fd.set("file", prepared);
       fd.set("path", target.path);
       const res = await replaceMedia(fd);
-      if (res.error) setError(res.error);
-      else setBust((b) => ({ ...b, [target.path]: Date.now() }));
+      if (res.error) {
+        setError(res.error);
+        toast.error(res.error, { id: toastId });
+      } else {
+        setBust((b) => ({ ...b, [target.path]: Date.now() }));
+        toast.success("Gambar diganti. Tautannya tetap sama.", { id: toastId });
+      }
       setReplacing(null);
       replaceTarget.current = null;
       if (replaceRef.current) replaceRef.current.value = "";
@@ -94,14 +101,26 @@ export function MediaLibrary({ items }: { items: MediaItem[] }) {
     setError(null);
     const list = Array.from(files);
     startTransition(async () => {
+      const toastId = toast.loading(`Mengunggah ${list.length} berkas…`);
+      let failed = 0;
       for (const file of list) {
         const fd = new FormData();
         fd.set("file", file);
         fd.set("folder", "media");
         const res = await uploadImage(fd);
-        if (res.error) setError(res.error);
+        if (res.error) {
+          failed++;
+          setError(res.error);
+        }
       }
       if (fileRef.current) fileRef.current.value = "";
+      if (failed === 0) {
+        toast.success(`${list.length} berkas diunggah.`, { id: toastId });
+      } else {
+        toast.error(`${failed} dari ${list.length} berkas gagal.`, {
+          id: toastId,
+        });
+      }
       router.refresh();
     });
   };
@@ -110,9 +129,11 @@ export function MediaLibrary({ items }: { items: MediaItem[] }) {
     try {
       await navigator.clipboard.writeText(url);
       setCopied(key);
+      toast.success("URL disalin.");
       setTimeout(() => setCopied(null), 1500);
     } catch {
       setError("Tidak bisa menyalin ke clipboard.");
+      toast.error("Tidak bisa menyalin ke clipboard.");
     }
   };
 
@@ -123,10 +144,16 @@ export function MediaLibrary({ items }: { items: MediaItem[] }) {
     if (!ok) return;
     setError(null);
     setDeleting(item.path);
+    const toastId = toast.loading(`Menghapus ${item.name}…`);
     const res = await deleteMedia(item.path);
     setDeleting(null);
-    if (res.error) setError(res.error);
-    else router.refresh();
+    if (res.error) {
+      setError(res.error);
+      toast.error(res.error, { id: toastId });
+    } else {
+      toast.success("Berkas dihapus.", { id: toastId });
+      router.refresh();
+    }
   };
 
   return (
