@@ -3,6 +3,8 @@
 import { assertAdmin } from "@/lib/auth/dal";
 import { createClient } from "@/lib/supabase/server";
 import { revalidatePublic } from "@/lib/actions/revalidate";
+import { listMedia } from "@/lib/admin/media";
+import type { MediaItem } from "@/lib/types";
 
 const MAX_BYTES = 10 * 1024 * 1024; // matches the `media` bucket limit
 const ALLOWED = [
@@ -16,6 +18,19 @@ const ALLOWED = [
 ];
 
 export type UploadResult = { url?: string; error?: string };
+
+/**
+ * Bucket listing for the media picker. Admin-guarded; returns an empty list
+ * rather than throwing so the dialog can show "kosong" instead of an error.
+ */
+export async function listMediaAction(): Promise<MediaItem[]> {
+  try {
+    await assertAdmin();
+  } catch {
+    return [];
+  }
+  return listMedia();
+}
 
 /** Sanitize a filename into a safe storage key. */
 function safeName(name: string): string {

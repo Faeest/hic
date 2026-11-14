@@ -101,12 +101,18 @@ export const prokerConfig: ResourceConfig = {
 
 export const galeriConfig: ResourceConfig = {
   table: "galeri",
-  noun: "Foto",
+  noun: "Momen",
   titleKey: "judul",
   subtitleKey: "keterangan",
-  createLabel: "Tambah foto",
+  createLabel: "Tambah momen",
   fields: [
-    { kind: "image", name: "image_url", label: "Gambar", folder: "galeri" },
+    {
+      kind: "images",
+      name: "images",
+      label: "Foto",
+      folder: "galeri",
+      hint: "Foto pertama menjadi sampul. Satu momen boleh berisi beberapa foto.",
+    },
     { kind: "text", name: "judul", label: "Judul" },
     { kind: "textarea", name: "keterangan", label: "Keterangan", rows: 2 },
     {

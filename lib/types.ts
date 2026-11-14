@@ -115,11 +115,24 @@ export type Foto = {
   judul: string;
   keterangan: string;
   span?: "wide" | "tall";
+  /** Ordered photos of this moment. `src` is the cover (= images[0]). */
+  images?: string[];
 };
 
 export type FaqItem = {
   pertanyaan: string;
   jawaban: string;
+};
+
+/** One object in the public `media` bucket. */
+export type MediaItem = {
+  /** Bucket-relative path, e.g. `galeri/ditkom-2025.webp`. */
+  path: string;
+  url: string;
+  name: string;
+  folder: string;
+  size: number;
+  updatedAt: string | null;
 };
 
 export type Section = {
@@ -317,6 +330,7 @@ export type ProkerRow = {
 export type GaleriRow = {
   id: string;
   image_url: string;
+  images: string[];
   judul: string;
   keterangan: string;
   span: "wide" | "tall" | null;

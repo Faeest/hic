@@ -17,6 +17,7 @@ import { TextArea } from "./fields/TextArea";
 import { SelectField } from "./fields/SelectField";
 import { ToggleField } from "./fields/ToggleField";
 import { ImageField } from "./fields/ImageField";
+import { ImagesField } from "./fields/ImagesField";
 import { ColorField } from "./fields/ColorField";
 import { RepeaterField } from "./fields/RepeaterField";
 import { SubmitButton } from "./fields/SubmitButton";
@@ -338,6 +339,16 @@ function FieldRenderer({ field, row }: { field: FieldSpec; row: Row | null }) {
           label={field.label}
           name={field.name}
           defaultValue={strVal}
+          folder={field.folder}
+          hint={field.hint}
+        />
+      );
+    case "images":
+      return (
+        <ImagesField
+          label={field.label}
+          name={field.name}
+          defaultValue={Array.isArray(raw) ? (raw as string[]) : []}
           folder={field.folder}
           hint={field.hint}
         />

@@ -1,16 +1,9 @@
 import "server-only";
 
 import { createClient } from "@/lib/supabase/server";
+import type { MediaItem } from "@/lib/types";
 
-export type MediaItem = {
-  /** Bucket-relative path, e.g. `galeri/ditkom-2025.webp`. */
-  path: string;
-  url: string;
-  name: string;
-  folder: string;
-  size: number;
-  updatedAt: string | null;
-};
+export type { MediaItem };
 
 type StorageEntry = {
   name: string;

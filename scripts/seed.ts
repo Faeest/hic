@@ -298,6 +298,7 @@ async function main() {
     galeriSeed.map((f, i) => ({
       id: id(`galeri:${f.src}`),
       image_url: f.src,
+      images: f.images && f.images.length > 0 ? f.images : [f.src],
       judul: f.judul,
       keterangan: f.keterangan,
       span: f.span ?? null,

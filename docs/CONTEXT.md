@@ -173,6 +173,29 @@ is `security definer`, revoked from `anon`, granted to `authenticated`.
 - `koordinator` — Satya Garda Prasetyo (web), Muhammad Dimas Cahyo (uiux),
   Zulhan Arif Fasya (robotics). These are external to the board and kept as-is.
 
+### galeri — one row is a moment
+
+`galeri.images text[]` holds the ordered photos of a moment; `image_url` is the
+cover and always mirrors `images[0]` (kept for the pre-0008 build and for any
+reader that still wants a single URL). `lib/content/galeri.ts` maps the array to
+`Foto.images` and drops rows with no image at all.
+
+- Public: the grid shows the cover; a moment with more than one photo gets an
+  `N foto` pill and opens `components/home/GaleriLightbox.tsx` (arrows, counter,
+  Escape, dots).
+- Admin: `galeriConfig` uses the `images` field kind → `ImagesField`, which
+  submits a JSON array. The first thumbnail is the cover; arrows reorder.
+- `crud.ts` parses `images` and writes `image_url = images[0] ?? ""`, so the
+  cover column cannot drift.
+
+### Media picker
+
+`components/admin/fields/MediaPicker.tsx` is the shared "choose from media"
+dialog: bucket listing via `listMediaAction()`, search, folder chips, multi-select,
+and an **Unggah** button that uploads into the field's folder and selects the new
+files immediately. `ImageField` (single) and `ImagesField` (multi) both use it, so
+every image field can pick an existing file instead of only uploading.
+
 ### Useful commands
 
 ```bash

@@ -2,10 +2,12 @@
 
 import { useRef, useState, useTransition } from "react";
 import Image from "next/image";
-import { UploadSimple, Trash, Spinner } from "@phosphor-icons/react";
+import { UploadSimple, Trash, Spinner, Images } from "@phosphor-icons/react";
 import { FieldWrap, inputClass } from "./FieldWrap";
+import { MediaPicker } from "./MediaPicker";
 import { uploadImage } from "@/lib/actions/upload";
 import { compressImage } from "@/lib/media/compress";
+import { toast } from "sonner";
 import { cn } from "@/lib/utils";
 
 const fmt = (bytes: number) =>
@@ -33,6 +35,7 @@ export function ImageField({
   const [url, setUrl] = useState<string>(defaultValue ?? "");
   const [error, setError] = useState<string | null>(null);
   const [saved, setSaved] = useState<string | null>(null);
+  const [pickerOpen, setPickerOpen] = useState(false);
   const [pending, startTransition] = useTransition();
   const fileRef = useRef<HTMLInputElement>(null);
 
@@ -41,6 +44,7 @@ export function ImageField({
     setError(null);
     setSaved(null);
     startTransition(async () => {
+      const toastId = toast.loading("Mengunggah…");
       const compressed = await compressImage(file);
       if (compressed !== file) {
         setSaved(`${fmt(file.size)} → ${fmt(compressed.size)}`);
@@ -50,8 +54,13 @@ export function ImageField({
       fd.set("file", compressed);
       fd.set("folder", folder);
       const res = await uploadImage(fd);
-      if (res.error) setError(res.error);
-      else if (res.url) setUrl(res.url);
+      if (res.error) {
+        setError(res.error);
+        toast.error(res.error, { id: toastId });
+      } else if (res.url) {
+        setUrl(res.url);
+        toast.success("Gambar diunggah dan dipilih.", { id: toastId });
+      }
       if (fileRef.current) fileRef.current.value = "";
     });
   };
@@ -87,6 +96,14 @@ export function ImageField({
             className={cn(inputClass, "text-sm")}
           />
           <div className="flex flex-wrap items-center gap-2">
+            <button
+              type="button"
+              onClick={() => setPickerOpen(true)}
+              className="inline-flex items-center gap-2 rounded-sm border border-ink/15 px-4 py-2 text-sm font-medium text-ink-soft transition-colors hover:text-ember dark:border-white/15"
+            >
+              <Images size={16} weight="bold" />
+              Pilih dari media
+            </button>
             <button
               type="button"
               onClick={() => fileRef.current?.click()}
@@ -126,6 +143,17 @@ export function ImageField({
           )}
         </div>
       </div>
+
+      <MediaPicker
+        open={pickerOpen}
+        onClose={() => setPickerOpen(false)}
+        onSelect={(urls) => {
+          if (urls[0]) setUrl(urls[0]);
+        }}
+        folder={folder}
+        title={`Pilih ${label.toLowerCase()}`}
+        selected={url ? [url] : []}
+      />
     </FieldWrap>
   );
 }

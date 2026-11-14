@@ -37,6 +37,19 @@ function bool(fd: FormData, key: string): boolean {
   return fd.get(key) === "on" || fd.get(key) === "true";
 }
 
+/** Parse a JSON array submitted by a repeater/images field; tolerate junk. */
+function jsonArray(value: FormDataEntryValue | null): string[] {
+  if (typeof value !== "string" || value.trim() === "") return [];
+  try {
+    const parsed = JSON.parse(value);
+    return Array.isArray(parsed)
+      ? parsed.filter((v): v is string => typeof v === "string" && v !== "")
+      : [];
+  } catch {
+    return [];
+  }
+}
+
 /** Build a row payload from form fields, skipping keys not present. */
 function buildPayload(table: CrudTable, fd: FormData): Record<string, unknown> {
   const pick = (keys: string[], mapper: (k: string) => unknown) =>
@@ -76,7 +89,7 @@ function buildPayload(table: CrudTable, fd: FormData): Record<string, unknown> {
       "dana",
       "warna",
     ],
-    galeri: ["image_url", "judul", "keterangan"],
+    galeri: ["judul", "keterangan"],
     faq: ["pertanyaan", "jawaban"],
   };
 
@@ -108,6 +121,13 @@ function buildPayload(table: CrudTable, fd: FormData): Record<string, unknown> {
   if (table === "galeri" && fd.has("span")) {
     const span = str(fd, "span");
     payload.span = span === "wide" || span === "tall" ? span : null;
+  }
+
+  // galeri.images is the ordered list; image_url mirrors the cover.
+  if (table === "galeri" && fd.has("images")) {
+    const images = jsonArray(fd.get("images"));
+    payload.images = images;
+    payload.image_url = images[0] ?? "";
   }
 
   return payload;

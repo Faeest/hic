@@ -17,7 +17,8 @@ export default async function AdminGaleriPage() {
           Galeri
         </h1>
         <p className="mt-2 text-sm leading-relaxed text-ink-soft">
-          Foto kegiatan. Unggah gambar atau tempel URL.
+          Satu momen boleh berisi beberapa foto. Pilih dari media atau unggah
+          baru — foto pertama menjadi sampul.
         </p>
       </div>
       <ResourceManager config={galeriConfig} rows={rows} />
