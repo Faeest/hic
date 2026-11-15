@@ -2,6 +2,7 @@
 
 import { useRef, useState, useTransition } from "react";
 import Image from "next/image";
+import { Reorder, useDragControls } from "framer-motion";
 import {
   Plus,
   UploadSimple,
@@ -10,6 +11,7 @@ import {
   ArrowLeft,
   ArrowRight,
   Images,
+  DotsSixVertical,
 } from "@phosphor-icons/react";
 import { FieldWrap } from "./FieldWrap";
 import { MediaPicker } from "./MediaPicker";
@@ -117,61 +119,23 @@ export function ImagesField({
       <input type="hidden" name={name} value={JSON.stringify(images)} />
 
       {images.length > 0 ? (
-        <ul className="grid grid-cols-3 gap-2 sm:grid-cols-4 md:grid-cols-5">
+        <Reorder.Group
+          axis="y"
+          values={images}
+          onReorder={setImages}
+          className="grid grid-cols-3 gap-2 sm:grid-cols-4 md:grid-cols-5"
+        >
           {images.map((url, i) => (
-            <li
+            <SortableImage
               key={url}
-              className="group relative overflow-hidden rounded-sm border border-ink/10 bg-cream dark:border-white/10 dark:bg-white/[0.03]"
-            >
-              <span className="relative block aspect-square">
-                <Image
-                  src={url}
-                  alt=""
-                  fill
-                  sizes="160px"
-                  className="object-cover"
-                  unoptimized={!url.startsWith("/")}
-                />
-              </span>
-
-              {i === 0 && (
-                <span className="absolute left-1.5 top-1.5 rounded-sm bg-ember px-1.5 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-white">
-                  Sampul
-                </span>
-              )}
-
-              <button
-                type="button"
-                onClick={() => remove(url)}
-                aria-label="Hapus foto"
-                className="absolute right-1.5 top-1.5 grid h-8 w-8 place-items-center rounded-sm bg-ink/75 text-white shadow-sm backdrop-blur-sm transition-colors hover:bg-red-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
-              >
-                <Trash size={16} weight="fill" />
-              </button>
-
-              <div className="absolute inset-x-0 bottom-0 flex items-center justify-center gap-1 bg-ink/70 px-1 py-1 opacity-100 transition-opacity sm:opacity-0 sm:group-hover:opacity-100 sm:group-focus-within:opacity-100">
-                <button
-                  type="button"
-                  onClick={() => move(i, -1)}
-                  disabled={i === 0}
-                  aria-label="Geser kiri"
-                  className="grid h-7 w-7 place-items-center rounded-xs text-white/90 transition-colors hover:text-white disabled:opacity-30"
-                >
-                  <ArrowLeft size={14} weight="bold" />
-                </button>
-                <button
-                  type="button"
-                  onClick={() => move(i, 1)}
-                  disabled={i === images.length - 1}
-                  aria-label="Geser kanan"
-                  className="grid h-7 w-7 place-items-center rounded-xs text-white/90 transition-colors hover:text-white disabled:opacity-30"
-                >
-                  <ArrowRight size={14} weight="bold" />
-                </button>
-              </div>
-            </li>
+              url={url}
+              index={i}
+              total={images.length}
+              onRemove={() => remove(url)}
+              onMove={(dir) => move(i, dir)}
+            />
           ))}
-        </ul>
+        </Reorder.Group>
       ) : (
         <p className="flex items-center gap-2 rounded-sm border border-dashed border-ink/15 px-4 py-6 text-sm text-ink-faint dark:border-white/15">
           <Images size={18} /> Belum ada foto.
@@ -223,5 +187,94 @@ export function ImagesField({
         selected={images}
       />
     </FieldWrap>
+  );
+}
+
+/**
+ * One draggable photo tile. The grip starts the drag so the trash and arrow
+ * buttons keep working as plain clicks. Overlays use a fixed dark scrim so the
+ * icons stay visible in both themes.
+ */
+function SortableImage({
+  url,
+  index,
+  total,
+  onRemove,
+  onMove,
+}: {
+  url: string;
+  index: number;
+  total: number;
+  onRemove: () => void;
+  onMove: (dir: -1 | 1) => void;
+}) {
+  const controls = useDragControls();
+
+  return (
+    <Reorder.Item
+      as="li"
+      value={url}
+      dragListener={false}
+      dragControls={controls}
+      whileDrag={{ scale: 1.03, zIndex: 20 }}
+      className="group relative overflow-hidden rounded-sm border border-ink/10 bg-cream dark:border-white/10 dark:bg-white/[0.03]"
+    >
+      <span className="relative block aspect-square">
+        <Image
+          src={url}
+          alt=""
+          fill
+          sizes="160px"
+          className="object-cover"
+          unoptimized={!url.startsWith("/")}
+        />
+      </span>
+
+      {index === 0 && (
+        <span className="absolute left-1.5 top-1.5 rounded-sm bg-ember px-1.5 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-white">
+          Sampul
+        </span>
+      )}
+
+      <button
+        type="button"
+        onClick={onRemove}
+        aria-label="Hapus foto"
+        className="absolute right-1.5 top-1.5 grid h-8 w-8 place-items-center rounded-sm bg-[#1c1512]/80 text-white shadow-sm backdrop-blur-sm transition-colors hover:bg-red-600 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
+      >
+        <Trash size={16} weight="fill" />
+      </button>
+
+      <div className="absolute inset-x-0 bottom-0 flex items-center justify-between gap-1 bg-[#1c1512]/80 px-1 py-1">
+        <button
+          type="button"
+          onPointerDown={(event) => controls.start(event)}
+          aria-label="Geser untuk mengurutkan"
+          className="grid h-7 w-7 cursor-grab touch-none place-items-center rounded-xs text-white/90 transition-colors hover:text-white active:cursor-grabbing"
+        >
+          <DotsSixVertical size={14} weight="bold" />
+        </button>
+        <div className="flex items-center gap-1">
+          <button
+            type="button"
+            onClick={() => onMove(-1)}
+            disabled={index === 0}
+            aria-label="Geser kiri"
+            className="grid h-7 w-7 place-items-center rounded-xs text-white/90 transition-colors hover:text-white disabled:opacity-30"
+          >
+            <ArrowLeft size={14} weight="bold" />
+          </button>
+          <button
+            type="button"
+            onClick={() => onMove(1)}
+            disabled={index === total - 1}
+            aria-label="Geser kanan"
+            className="grid h-7 w-7 place-items-center rounded-xs text-white/90 transition-colors hover:text-white disabled:opacity-30"
+          >
+            <ArrowRight size={14} weight="bold" />
+          </button>
+        </div>
+      </div>
+    </Reorder.Item>
   );
 }
