@@ -2,7 +2,6 @@
 
 import { useRef, useState, useTransition } from "react";
 import Image from "next/image";
-import { Reorder, useDragControls } from "framer-motion";
 import {
   Plus,
   UploadSimple,
@@ -67,6 +66,18 @@ export function ImagesField({
     });
   };
 
+  const [dragIndex, setDragIndex] = useState<number | null>(null);
+
+  const reorder = (from: number, to: number) => {
+    if (from === to) return;
+    setImages((current) => {
+      const next = [...current];
+      const [moved] = next.splice(from, 1);
+      next.splice(to, 0, moved);
+      return next;
+    });
+  };
+
   const onUpload = (files: FileList | null) => {
     if (!files || files.length === 0) return;
     const list = Array.from(files);
@@ -119,23 +130,25 @@ export function ImagesField({
       <input type="hidden" name={name} value={JSON.stringify(images)} />
 
       {images.length > 0 ? (
-        <Reorder.Group
-          axis="y"
-          values={images}
-          onReorder={setImages}
-          className="grid grid-cols-3 gap-2 sm:grid-cols-4 md:grid-cols-5"
-        >
+        <ul className="grid grid-cols-3 gap-2 sm:grid-cols-4 md:grid-cols-5">
           {images.map((url, i) => (
-            <SortableImage
+            <PhotoTile
               key={url}
               url={url}
               index={i}
               total={images.length}
+              dragging={dragIndex === i}
+              onDragStart={() => setDragIndex(i)}
+              onDrop={() => {
+                if (dragIndex !== null) reorder(dragIndex, i);
+                setDragIndex(null);
+              }}
+              onDragEnd={() => setDragIndex(null)}
               onRemove={() => remove(url)}
               onMove={(dir) => move(i, dir)}
             />
           ))}
-        </Reorder.Group>
+        </ul>
       ) : (
         <p className="flex items-center gap-2 rounded-sm border border-dashed border-ink/15 px-4 py-6 text-sm text-ink-faint dark:border-white/15">
           <Images size={18} /> Belum ada foto.
@@ -191,33 +204,52 @@ export function ImagesField({
 }
 
 /**
- * One draggable photo tile. The grip starts the drag so the trash and arrow
- * buttons keep working as plain clicks. Overlays use a fixed dark scrim so the
- * icons stay visible in both themes.
+ * One photo tile. Native HTML5 drag-and-drop is used instead of a transform
+ * library: the tiles live in a wrapping grid, where transform-based reordering
+ * overlaps rows. The grip is the visual affordance; the whole tile is
+ * draggable, and the arrows remain for keyboard/touch.
  */
-function SortableImage({
+function PhotoTile({
   url,
   index,
   total,
+  dragging,
+  onDragStart,
+  onDrop,
+  onDragEnd,
   onRemove,
   onMove,
 }: {
   url: string;
   index: number;
   total: number;
+  dragging: boolean;
+  onDragStart: () => void;
+  onDrop: () => void;
+  onDragEnd: () => void;
   onRemove: () => void;
   onMove: (dir: -1 | 1) => void;
 }) {
-  const controls = useDragControls();
-
   return (
-    <Reorder.Item
-      as="li"
-      value={url}
-      dragListener={false}
-      dragControls={controls}
-      whileDrag={{ scale: 1.03, zIndex: 20 }}
-      className="group relative overflow-hidden rounded-sm border border-ink/10 bg-cream dark:border-white/10 dark:bg-white/[0.03]"
+    <li
+      draggable
+      onDragStart={(event) => {
+        event.dataTransfer.effectAllowed = "move";
+        onDragStart();
+      }}
+      onDragOver={(event) => {
+        event.preventDefault();
+        event.dataTransfer.dropEffect = "move";
+      }}
+      onDrop={(event) => {
+        event.preventDefault();
+        onDrop();
+      }}
+      onDragEnd={onDragEnd}
+      className={cn(
+        "group relative cursor-grab overflow-hidden rounded-sm border border-ink/10 bg-cream active:cursor-grabbing dark:border-white/10 dark:bg-white/[0.03]",
+        dragging && "opacity-40 ring-2 ring-ember"
+      )}
     >
       <span className="relative block aspect-square">
         <Image
@@ -225,7 +257,7 @@ function SortableImage({
           alt=""
           fill
           sizes="160px"
-          className="object-cover"
+          className="pointer-events-none object-cover"
           unoptimized={!url.startsWith("/")}
         />
       </span>
@@ -246,14 +278,12 @@ function SortableImage({
       </button>
 
       <div className="absolute inset-x-0 bottom-0 flex items-center justify-between gap-1 bg-[#1c1512]/80 px-1 py-1">
-        <button
-          type="button"
-          onPointerDown={(event) => controls.start(event)}
-          aria-label="Geser untuk mengurutkan"
-          className="grid h-7 w-7 cursor-grab touch-none place-items-center rounded-xs text-white/90 transition-colors hover:text-white active:cursor-grabbing"
+        <span
+          aria-hidden
+          className="grid h-7 w-7 place-items-center rounded-xs text-white/90"
         >
           <DotsSixVertical size={14} weight="bold" />
-        </button>
+        </span>
         <div className="flex items-center gap-1">
           <button
             type="button"
@@ -275,6 +305,6 @@ function SortableImage({
           </button>
         </div>
       </div>
-    </Reorder.Item>
+    </li>
   );
 }
