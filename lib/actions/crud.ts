@@ -79,6 +79,7 @@ function buildPayload(table: CrudTable, fd: FormData): Record<string, unknown> {
       "unit",
       "nrp",
       "kepengurusan_id",
+      "grup_id",
     ],
     proker: [
       "judul",
@@ -140,6 +141,9 @@ export async function createRow(table: string, fd: FormData): Promise<CrudResult
     return { ok: false, error: "Tidak diizinkan." };
   }
   if (!isAllowed(table)) return { ok: false, error: `Tabel tidak dikenal: ${table}` };
+  if (table === "pengurus" && !str(fd, "grup_id")) {
+    return { ok: false, error: "Pilih kelompok pengurus." };
+  }
 
   const supabase = await looseClient();
   const { error } = await supabase.from(table).insert(buildPayload(table, fd));
@@ -161,6 +165,9 @@ export async function updateRow(
   }
   if (!isAllowed(table)) return { ok: false, error: `Tabel tidak dikenal: ${table}` };
   if (!id) return { ok: false, error: "ID tidak ditemukan." };
+  if (table === "pengurus" && fd.has("grup_id") && !str(fd, "grup_id")) {
+    return { ok: false, error: "Pilih kelompok pengurus." };
+  }
 
   const supabase = await looseClient();
   const { error } = await supabase

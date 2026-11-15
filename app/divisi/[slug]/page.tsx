@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { getAllDivisi, getDivisi } from "@/lib/content/divisi";
 import { getProkerByDivisi } from "@/lib/content/proker";
-import { getPengurus } from "@/lib/content/pengurus";
+import { getPjDivisi } from "@/lib/content/pengurus";
 import { getSite } from "@/lib/content/site";
 import { DivisiHero } from "@/components/divisi/DivisiHero";
 import { Kurikulum } from "@/components/divisi/Kurikulum";
@@ -47,8 +47,7 @@ export default async function DivisiPage({
   if (!d) notFound();
 
   const proker = await getProkerByDivisi(slug);
-  const { koordinator } = await getPengurus();
-  const pj = koordinator.find((p) => p.unit === d.slug);
+  const pj = await getPjDivisi(d.slug);
 
   return (
     <>

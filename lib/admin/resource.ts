@@ -6,7 +6,7 @@ export type FieldSpec =
   | { kind: "textarea"; name: string; label: string; rows?: number; hint?: string }
   | { kind: "number"; name: string; label: string; hint?: string }
   | { kind: "bool"; name: string; label: string; hint?: string }
-  | { kind: "select"; name: string; label: string; options: { value: string; label: string }[]; hint?: string; placeholder?: string }
+  | { kind: "select"; name: string; label: string; options?: { value: string; label: string }[]; optionsFrom?: string; required?: boolean; hint?: string; placeholder?: string }
   | { kind: "image"; name: string; label: string; folder?: string; hint?: string }
   | { kind: "images"; name: string; label: string; folder?: string; hint?: string }
   | { kind: "color"; name: string; label: string; hint?: string }

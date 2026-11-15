@@ -3,6 +3,12 @@ import type { Pengurus } from "@/lib/types";
 // Type now lives in lib/types.ts (single source of truth).
 export type { Pengurus };
 
+/**
+ * Groups of the seed board. Mirror of DEFAULT_GRUP; kept here so the seed
+ * script and the offline fallback have one import path.
+ */
+export { DEFAULT_GRUP as seedPengurusGrup } from "@/lib/pengurus-grup";
+
 export const pembina: Pengurus = {
   nama: "Hilman Nuril Hadi, S.Kom., M.Kom",
   jabatan: "Dosen Pembina",

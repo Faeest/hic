@@ -85,7 +85,19 @@ export type Pengurus = {
   periode?: string;
 };
 
+/** Legacy bucket column. New code groups by `grup_id`; kept for old builds. */
 export type KategoriPengurus = "pembina" | "inti" | "biro" | "koordinator";
+
+/**
+ * A group inside one kepengurusan board. `pembina` and `inti` are reserved
+ * slugs seeded for every board; the rest are admin-defined.
+ */
+export type PengurusGrup = {
+  slug: string;
+  label: string;
+  deskripsi: string;
+  sort: number;
+};
 
 /**
  * A kepengurusan board — the "loadout". Exactly one row is `aktif`; that is the
@@ -305,9 +317,18 @@ export type PengurusRow = {
   foto?: string | null;
   unit?: string | null;
   kepengurusan_id: string;
+  /** Group this person belongs to. Null only for rows written by an old build. */
+  grup_id?: string | null;
+  /** @deprecated superseded by `grup_id`; kept for the rollout window. */
   kategori: KategoriPengurus;
   sort: number;
   published: boolean;
+};
+
+export type PengurusGrupRow = PengurusGrup & {
+  id: string;
+  kepengurusan_id: string;
+  updated_at: string;
 };
 
 export type KepengurusanRow = Kepengurusan & {
@@ -382,6 +403,7 @@ export type Database = {
       kurikulum: Table<KurikulumRow>;
       mentor: Table<MentorRow>;
       pengurus: Table<PengurusRow>;
+      pengurus_grup: Table<PengurusGrupRow>;
       kepengurusan: Table<KepengurusanRow>;
       proker: Table<ProkerRow>;
       galeri: Table<GaleriRow>;

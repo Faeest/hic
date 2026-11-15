@@ -16,9 +16,9 @@ Founded 26 August 1996, based at Jl. Raya Tidar 100, Malang.
 - 3 divisi pages: /divisi/web, /divisi/uiux, /divisi/robotics
   (track hero, kurikulum, mentors, program kerja divisi)
   - `/divisi/iot` 307-redirects to `/divisi/robotics` (legacy slug)
-- Pengurus: Dosen Pembina + BPH (Ketua Umum, Sekretaris, Bendahara) + Biro
-  (Inventaris, Humas, 3D, Program dan Acara, Website HIC, Keilmuan) +
-  Penanggung Jawab Divisi (Web / UI/UX / Robotics)
+- Pengurus: Dosen Pembina + BPH (Ketua Umum, Sekretaris, Bendahara) as fixed
+  groups, plus per-period configurable groups (Biro, PJ Divisi, …) managed at
+  `/admin/pengurus/kategori` — `pengurus_grup` table + `pengurus.grup_id`.
 
 ## Real content sources
 - `docs/proker_hic_kepengurusan_25-26.pdf` — visi, 7 pilar misi, program kerja,

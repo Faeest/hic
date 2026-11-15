@@ -10,6 +10,7 @@ import type {
   KurikulumRow,
   MentorRow,
   PengurusRow,
+  PengurusGrupRow,
   ProkerRow,
   SectionRow,
   SiteSettingsRow,
@@ -50,6 +51,20 @@ export async function adminPengurus(loadoutId?: string): Promise<PengurusRow[]> 
   const { error, data } = await query;
   if (error) throw new Error(error.message);
   return (data ?? []) as PengurusRow[];
+}
+
+/** Groups of one board, in display order. */
+export async function adminPengurusGrup(
+  loadoutId: string
+): Promise<PengurusGrupRow[]> {
+  const supabase = (await createClient()) as unknown as SupabaseClient;
+  const { data, error } = await supabase
+    .from("pengurus_grup")
+    .select("*")
+    .eq("kepengurusan_id", loadoutId)
+    .order("sort", { ascending: true });
+  if (error) throw new Error(error.message);
+  return (data ?? []) as PengurusGrupRow[];
 }
 
 /** How many pengurus rows each board holds, keyed by board id. */

@@ -22,6 +22,7 @@ import {
   koordinatorDivisi,
   pembina,
   pengurusInti,
+  seedPengurusGrup,
 } from "../data/pengurus";
 import { kepengurusan as kepengurusanSeed } from "../data/kepengurusan";
 import { proker as prokerSeed } from "../data/proker";
@@ -242,6 +243,27 @@ async function main() {
     "id"
   );
 
+  /* ---- pengurus groups ---- */
+  console.log("pengurus_grup");
+  const grupIds = new Map(
+    seedPengurusGrup.map((g) => [
+      g.slug,
+      id(`pengurus_grup:${kepengurusanSeed.periode}:${g.slug}`),
+    ])
+  );
+  await upsert(
+    "pengurus_grup",
+    seedPengurusGrup.map((g) => ({
+      id: grupIds.get(g.slug),
+      kepengurusan_id: boardId,
+      slug: g.slug,
+      label: g.label,
+      deskripsi: g.deskripsi,
+      sort: g.sort,
+    })),
+    "id"
+  );
+
   /* ---- pengurus ---- */
   console.log("pengurus");
   const pengurusRows = [
@@ -266,6 +288,7 @@ async function main() {
     gradien: p.gradien,
     nrp: p.nrp ?? "",
     kategori: p.kategori,
+    grup_id: grupIds.get(p.kategori) ?? null,
     kepengurusan_id: boardId,
     sort: i,
     published: true,

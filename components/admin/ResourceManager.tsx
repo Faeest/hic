@@ -40,11 +40,17 @@ export function ResourceManager({
   config,
   rows,
   fixedValues,
+  optionSets,
+  subtitleFor,
 }: {
   config: ResourceConfig;
   rows: Row[];
   /** Values injected into every create/update form (e.g. parent divisi_id). */
   fixedValues?: Record<string, string>;
+  /** Dynamic option lists keyed by `FieldSpec.optionsFrom`. */
+  optionSets?: Record<string, { value: string; label: string }[]>;
+  /** Overrides the list subtitle, e.g. to append the row's group name. */
+  subtitleFor?: (row: Row) => string | undefined;
 }) {
   const router = useRouter();
   const [editing, setEditing] = useState<Row | null>(null);
@@ -196,6 +202,7 @@ export function ResourceManager({
             config={config}
             row={creating ? null : editing}
             fixedValues={fixedValues}
+            optionSets={optionSets}
             onDone={() => {
               close();
               router.refresh();
@@ -246,7 +253,7 @@ export function ResourceManager({
                 </p>
                 {config.subtitleKey && (
                   <p className="truncate text-sm text-ink-soft">
-                    {String(row[config.subtitleKey] ?? "")}
+                    {subtitleFor?.(row) ?? String(row[config.subtitleKey] ?? "")}
                   </p>
                 )}
               </div>
@@ -346,11 +353,13 @@ function ResourceForm({
   config,
   row,
   fixedValues,
+  optionSets,
   onDone,
 }: {
   config: ResourceConfig;
   row: Row | null;
   fixedValues?: Record<string, string>;
+  optionSets?: Record<string, { value: string; label: string }[]>;
   onDone: () => void;
 }) {
   const [state, action] = useActionState<CrudResult | undefined, FormData>(
@@ -382,7 +391,7 @@ function ResourceForm({
       )}
 
       {config.fields.map((f) => (
-        <FieldRenderer key={f.name} field={f} row={row} />
+        <FieldRenderer key={f.name} field={f} row={row} optionSets={optionSets} />
       ))}
 
       <div className="flex items-center gap-3 pt-2">
@@ -397,7 +406,15 @@ function ResourceForm({
   );
 }
 
-function FieldRenderer({ field, row }: { field: FieldSpec; row: Row | null }) {
+function FieldRenderer({
+  field,
+  row,
+  optionSets,
+}: {
+  field: FieldSpec;
+  row: Row | null;
+  optionSets?: Record<string, { value: string; label: string }[]>;
+}) {
   const raw = row ? row[field.name] : undefined;
   const strVal = raw == null ? "" : String(raw);
 
@@ -460,7 +477,11 @@ function FieldRenderer({ field, row }: { field: FieldSpec; row: Row | null }) {
         <SelectField
           label={field.label}
           name={field.name}
-          options={field.options}
+          options={
+            field.optionsFrom
+              ? optionSets?.[field.optionsFrom] ?? []
+              : field.options ?? []
+          }
           defaultValue={strVal}
           placeholder={field.placeholder}
           hint={field.hint}

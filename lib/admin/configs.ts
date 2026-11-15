@@ -55,14 +55,12 @@ export const pengurusConfig: ResourceConfig = {
     { kind: "text", name: "jabatan", label: "Jabatan", hint: "mis. Ketua Umum, Kepala Biro Humas, PJ Divisi Web." },
     {
       kind: "select",
-      name: "kategori",
-      label: "Kategori",
-      options: [
-        { value: "pembina", label: "Dosen Pembina" },
-        { value: "inti", label: "BPH / Inti" },
-        { value: "biro", label: "Biro" },
-        { value: "koordinator", label: "PJ Divisi" },
-      ],
+      name: "grup_id",
+      label: "Kelompok",
+      optionsFrom: "grup",
+      required: true,
+      placeholder: "Pilih kelompok…",
+      hint: "Menentukan posisi kartu di halaman pengurus. Kelola kelompoknya di tab Kategori.",
     },
     {
       kind: "text",

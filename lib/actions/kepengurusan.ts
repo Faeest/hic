@@ -3,7 +3,8 @@
 import { assertAdmin } from "@/lib/auth/dal";
 import { createClient } from "@/lib/supabase/server";
 import { revalidatePublic } from "@/lib/actions/revalidate";
-import type { PengurusRow } from "@/lib/types";
+import { DEFAULT_GRUP } from "@/lib/pengurus-grup";
+import type { PengurusGrupRow, PengurusRow } from "@/lib/types";
 
 export type KepengurusanResult = { ok: true } | { ok: false; error: string };
 
@@ -12,11 +13,67 @@ function str(fd: FormData, key: string): string {
   return typeof v === "string" ? v.trim() : "";
 }
 
-/** Copy every pengurus row of `sourceId` into `targetId`. */
+/**
+ * Create the group set for a new board and return a source→target group id map.
+ *
+ * A copied board keeps the source's groups (including renamed ones); a fresh
+ * board gets DEFAULT_GRUP. The map is what remaps each copied person's
+ * `grup_id`, so members never point at the previous board's groups.
+ */
+async function setupGroups(
+  supabase: Awaited<ReturnType<typeof createClient>>,
+  sourceId: string | null,
+  targetId: string
+): Promise<{ map: Map<string, string>; error: string | null }> {
+  let sourceGroups: PengurusGrupRow[] = [];
+
+  if (sourceId) {
+    const { data, error } = await supabase
+      .from("pengurus_grup")
+      .select("*")
+      .eq("kepengurusan_id", sourceId)
+      .order("sort", { ascending: true });
+    if (error) return { map: new Map(), error: error.message };
+    sourceGroups = (data ?? []) as PengurusGrupRow[];
+  }
+
+  const rows =
+    sourceGroups.length > 0
+      ? sourceGroups.map((g) => ({
+          kepengurusan_id: targetId,
+          slug: g.slug,
+          label: g.label,
+          deskripsi: g.deskripsi,
+          sort: g.sort,
+        }))
+      : DEFAULT_GRUP.map((g) => ({ ...g, kepengurusan_id: targetId }));
+
+  const { error: insertError } = await supabase
+    .from("pengurus_grup")
+    .insert(rows);
+  if (insertError) return { map: new Map(), error: insertError.message };
+
+  const { data: created, error: readError } = await supabase
+    .from("pengurus_grup")
+    .select("id, slug")
+    .eq("kepengurusan_id", targetId);
+  if (readError) return { map: new Map(), error: readError.message };
+
+  const bySlug = new Map((created ?? []).map((g) => [g.slug, g.id]));
+  const map = new Map<string, string>();
+  for (const group of sourceGroups) {
+    const target = bySlug.get(group.slug);
+    if (target) map.set(group.id, target);
+  }
+  return { map, error: null };
+}
+
+/** Copy every pengurus row of `sourceId` into `targetId`, remapping its group. */
 async function copyRows(
   supabase: Awaited<ReturnType<typeof createClient>>,
   sourceId: string,
-  targetId: string
+  targetId: string,
+  grupMap: Map<string, string>
 ): Promise<string | null> {
   const { data, error } = await supabase
     .from("pengurus")
@@ -36,6 +93,7 @@ async function copyRows(
     foto: row.foto ?? "",
     unit: row.unit ?? "",
     kategori: row.kategori,
+    grup_id: row.grup_id ? grupMap.get(row.grup_id) ?? null : null,
     sort: row.sort,
     published: row.published,
     kepengurusan_id: targetId,
@@ -83,13 +141,21 @@ export async function createKepengurusan(fd: FormData): Promise<KepengurusanResu
     .single();
   if (error) return { ok: false, error: error.message };
 
-  const source = str(fd, "salin_dari");
-  if (source && data) {
-    const copyError = await copyRows(supabase, source, data.id);
-    if (copyError) {
+  const source = str(fd, "salin_dari") || null;
+  if (data) {
+    const { map, error: grupError } = await setupGroups(supabase, source, data.id);
+    if (grupError) {
       // Roll back the empty board so a failed copy leaves nothing behind.
       await supabase.from("kepengurusan").delete().eq("id", data.id);
-      return { ok: false, error: copyError };
+      return { ok: false, error: grupError };
+    }
+
+    if (source) {
+      const copyError = await copyRows(supabase, source, data.id, map);
+      if (copyError) {
+        await supabase.from("kepengurusan").delete().eq("id", data.id);
+        return { ok: false, error: copyError };
+      }
     }
   }
 
@@ -205,7 +271,13 @@ export async function duplicateKepengurusan(
     .single();
   if (createError) return { ok: false, error: createError.message };
 
-  const copyError = await copyRows(supabase, id, created.id);
+  const { map, error: grupError } = await setupGroups(supabase, id, created.id);
+  if (grupError) {
+    await supabase.from("kepengurusan").delete().eq("id", created.id);
+    return { ok: false, error: grupError };
+  }
+
+  const copyError = await copyRows(supabase, id, created.id, map);
   if (copyError) {
     await supabase.from("kepengurusan").delete().eq("id", created.id);
     return { ok: false, error: copyError };
