@@ -1,13 +1,30 @@
 "use client";
 
-import { useActionState, useState } from "react";
+import { useActionState, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
-import { CheckCircle, Eye, PencilSimple } from "@phosphor-icons/react";
+import {
+  CheckCircle,
+  Eye,
+  PencilSimple,
+  TextB,
+  TextItalic,
+  TextHOne,
+  TextHTwo,
+  ListBullets,
+  ListNumbers,
+  Quotes,
+  LinkSimple,
+  Code,
+  CodeBlock,
+  Minus,
+  ImageSquare,
+} from "@phosphor-icons/react";
 import { TextField } from "./fields/TextField";
 import { TextArea } from "./fields/TextArea";
 import { ImageField } from "./fields/ImageField";
 import { ToggleField } from "./fields/ToggleField";
 import { SubmitButton } from "./fields/SubmitButton";
+import { MediaPicker } from "./fields/MediaPicker";
 import { Markdown } from "@/components/blog/Markdown";
 import { createPost, updatePost, type PostResult } from "@/lib/actions/posts";
 import { withToast } from "@/lib/admin/toast";
@@ -19,6 +36,58 @@ export function PostEditor({ post }: { post: Post | null }) {
   const [body, setBody] = useState(post?.bodyMd ?? "");
   const [tags, setTags] = useState((post?.tags ?? []).join(", "));
   const [tab, setTab] = useState<"write" | "preview">("write");
+  const [pickerOpen, setPickerOpen] = useState(false);
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
+
+  /** Wrap the selection (or a placeholder) with Markdown markers. */
+  const wrap = (before: string, after = before, placeholder = "teks") => {
+    const el = textareaRef.current;
+    if (!el) return;
+    const start = el.selectionStart;
+    const end = el.selectionEnd;
+    const selected = body.slice(start, end) || placeholder;
+    const next = body.slice(0, start) + before + selected + after + body.slice(end);
+    setBody(next);
+    requestAnimationFrame(() => {
+      el.focus();
+      el.setSelectionRange(start + before.length, start + before.length + selected.length);
+    });
+  };
+
+  /** Prefix every selected line, e.g. "- " or "> ". */
+  const prefixLines = (prefix: string) => {
+    const el = textareaRef.current;
+    if (!el) return;
+    const start = el.selectionStart;
+    const end = el.selectionEnd;
+    const lineStart = body.lastIndexOf("\n", start - 1) + 1;
+    const lineEnd = body.indexOf("\n", end);
+    const sliceEnd = lineEnd === -1 ? body.length : lineEnd;
+    const block = body.slice(lineStart, sliceEnd) || "teks";
+    const nextBlock = block
+      .split("\n")
+      .map((line) => (line.startsWith(prefix) ? line : `${prefix}${line}`))
+      .join("\n");
+    const next = body.slice(0, lineStart) + nextBlock + body.slice(sliceEnd);
+    setBody(next);
+    requestAnimationFrame(() => {
+      el.focus();
+      el.setSelectionRange(lineStart, lineStart + nextBlock.length);
+    });
+  };
+
+  const insert = (text: string) => {
+    const el = textareaRef.current;
+    if (!el) return;
+    const start = el.selectionStart;
+    const end = el.selectionEnd;
+    const next = body.slice(0, start) + text + body.slice(end);
+    setBody(next);
+    requestAnimationFrame(() => {
+      el.focus();
+      el.setSelectionRange(start + text.length, start + text.length);
+    });
+  };
 
   const [state, action] = useActionState<PostResult | undefined, FormData>(
     async (_prev, formData) => {
@@ -123,15 +192,71 @@ export function PostEditor({ post }: { post: Post | null }) {
         </div>
 
         {tab === "write" ? (
-          <textarea
-            value={body}
-            onChange={(e) => setBody(e.target.value)}
-            rows={20}
-            placeholder={"# Judul\n\nTulis dalam **Markdown**…"}
-            className="w-full resize-y rounded-sm border border-ink/15 bg-white px-4 py-3 font-mono text-sm leading-relaxed text-ink outline-none transition-colors focus:border-ember dark:border-white/15 dark:bg-white/[0.04]"
-          />
+          <div className="flex flex-col gap-2">
+            <div className="flex flex-wrap items-center gap-1 rounded-sm border border-ink/15 bg-cream/60 p-1.5 dark:border-white/15 dark:bg-white/[0.03]">
+              <ToolButton label="Tebal" onClick={() => wrap("**")}>
+                <TextB size={16} weight="bold" />
+              </ToolButton>
+              <ToolButton label="Miring" onClick={() => wrap("_")}>
+                <TextItalic size={16} weight="bold" />
+              </ToolButton>
+              <ToolButton label="Judul besar" onClick={() => prefixLines("## ")}>
+                <TextHOne size={16} weight="bold" />
+              </ToolButton>
+              <ToolButton label="Judul kecil" onClick={() => prefixLines("### ")}>
+                <TextHTwo size={16} weight="bold" />
+              </ToolButton>
+              <span className="mx-1 h-5 w-px bg-ink/15 dark:bg-white/15" />
+              <ToolButton label="Daftar poin" onClick={() => prefixLines("- ")}>
+                <ListBullets size={16} weight="bold" />
+              </ToolButton>
+              <ToolButton label="Daftar nomor" onClick={() => prefixLines("1. ")}>
+                <ListNumbers size={16} weight="bold" />
+              </ToolButton>
+              <ToolButton label="Kutipan" onClick={() => prefixLines("> ")}>
+                <Quotes size={16} weight="bold" />
+              </ToolButton>
+              <span className="mx-1 h-5 w-px bg-ink/15 dark:bg-white/15" />
+              <ToolButton
+                label="Tautan"
+                onClick={() => wrap("[", "](https://)", "teks tautan")}
+              >
+                <LinkSimple size={16} weight="bold" />
+              </ToolButton>
+              <ToolButton label="Kode" onClick={() => wrap("`")}>
+                <Code size={16} weight="bold" />
+              </ToolButton>
+              <ToolButton
+                label="Blok kode"
+                onClick={() => wrap("\n```\n", "\n```\n", "kode")}
+              >
+                <CodeBlock size={16} weight="bold" />
+              </ToolButton>
+              <ToolButton label="Garis pemisah" onClick={() => insert("\n---\n")}>
+                <Minus size={16} weight="bold" />
+              </ToolButton>
+              <ToolButton label="Sisipkan gambar" onClick={() => setPickerOpen(true)}>
+                <ImageSquare size={16} weight="bold" />
+              </ToolButton>
+            </div>
+            <p className="text-xs leading-relaxed text-ink-faint">
+              Pilih teks lalu klik tombol. Tidak perlu hafal Markdown.
+            </p>
+            <textarea
+              ref={textareaRef}
+              value={body}
+              onChange={(e) => setBody(e.target.value)}
+              rows={20}
+              data-lenis-prevent
+              placeholder={"Tulis artikel di sini…\n\nGunakan tombol di atas untuk menebalkan, membuat daftar, atau menyisipkan gambar."}
+              className="w-full resize-y rounded-sm border border-ink/15 bg-white px-4 py-3 font-mono text-sm leading-relaxed text-ink outline-none transition-colors focus:border-ember dark:border-white/15 dark:bg-white/[0.04]"
+            />
+          </div>
         ) : (
-          <div className="min-h-[20rem] rounded-sm border border-ink/10 bg-cream p-5 dark:border-white/10 dark:bg-white/[0.02]">
+          <div
+            data-lenis-prevent
+            className="min-h-[20rem] rounded-sm border border-ink/10 bg-cream p-5 dark:border-white/10 dark:bg-white/[0.02]"
+          >
             {body.trim() ? (
               <Markdown>{body}</Markdown>
             ) : (
@@ -142,12 +267,45 @@ export function PostEditor({ post }: { post: Post | null }) {
         <input type="hidden" name="bodyMd" value={body} />
       </div>
 
+      <MediaPicker
+        open={pickerOpen}
+        onClose={() => setPickerOpen(false)}
+        onSelect={(urls) => {
+          if (urls[0]) insert(`\n![gambar](${urls[0]})\n`);
+          setPickerOpen(false);
+        }}
+        folder="posts"
+        title="Sisipkan gambar"
+      />
+
       <div className="sticky bottom-4 z-10">
         <div className="glass-panel flex items-center justify-end gap-3 rounded-sm px-4 py-3">
           <SubmitButton>{post ? "Simpan" : "Buat artikel"}</SubmitButton>
         </div>
       </div>
     </form>
+  );
+}
+
+function ToolButton({
+  label,
+  onClick,
+  children,
+}: {
+  label: string;
+  onClick: () => void;
+  children: React.ReactNode;
+}) {
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      title={label}
+      aria-label={label}
+      className="grid h-8 w-8 place-items-center rounded-sm text-ink-soft transition-colors hover:bg-ember/10 hover:text-ember"
+    >
+      {children}
+    </button>
   );
 }
 
