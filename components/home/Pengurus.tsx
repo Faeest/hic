@@ -192,16 +192,16 @@ export function Pengurus({
           </div>
         )}
 
-        {/* BPH — fixed group */}
-        {inti.length > 0 && (
+        {/* BPH — fixed group, copy comes from the database */}
+        {inti.anggota.length > 0 && (
           <>
             <GroupHead
-              label="Badan Pengurus Harian"
-              deskripsi="Mengurus organisasi: jadwal, kas, dan dokumen."
+              label={inti.label}
+              deskripsi={inti.deskripsi}
               first
             />
             <div className="mt-6 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-              {inti.map((p, i) => (
+              {inti.anggota.map((p, i) => (
                 <PersonCard key={p.nama} p={p} delay={i * 0.05} />
               ))}
             </div>
@@ -214,7 +214,7 @@ export function Pengurus({
             <GroupHead
               label={g.label}
               deskripsi={g.deskripsi}
-              first={gi === 0 && inti.length === 0}
+              first={gi === 0 && inti.anggota.length === 0}
             />
             <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
               {g.anggota.map((p, i) => (

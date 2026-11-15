@@ -19,8 +19,8 @@ export type PengurusGroup = PengurusGrup & { anggota: Pengurus[] };
 export type PengurusGroups = {
   /** The dosen pembina card(s) — normally exactly one. */
   pembina: Pengurus[];
-  /** Badan Pengurus Harian. */
-  inti: Pengurus[];
+  /** Badan Pengurus Harian: fixed group, editable label/description. */
+  inti: PengurusGroup;
   /** Admin-defined groups, in board order, empty groups omitted. */
   grup: PengurusGroup[];
 };
@@ -38,7 +38,7 @@ const seedGroup = (slug: string, anggota: Pengurus[]): PengurusGroup => {
 
 export const seedPengurus: PengurusGroups = {
   pembina: [seedPembina],
-  inti: seedInti,
+  inti: seedGroup("inti", seedInti),
   grup: [seedGroup("biro", seedBiro), seedGroup("koordinator", seedKoordinator)],
 };
 
@@ -111,7 +111,14 @@ export async function getPengurus(): Promise<PengurusGroups> {
     }
 
     const pembina = buckets.get(bySlug.get("pembina")?.id ?? "") ?? [];
-    const inti = buckets.get(bySlug.get("inti")?.id ?? "") ?? [];
+    const intiMeta = bySlug.get("inti");
+    const inti: PengurusGroup = {
+      slug: "inti",
+      label: intiMeta?.label ?? "Badan Pengurus Harian",
+      deskripsi: intiMeta?.deskripsi ?? "",
+      sort: intiMeta?.sort ?? 10,
+      anggota: buckets.get(intiMeta?.id ?? "") ?? [],
+    };
     const grup = groups
       .filter((g) => !(RESERVED_GRUP_SLUGS as readonly string[]).includes(g.slug))
       .map((g) => ({
@@ -136,7 +143,7 @@ export async function getPengurus(): Promise<PengurusGroups> {
  */
 export async function getPjDivisi(slug: string): Promise<Pengurus | undefined> {
   const { pembina, inti, grup } = await getPengurus();
-  return [...pembina, ...inti, ...grup.flatMap((g) => g.anggota)].find(
+  return [...pembina, ...inti.anggota, ...grup.flatMap((g) => g.anggota)].find(
     (p) => p.unit === slug
   );
 }
