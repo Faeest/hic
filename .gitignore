@@ -54,3 +54,6 @@ _*.html
 _*.txt
 _*.out
 _*.cjs
+
+# Supabase CLI scratch
+supabase/.temp/
