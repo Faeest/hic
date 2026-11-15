@@ -3,6 +3,7 @@ import localFont from "next/font/local";
 import { MotionProvider } from "@/components/ui/MotionProvider";
 import { SmoothScroll } from "@/components/ui/SmoothScroll";
 import { AuthHashRedirect } from "@/components/admin/AuthHashRedirect";
+import { ScrollToTop } from "@/components/ui/ScrollToTop";
 import { Analytics } from "@vercel/analytics/next";
 import "./globals.css";
 
@@ -57,7 +58,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       </head>
       <body className="min-h-dvh flex flex-col bg-paper text-ink transition-colors duration-400">
         <MotionProvider>
-          <SmoothScroll>{children}</SmoothScroll>
+          <SmoothScroll>
+            {children}
+            <ScrollToTop />
+          </SmoothScroll>
         </MotionProvider>
         <AuthHashRedirect />
         <Analytics />
