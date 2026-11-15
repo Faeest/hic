@@ -37,7 +37,7 @@ export default async function BlogPage() {
     <>
       <Navbar site={site} divisi={divisi} />
       <main className="bg-paper">
-        <section className="relative scroll-mt-24 bg-paper py-14 sm:py-16">
+        <section className="relative scroll-mt-24 bg-paper pb-16 pt-28 sm:pb-20 sm:pt-32">
           <div className="mx-auto max-w-7xl px-5 sm:px-8">
             <p className="flex items-baseline gap-3 text-sm">
               <span className="font-medium text-ember">Blog</span>

@@ -3,6 +3,7 @@
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import { cn } from "@/lib/utils";
+import { toSiteMediaUrl } from "@/lib/media/url";
 
 /**
  * Shared Markdown renderer for both the admin preview and the public post page.
@@ -74,7 +75,11 @@ export function Markdown({
           hr: () => <hr className="border-ink/10 dark:border-white/10" />,
           img: ({ src, alt }) => (
             // eslint-disable-next-line @next/next/no-img-element
-            <img src={typeof src === "string" ? src : ""} alt={alt ?? ""} className="rounded-xs" />
+            <img
+              src={typeof src === "string" ? toSiteMediaUrl(src) : ""}
+              alt={alt ?? ""}
+              className="rounded-xs"
+            />
           ),
           table: ({ children }) => (
             <div className="overflow-x-auto">

@@ -65,7 +65,7 @@ export default async function BlogPostPage({
     <>
       <Navbar site={site} divisi={divisi} />
       <main className="bg-paper">
-        <article className="mx-auto max-w-[68ch] px-5 py-14 sm:px-8 sm:py-16">
+        <article className="mx-auto max-w-4xl px-5 pb-16 pt-28 sm:px-8 sm:pb-20 sm:pt-32">
           <Link
             href="/blog"
             className="inline-flex items-center gap-2 text-sm font-medium text-ink-soft transition-colors hover:text-ember"

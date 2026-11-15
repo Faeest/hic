@@ -26,6 +26,7 @@ import { ToggleField } from "./fields/ToggleField";
 import { SubmitButton } from "./fields/SubmitButton";
 import { MediaPicker } from "./fields/MediaPicker";
 import { Markdown } from "@/components/blog/Markdown";
+import { toSiteMediaUrl } from "@/lib/media/url";
 import { createPost, updatePost, type PostResult } from "@/lib/actions/posts";
 import { withToast } from "@/lib/admin/toast";
 import { cn } from "@/lib/utils";
@@ -271,7 +272,7 @@ export function PostEditor({ post }: { post: Post | null }) {
         open={pickerOpen}
         onClose={() => setPickerOpen(false)}
         onSelect={(urls) => {
-          if (urls[0]) insert(`\n![gambar](${urls[0]})\n`);
+          if (urls[0]) insert(`\n![gambar](${toSiteMediaUrl(urls[0])})\n`);
           setPickerOpen(false);
         }}
         folder="posts"
