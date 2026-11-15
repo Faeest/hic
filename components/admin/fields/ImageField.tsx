@@ -7,6 +7,7 @@ import { FieldWrap, inputClass } from "./FieldWrap";
 import { MediaPicker } from "./MediaPicker";
 import { uploadImage } from "@/lib/actions/upload";
 import { compressImage } from "@/lib/media/compress";
+import { MAX_UPLOAD_BYTES, tooLargeMessage } from "@/lib/media/limits";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
 
@@ -45,23 +46,37 @@ export function ImageField({
     setSaved(null);
     startTransition(async () => {
       const toastId = toast.loading("Mengunggah…");
-      const compressed = await compressImage(file);
-      if (compressed !== file) {
-        setSaved(`${fmt(file.size)} → ${fmt(compressed.size)}`);
-      }
+      try {
+        const compressed = await compressImage(file);
+        if (compressed.size > MAX_UPLOAD_BYTES) {
+          const message = tooLargeMessage(compressed);
+          setError(message);
+          toast.error(message, { id: toastId });
+          return;
+        }
+        if (compressed !== file) {
+          setSaved(`${fmt(file.size)} → ${fmt(compressed.size)}`);
+        }
 
-      const fd = new FormData();
-      fd.set("file", compressed);
-      fd.set("folder", folder);
-      const res = await uploadImage(fd);
-      if (res.error) {
-        setError(res.error);
-        toast.error(res.error, { id: toastId });
-      } else if (res.url) {
-        setUrl(res.url);
-        toast.success("Gambar diunggah dan dipilih.", { id: toastId });
+        const fd = new FormData();
+        fd.set("file", compressed);
+        fd.set("folder", folder);
+        const res = await uploadImage(fd);
+        if (res.error) {
+          setError(res.error);
+          toast.error(res.error, { id: toastId });
+        } else if (res.url) {
+          setUrl(res.url);
+          toast.success("Gambar diunggah dan dipilih.", { id: toastId });
+        }
+      } catch (error) {
+        const message =
+          error instanceof Error ? error.message : "Gagal mengunggah gambar.";
+        setError(message);
+        toast.error(message, { id: toastId });
+      } finally {
+        if (fileRef.current) fileRef.current.value = "";
       }
-      if (fileRef.current) fileRef.current.value = "";
     });
   };
 

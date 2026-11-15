@@ -15,6 +15,7 @@ import { FieldWrap } from "./FieldWrap";
 import { MediaPicker } from "./MediaPicker";
 import { uploadImage } from "@/lib/actions/upload";
 import { compressImage } from "@/lib/media/compress";
+import { MAX_UPLOAD_BYTES, tooLargeMessage } from "@/lib/media/limits";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
 
@@ -72,22 +73,39 @@ export function ImagesField({
     startTransition(async () => {
       const urls: string[] = [];
       let failed = 0;
+      let lastError: string | null = null;
       for (const file of list) {
-        const compressed = await compressImage(file);
-        const fd = new FormData();
-        fd.set("file", compressed);
-        fd.set("folder", folder);
-        const res = await uploadImage(fd);
-        if (res.error || !res.url) failed++;
-        else urls.push(res.url);
+        try {
+          const compressed = await compressImage(file);
+          if (compressed.size > MAX_UPLOAD_BYTES) {
+            failed++;
+            lastError = tooLargeMessage(compressed);
+            continue;
+          }
+          const fd = new FormData();
+          fd.set("file", compressed);
+          fd.set("folder", folder);
+          const res = await uploadImage(fd);
+          if (res.error || !res.url) {
+            failed++;
+            lastError = res.error ?? "Gagal mengunggah.";
+          } else {
+            urls.push(res.url);
+          }
+        } catch (error) {
+          failed++;
+          lastError =
+            error instanceof Error ? error.message : "Gagal mengunggah.";
+        }
       }
       if (urls.length > 0) add(urls);
       if (failed === 0) {
         toast.success(`${urls.length} berkas diunggah.`, { id: toastId });
       } else {
-        toast.error(`${failed} dari ${list.length} berkas gagal.`, {
-          id: toastId,
-        });
+        toast.error(
+          lastError ?? `${failed} dari ${list.length} berkas gagal.`,
+          { id: toastId }
+        );
       }
       setUploading(false);
       if (fileRef.current) fileRef.current.value = "";

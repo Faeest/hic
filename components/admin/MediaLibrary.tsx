@@ -12,7 +12,8 @@ import {
   ArrowsClockwise,
 } from "@phosphor-icons/react";
 import { uploadImage, deleteMedia, replaceMedia } from "@/lib/actions/upload";
-import { compressKeepingType } from "@/lib/media/compress";
+import { compressImage, compressKeepingType } from "@/lib/media/compress";
+import { MAX_UPLOAD_BYTES, tooLargeMessage } from "@/lib/media/limits";
 import { toast } from "sonner";
 import type { MediaItem } from "@/lib/admin/media";
 import { cn } from "@/lib/utils";
@@ -77,22 +78,36 @@ export function MediaLibrary({ items }: { items: MediaItem[] }) {
     setReplacing(target.path);
     startTransition(async () => {
       const toastId = toast.loading(`Mengganti ${target.name}…`);
-      const prepared = await compressKeepingType(file, target.path);
-      const fd = new FormData();
-      fd.set("file", prepared);
-      fd.set("path", target.path);
-      const res = await replaceMedia(fd);
-      if (res.error) {
-        setError(res.error);
-        toast.error(res.error, { id: toastId });
-      } else {
-        setBust((b) => ({ ...b, [target.path]: Date.now() }));
-        toast.success("Gambar diganti. Tautannya tetap sama.", { id: toastId });
+      try {
+        const prepared = await compressKeepingType(file, target.path);
+        if (prepared.size > MAX_UPLOAD_BYTES) {
+          const message = tooLargeMessage(prepared);
+          setError(message);
+          toast.error(message, { id: toastId });
+          return;
+        }
+        const fd = new FormData();
+        fd.set("file", prepared);
+        fd.set("path", target.path);
+        const res = await replaceMedia(fd);
+        if (res.error) {
+          setError(res.error);
+          toast.error(res.error, { id: toastId });
+        } else {
+          setBust((b) => ({ ...b, [target.path]: Date.now() }));
+          toast.success("Gambar diganti. Tautannya tetap sama.", { id: toastId });
+        }
+      } catch (error) {
+        const message =
+          error instanceof Error ? error.message : "Gagal mengganti gambar.";
+        setError(message);
+        toast.error(message, { id: toastId });
+      } finally {
+        setReplacing(null);
+        replaceTarget.current = null;
+        if (replaceRef.current) replaceRef.current.value = "";
+        router.refresh();
       }
-      setReplacing(null);
-      replaceTarget.current = null;
-      if (replaceRef.current) replaceRef.current.value = "";
-      router.refresh();
     });
   };
 
@@ -103,23 +118,38 @@ export function MediaLibrary({ items }: { items: MediaItem[] }) {
     startTransition(async () => {
       const toastId = toast.loading(`Mengunggah ${list.length} berkas…`);
       let failed = 0;
+      let lastError: string | null = null;
       for (const file of list) {
-        const fd = new FormData();
-        fd.set("file", file);
-        fd.set("folder", "media");
-        const res = await uploadImage(fd);
-        if (res.error) {
+        try {
+          const compressed = await compressImage(file);
+          if (compressed.size > MAX_UPLOAD_BYTES) {
+            failed++;
+            lastError = tooLargeMessage(compressed);
+            continue;
+          }
+          const fd = new FormData();
+          fd.set("file", compressed);
+          fd.set("folder", "media");
+          const res = await uploadImage(fd);
+          if (res.error) {
+            failed++;
+            lastError = res.error;
+          }
+        } catch (error) {
           failed++;
-          setError(res.error);
+          lastError =
+            error instanceof Error ? error.message : "Gagal mengunggah.";
         }
       }
       if (fileRef.current) fileRef.current.value = "";
       if (failed === 0) {
         toast.success(`${list.length} berkas diunggah.`, { id: toastId });
       } else {
-        toast.error(`${failed} dari ${list.length} berkas gagal.`, {
-          id: toastId,
-        });
+        setError(lastError);
+        toast.error(
+          lastError ?? `${failed} dari ${list.length} berkas gagal.`,
+          { id: toastId }
+        );
       }
       router.refresh();
     });
