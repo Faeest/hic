@@ -59,7 +59,7 @@ function GaleriFigure({
       <div className="absolute inset-0 bg-[linear-gradient(180deg,transparent_50%,rgba(0,0,0,0.55)_100%)]" aria-hidden />
 
       {count > 1 && (
-        <span className="absolute right-3 top-3 z-10 inline-flex items-center gap-1.5 rounded-full bg-ink/60 px-2.5 py-1 text-[11px] font-medium text-white backdrop-blur-sm">
+        <span className="absolute right-3 top-3 z-10 inline-flex items-center gap-1.5 rounded-full bg-[#0b0908]/60 px-2.5 py-1 text-[11px] font-medium text-white backdrop-blur-sm">
           <Images size={13} weight="bold" />
           {count} foto
         </span>
