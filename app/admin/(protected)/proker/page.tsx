@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { adminProker } from "@/lib/content/admin";
+import { adminDivisi, adminProker } from "@/lib/content/admin";
 import { ResourceManager } from "@/components/admin/ResourceManager";
 import { prokerConfig } from "@/lib/admin/configs";
 
@@ -9,7 +9,8 @@ export const metadata: Metadata = {
 };
 
 export default async function AdminProkerPage() {
-  const rows = await adminProker();
+  const [rows, divisi] = await Promise.all([adminProker(), adminDivisi()]);
+
   return (
     <div className="flex flex-col gap-6">
       <div>
@@ -20,7 +21,13 @@ export default async function AdminProkerPage() {
           Agenda dan program kerja HIC.
         </p>
       </div>
-      <ResourceManager config={prokerConfig} rows={rows} />
+      <ResourceManager
+        config={prokerConfig}
+        rows={rows}
+        optionSets={{
+          divisi: divisi.map((d) => ({ value: d.slug, label: d.nama })),
+        }}
+      />
     </div>
   );
 }

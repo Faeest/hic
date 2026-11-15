@@ -29,6 +29,9 @@ const satoshi = localFont({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL(
+    process.env.NEXT_PUBLIC_SITE_URL ?? "https://hic.ubhinus.ac.id"
+  ),
   title: "HIC — Hardware Interactive Club",
   description:
     "UKM keilmuan STIKI tempat mahasiswa saling mengajar: Web, UI/UX, dan Robotics. Belajar, berkarya, dan tumbuh bareng.",

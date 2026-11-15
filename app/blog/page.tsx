@@ -45,7 +45,7 @@ export default async function BlogPage() {
               <span className="font-medium text-ink-soft">Catatan HIC</span>
             </p>
             <h1 className="mt-5 max-w-[18ch] font-display text-5xl font-semibold leading-[1.0] tracking-tight text-ink sm:text-6xl lg:text-7xl">
-              Tulisan dari sekret.
+              {site.copy.blogH1}
             </h1>
 
             {posts.length === 0 ? (

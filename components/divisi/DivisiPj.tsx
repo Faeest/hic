@@ -7,7 +7,15 @@ import type { Divisi, Pengurus } from "@/lib/types";
  * outside the BPH, which is why this lives on the division page rather than in
  * the board grid on the homepage.
  */
-export function DivisiPj({ d, pj }: { d: Divisi; pj?: Pengurus }) {
+export function DivisiPj({
+  d,
+  pj,
+  note,
+}: {
+  d: Divisi;
+  pj?: Pengurus;
+  note: string;
+}) {
   if (!pj) return null;
 
   return (
@@ -39,7 +47,7 @@ export function DivisiPj({ d, pj }: { d: Divisi; pj?: Pengurus }) {
           </div>
 
           <p className="max-w-xs text-sm leading-snug text-ink-faint">
-            Diangkat oleh divisi ini, bukan bagian dari BPH.
+            {note}
           </p>
         </div>
       </div>

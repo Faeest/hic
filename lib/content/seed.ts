@@ -6,7 +6,37 @@
  */
 
 import { club, sosial } from "@/data/club";
-import type { Section, Site } from "@/lib/types";
+import type { Section, Site, SiteCopy } from "@/lib/types";
+
+export const seedCopy: SiteCopy = {
+  mentorHeading: "Diajar kakak tingkat yang tahun lalu duduk di kelas yang sama.",
+  kurikulumHeading: "Jalur belajarnya begini.",
+  prokerHeading: "Program kerja divisi",
+  pjNote: "Diangkat oleh divisi ini, bukan bagian dari BPH.",
+  gabungBody:
+    "Kelas perdana terbuka untuk siapa pun, tanpa syarat apa pun. Cukup datang dan penasaran.",
+  blogH1: "Tulisan dari sekret.",
+  blogLabel: "Blog",
+  navLinks: [
+    { href: "/#beranda", label: "Beranda" },
+    { href: "/#tentang", label: "Tentang" },
+    { href: "/#divisi", label: "Divisi" },
+    { href: "/#pengurus", label: "Pengurus" },
+    { href: "/#proker", label: "Program" },
+    { href: "/#galeri", label: "Galeri" },
+    { href: "/#faq", label: "FAQ" },
+  ],
+  footerNav: [
+    { href: "/#beranda", label: "Beranda" },
+    { href: "/#tentang", label: "Tentang" },
+    { href: "/#divisi", label: "Divisi" },
+    { href: "/#pengurus", label: "Pengurus" },
+    { href: "/#proker", label: "Program" },
+    { href: "/#galeri", label: "Galeri" },
+    { href: "/#faq", label: "FAQ" },
+    { href: "/blog", label: "Blog" },
+  ],
+};
 
 export const seedSite: Site = {
   nama: club.nama,
@@ -66,6 +96,7 @@ export const seedSite: Site = {
   ],
   tahunBerdiri: "1996",
   periodeKepengurusan: "2025–2026",
+  copy: seedCopy,
 };
 
 export const seedSections: Section[] = [

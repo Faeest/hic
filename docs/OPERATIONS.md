@@ -58,7 +58,11 @@ Supabase's free plan has no automated database backups. Two layers:
    FAQ, blog.
 3. **Aktifkan** the new board. The old one stays as an archive.
 4. `/admin/users` → add the new officers, remove the ones who left.
-5. Do not delete an old board unless you have a backup — deletion is permanent.
+5. Old boards are **hidden**, not deleted: the trash button asks you to type the
+   board name and sets `deleted_at`. Rows stay in the database. To restore one,
+   clear `deleted_at` in SQL (service role).
+6. Interface copy (mentor/kurikulum headings, divisi CTA, blog title, nav and
+   footer labels) is edited in `/admin/site` → **Teks antarmuka**.
 
 ## Deploy
 

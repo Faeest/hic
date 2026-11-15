@@ -210,13 +210,9 @@ immediately, so they ask before discarding an unsaved order.
 # read pengurus straight from Supabase (secret key bypasses RLS)
 node --env-file=.env.local -e '...'   # or a scratch .mjs using fetch + apikey header
 
-# deploy the VPS copy
-bash deploy.sh
-
 # deploy the public site
 git push origin master                # Vercel builds automatically
 ```
 
 `.env.local` keys: `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY`,
-`SUPABASE_SECRET_KEY`. The VPS `hic.env` has no `SUPABASE_SECRET_KEY`, so
-`scripts/snapshot-media.mjs` skips there.
+`SUPABASE_SECRET_KEY`, `NEXT_PUBLIC_SITE_URL`.

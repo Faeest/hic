@@ -210,6 +210,72 @@ export function SiteForm({ site }: { site: Site }) {
         </div>
       </Section>
 
+      <Section title="Teks antarmuka">
+        <p className="text-sm leading-relaxed text-ink-soft">
+          Judul dan catatan yang muncul di halaman divisi, blog, serta menu
+          navigasi.
+        </p>
+        <TextField
+          label="Judul bagian mentor"
+          name="copyMentorHeading"
+          defaultValue={site.copy.mentorHeading}
+        />
+        <TextField
+          label="Judul bagian kurikulum"
+          name="copyKurikulumHeading"
+          defaultValue={site.copy.kurikulumHeading}
+        />
+        <TextField
+          label="Judul program kerja divisi"
+          name="copyProkerHeading"
+          defaultValue={site.copy.prokerHeading}
+        />
+        <TextField
+          label="Catatan PJ divisi"
+          name="copyPjNote"
+          defaultValue={site.copy.pjNote}
+        />
+        <TextArea
+          label="Ajakan di akhir halaman divisi"
+          name="copyGabungBody"
+          defaultValue={site.copy.gabungBody}
+          rows={3}
+        />
+        <div className="grid gap-5 sm:grid-cols-2">
+          <TextField
+            label="Judul halaman blog"
+            name="copyBlogH1"
+            defaultValue={site.copy.blogH1}
+          />
+          <TextField
+            label="Label menu blog"
+            name="copyBlogLabel"
+            defaultValue={site.copy.blogLabel}
+          />
+        </div>
+        <RepeaterField
+          label="Menu navigasi"
+          name="copyNavLinks"
+          defaultValue={site.copy.navLinks}
+          itemLabel="Menu"
+          hint="Urutan mengikuti daftar. Tautan internal pakai /#seksi."
+          fields={[
+            { key: "label", label: "Label" },
+            { key: "href", label: "Tautan" },
+          ]}
+        />
+        <RepeaterField
+          label="Menu footer"
+          name="copyFooterNav"
+          defaultValue={site.copy.footerNav}
+          itemLabel="Menu"
+          fields={[
+            { key: "label", label: "Label" },
+            { key: "href", label: "Tautan" },
+          ]}
+        />
+      </Section>
+
       <Section title="Footer">
         <TextField
           label="Kalimat pembuka"

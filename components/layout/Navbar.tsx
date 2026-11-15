@@ -4,25 +4,23 @@ import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { cn } from "@/lib/utils";
 import { ThemeToggle } from "@/components/ui/ThemeToggle";
 import { useLenis } from "lenis/react";
 import type { Divisi, Site } from "@/lib/types";
 
-const links = [
-  { href: "/#beranda", label: "Beranda", id: "beranda" },
-  { href: "/#tentang", label: "Tentang", id: "tentang" },
-  { href: "/#divisi", label: "Divisi", id: "divisi" },
-  { href: "/#pengurus", label: "Pengurus", id: "pengurus" },
-  { href: "/#proker", label: "Program", id: "proker" },
-  { href: "/#galeri", label: "Galeri", id: "galeri" },
-  { href: "/#faq", label: "FAQ", id: "faq" },
-];
-
-const blogLink = { href: "/blog", label: "Blog" };
-
 export function Navbar({ site }: { site: Site; divisi?: Divisi[] }) {
+  const links = useMemo(
+    () =>
+      site.copy.navLinks.map((l) => ({
+        href: l.href,
+        label: l.label,
+        id: l.href.includes("#") ? l.href.split("#")[1] : "",
+      })),
+    [site.copy.navLinks]
+  );
+  const blogLink = { href: "/blog", label: site.copy.blogLabel };
   const [scrolled, setScrolled] = useState(() =>
     typeof window !== "undefined" ? window.scrollY > 24 : false
   );
@@ -98,7 +96,7 @@ export function Navbar({ site }: { site: Site; divisi?: Divisi[] }) {
       window.removeEventListener("scrollend", onScrollEnd);
       if (unlockTimer.current) clearTimeout(unlockTimer.current);
     };
-  }, [pathname]);
+  }, [pathname, links]);
 
   const isActive = (id: string) => {
     if (pathname === "/") return active ? active === id : id === "beranda";
@@ -250,7 +248,7 @@ export function Navbar({ site }: { site: Site; divisi?: Divisi[] }) {
             animate={{ opacity: 1, clipPath: "inset(0 0 0% 0)" }}
             exit={{ opacity: 0, clipPath: "inset(0 0 100% 0)" }}
             transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
-            className="fixed inset-0 z-40 flex flex-col justify-between bg-cream px-6 pb-10 pt-28 dark:bg-[#181512] lg:hidden"
+            className="fixed inset-0 z-40 flex flex-col justify-between gap-8 overflow-y-auto overscroll-contain bg-cream px-6 pb-10 pt-28 dark:bg-[#181512] lg:hidden"
           >
             <div className="flex flex-col gap-1">
               {links.map((l, i) => {

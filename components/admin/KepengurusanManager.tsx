@@ -42,6 +42,10 @@ export function KepengurusanManager({
   const [form, setForm] = useState<FormState | null>(null);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [confirmDelete, setConfirmDelete] = useState<{
+    board: KepengurusanRow;
+    value: string;
+  } | null>(null);
 
   const close = () => {
     setForm(null);
@@ -71,16 +75,11 @@ export function KepengurusanManager({
     });
 
   const onDelete = async (board: KepengurusanRow) => {
-    if (
-      !confirm(
-        `Hapus "${board.nama}" beserta ${counts[board.id] ?? 0} pengurus di dalamnya?`
-      )
-    )
-      return;
     await run(() => deleteKepengurusan(board.id), {
-      loading: "Menghapus…",
-      success: "Kepengurusan dihapus.",
+      loading: "Menyembunyikan…",
+      success: "Kepengurusan disembunyikan.",
     });
+    setConfirmDelete(null);
   };
 
   const onSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
@@ -114,6 +113,54 @@ export function KepengurusanManager({
         <p className="rounded-sm border border-red-500/30 bg-red-500/10 px-4 py-3 text-sm text-red-600 dark:text-red-400">
           {error}
         </p>
+      )}
+
+      {confirmDelete && (
+        <div className="glass-panel flex flex-col gap-4 rounded-sm border border-red-500/30 p-6 sm:p-8">
+          <div>
+            <h2 className="font-display text-xl font-semibold tracking-tight text-ink">
+              Sembunyikan kepengurusan?
+            </h2>
+            <p className="mt-2 text-sm leading-relaxed text-ink-soft">
+              <span className="text-ink">{confirmDelete.board.nama}</span> beserta{" "}
+              {counts[confirmDelete.board.id] ?? 0} pengurus tidak akan tampil
+              lagi. Datanya tetap tersimpan dan bisa dipulihkan lewat database.
+            </p>
+          </div>
+          <label className="flex flex-col gap-2 text-sm text-ink-soft">
+            Ketik nama kepengurusan untuk konfirmasi
+            <input
+              value={confirmDelete.value}
+              onChange={(event) =>
+                setConfirmDelete((current) =>
+                  current ? { ...current, value: event.target.value } : current
+                )
+              }
+              className="rounded-sm border border-ink/15 bg-white px-4 py-2.5 text-base text-ink outline-none transition-colors focus:border-ember dark:border-white/15 dark:bg-white/[0.04]"
+            />
+          </label>
+          <div className="flex flex-wrap items-center gap-2">
+            <button
+              type="button"
+              disabled={
+                busy ||
+                confirmDelete.value.trim().toLowerCase() !==
+                  confirmDelete.board.nama.trim().toLowerCase()
+              }
+              onClick={() => onDelete(confirmDelete.board)}
+              className="rounded-sm bg-red-600 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-red-700 disabled:opacity-40"
+            >
+              Sembunyikan
+            </button>
+            <button
+              type="button"
+              onClick={() => setConfirmDelete(null)}
+              className="rounded-sm border border-ink/15 px-4 py-2 text-sm text-ink-soft transition-colors hover:text-ink dark:border-white/15"
+            >
+              Batal
+            </button>
+          </div>
+        </div>
       )}
 
       <div className="flex items-center justify-between gap-4">
@@ -273,9 +320,12 @@ export function KepengurusanManager({
               </button>
               <button
                 type="button"
-                onClick={() => onDelete(board)}
+                onClick={() => {
+                  setError(null);
+                  setConfirmDelete({ board, value: "" });
+                }}
                 disabled={busy || board.aktif}
-                aria-label="Hapus"
+                aria-label="Sembunyikan"
                 className="grid h-9 w-9 place-items-center rounded-sm border border-ink/15 text-ink-soft transition-colors hover:text-red-500 disabled:opacity-30 dark:border-white/15"
               >
                 <Trash size={16} weight="bold" />

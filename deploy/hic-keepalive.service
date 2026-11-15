@@ -1,7 +1,0 @@
-[Unit]
-Description=HIC — Supabase keepalive (prevents free-project pause)
-After=network-online.target
-
-[Service]
-Type=oneshot
-ExecStart=/home/lerraf/hic/deploy/keepalive.sh

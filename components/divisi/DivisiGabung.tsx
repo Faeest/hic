@@ -6,7 +6,7 @@ import Link from "next/link";
 import { divisiVars } from "@/lib/utils";
 import type { Divisi } from "@/lib/types";
 
-export function DivisiGabung({ d }: { d: Divisi }) {
+export function DivisiGabung({ d, body }: { d: Divisi; body: string }) {
   return (
     <section className="relative bg-paper py-24 sm:py-28" style={divisiVars(d)}>
       <div className="mx-auto max-w-7xl px-5 sm:px-8">
@@ -33,8 +33,7 @@ export function DivisiGabung({ d }: { d: Divisi }) {
                 Tertarik nyoba {d.nama}?
               </h2>
               <p className="mt-5 max-w-md text-lg leading-relaxed text-white/85">
-                Kelas perdana terbuka untuk siapa pun, tanpa syarat apa pun.
-                Cukup datang dan penasaran.
+                {body}
               </p>
             </div>
             <div className="flex shrink-0 flex-wrap gap-3.5">

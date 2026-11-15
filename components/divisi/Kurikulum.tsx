@@ -6,7 +6,7 @@ import { Reveal } from "@/components/ui/Reveal";
 import { divisiVars } from "@/lib/utils";
 import type { Divisi } from "@/lib/types";
 
-export function Kurikulum({ d }: { d: Divisi }) {
+export function Kurikulum({ d, heading }: { d: Divisi; heading: string }) {
   const totalPertemuan = d.kurikulum.reduce((a, k) => a + parseInt(k.durasi), 0);
   return (
     <section
@@ -22,7 +22,7 @@ export function Kurikulum({ d }: { d: Divisi }) {
                 Kurikulum
               </p>
               <h2 className="mt-3 font-display text-4xl font-semibold tracking-tight text-ink sm:text-5xl">
-                Jalur belajarnya begini.
+                {heading}
               </h2>
             </div>
             <span className="hidden shrink-0 items-center gap-2 border border-ink/10 px-4 py-2 text-xs text-ink-soft sm:inline-flex">

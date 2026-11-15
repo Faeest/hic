@@ -57,3 +57,6 @@ _*.cjs
 
 # Supabase CLI scratch
 supabase/.temp/
+
+# Local planning file (never commit)
+MILESTONES.local.md

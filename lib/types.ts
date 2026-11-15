@@ -163,6 +163,18 @@ export type Testimoni = {
 };
 
 /** Site-wide identity + copy. Superset of the old `club` object. */
+export type SiteCopy = {
+  mentorHeading: string;
+  kurikulumHeading: string;
+  prokerHeading: string;
+  pjNote: string;
+  gabungBody: string;
+  blogH1: string;
+  blogLabel: string;
+  navLinks: { label: string; href: string }[];
+  footerNav: { label: string; href: string }[];
+};
+
 export type Site = {
   nama: string;
   namaPanjang: string;
@@ -198,6 +210,7 @@ export type Site = {
   marqueeItems: string[];
   tahunBerdiri: string;
   periodeKepengurusan: string;
+  copy: SiteCopy;
 };
 
 export type Post = {
@@ -258,6 +271,7 @@ export type SiteSettingsRow = {
   marquee_items: string[];
   tahun_berdiri: string;
   periode_kepengurusan: string;
+  copy?: SiteCopy | null;
   updated_at: string;
 };
 
@@ -340,6 +354,8 @@ export type AdminUserRow = {
 
 export type KepengurusanRow = Kepengurusan & {
   updated_at: string;
+  /** Set when the board is hidden; rows are kept for recovery. */
+  deleted_at?: string | null;
 };
 
 export type ProkerRow = {

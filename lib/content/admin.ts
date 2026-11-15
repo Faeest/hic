@@ -41,7 +41,16 @@ export const adminProker = () => adminList<ProkerRow>("proker");
 export const adminGaleri = () => adminList<GaleriRow>("galeri");
 export const adminFaq = () => adminList<FaqRow>("faq");
 
-export const adminKepengurusan = () => adminList<KepengurusanRow>("kepengurusan");
+export async function adminKepengurusan(): Promise<KepengurusanRow[]> {
+  const supabase = (await createClient()) as unknown as SupabaseClient;
+  const { data, error } = await supabase
+    .from("kepengurusan")
+    .select("*")
+    .is("deleted_at", null)
+    .order("sort", { ascending: true });
+  if (error) throw new Error(error.message);
+  return (data ?? []) as KepengurusanRow[];
+}
 
 /** Pengurus rows, optionally scoped to one board. */
 export async function adminPengurus(loadoutId?: string): Promise<PengurusRow[]> {

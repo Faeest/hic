@@ -6,7 +6,15 @@ import { Reveal } from "@/components/ui/Reveal";
 import { divisiVars } from "@/lib/utils";
 import type { Divisi, Proker } from "@/lib/types";
 
-export function DivisiProker({ d, items }: { d: Divisi; items: Proker[] }) {
+export function DivisiProker({
+  d,
+  items,
+  heading,
+}: {
+  d: Divisi;
+  items: Proker[];
+  heading: string;
+}) {
   if (items.length === 0) return null;
 
   return (
@@ -16,7 +24,7 @@ export function DivisiProker({ d, items }: { d: Divisi; items: Proker[] }) {
           <div className="flex items-end justify-between gap-6">
             <div>
               <p className="text-sm font-medium text-[var(--div-main)]">
-                Program kerja divisi
+                {heading}
               </p>
               <h2 className="mt-3 font-display text-4xl font-semibold tracking-tight text-ink sm:text-5xl">
                 Agenda yang menyentuh {d.nama}.

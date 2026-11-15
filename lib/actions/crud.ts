@@ -4,6 +4,7 @@ import { assertAdmin } from "@/lib/auth/dal";
 import { createClient } from "@/lib/supabase/server";
 import { revalidatePublic } from "@/lib/actions/revalidate";
 import { isAllowedTable, type CrudTable } from "@/lib/admin/tables";
+import { friendlyDbError } from "@/lib/admin/errors";
 import type { SupabaseClient } from "@supabase/supabase-js";
 
 export type CrudResult = { ok: true } | { ok: false; error: string };
@@ -147,7 +148,7 @@ export async function createRow(table: string, fd: FormData): Promise<CrudResult
 
   const supabase = await looseClient();
   const { error } = await supabase.from(table).insert(buildPayload(table, fd));
-  if (error) return { ok: false, error: error.message };
+  if (error) return { ok: false, error: friendlyDbError(error) };
 
   revalidatePublic();
   return { ok: true };
@@ -174,7 +175,7 @@ export async function updateRow(
     .from(table)
     .update(buildPayload(table, fd))
     .eq("id", id);
-  if (error) return { ok: false, error: error.message };
+  if (error) return { ok: false, error: friendlyDbError(error) };
 
   revalidatePublic();
   return { ok: true };
@@ -190,8 +191,31 @@ export async function deleteRow(table: string, id: string): Promise<CrudResult> 
   if (!id) return { ok: false, error: "ID tidak ditemukan." };
 
   const supabase = await looseClient();
+
+  // A divisi owns its kurikulum and mentors; deleting it would cascade them
+  // silently. Block until the admin clears the children first.
+  if (table === "divisi") {
+    const [{ count: kurikulum }, { count: mentor }] = await Promise.all([
+      supabase
+        .from("kurikulum")
+        .select("id", { count: "exact", head: true })
+        .eq("divisi_id", id),
+      supabase
+        .from("mentor")
+        .select("id", { count: "exact", head: true })
+        .eq("divisi_id", id),
+    ]);
+    const total = (kurikulum ?? 0) + (mentor ?? 0);
+    if (total > 0) {
+      return {
+        ok: false,
+        error: `Divisi ini masih punya ${kurikulum ?? 0} kurikulum dan ${mentor ?? 0} mentor. Hapus isinya dulu sebelum menghapus divisi.`,
+      };
+    }
+  }
+
   const { error } = await supabase.from(table).delete().eq("id", id);
-  if (error) return { ok: false, error: error.message };
+  if (error) return { ok: false, error: friendlyDbError(error) };
 
   revalidatePublic();
   return { ok: true };
@@ -215,7 +239,7 @@ export async function reorderRows(
       .from(table)
       .update({ sort: i })
       .eq("id", ids[i]);
-    if (error) return { ok: false, error: error.message };
+    if (error) return { ok: false, error: friendlyDbError(error) };
   }
 
   revalidatePublic();

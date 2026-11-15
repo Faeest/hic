@@ -87,7 +87,14 @@ export const prokerConfig: ResourceConfig = {
   fields: [
     { kind: "text", name: "judul", label: "Judul", required: true },
     { kind: "text", name: "kategori", label: "Kategori" },
-    { kind: "text", name: "divisi_slug", label: "Slug divisi", hint: "web / uiux / robotics" },
+    {
+      kind: "select",
+      name: "divisi_slug",
+      label: "Divisi",
+      optionsFrom: "divisi",
+      placeholder: "Pilih divisi…",
+      hint: "Menentukan di halaman divisi mana program ini tampil.",
+    },
     { kind: "text", name: "tahun", label: "Tahun" },
     { kind: "textarea", name: "deskripsi", label: "Deskripsi", rows: 3 },
     { kind: "text", name: "dana", label: "Dana" },

@@ -4,6 +4,7 @@ import { redirect } from "next/navigation";
 import { assertAdmin } from "@/lib/auth/dal";
 import { createClient } from "@/lib/supabase/server";
 import { revalidatePublic } from "@/lib/actions/revalidate";
+import { friendlyDbError } from "@/lib/admin/errors";
 
 export type PostResult = { ok: true; id?: string } | { ok: false; error: string };
 
@@ -75,7 +76,7 @@ export async function createPost(fd: FormData): Promise<PostResult> {
     .select("id")
     .single();
 
-  if (error) return { ok: false, error: error.message };
+  if (error) return { ok: false, error: friendlyDbError(error) };
 
   revalidatePublic();
   return { ok: true, id: data?.id };
@@ -111,7 +112,7 @@ export async function updatePost(id: string, fd: FormData): Promise<PostResult> 
     .update({ ...payload, ...firstPublish })
     .eq("id", id);
 
-  if (error) return { ok: false, error: error.message };
+  if (error) return { ok: false, error: friendlyDbError(error) };
 
   revalidatePublic();
   return { ok: true, id };
@@ -127,7 +128,7 @@ export async function deletePost(id: string): Promise<PostResult> {
 
   const supabase = await createClient();
   const { error } = await supabase.from("posts").delete().eq("id", id);
-  if (error) return { ok: false, error: error.message };
+  if (error) return { ok: false, error: friendlyDbError(error) };
 
   revalidatePublic();
   return { ok: true };

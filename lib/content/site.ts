@@ -5,7 +5,7 @@ import { publicDb } from "@/lib/supabase/public";
 import { CONTENT_TAGS } from "@/lib/cache/tags";
 import type { Section, SectionRow, Site, SiteSettingsRow, Testimoni } from "@/lib/types";
 import { bySort, warnFallback } from "./util";
-import { seedSections, seedSite } from "./seed";
+import { seedSections, seedSite, seedCopy } from "./seed";
 
 // Re-exported for callers that want the seed values alongside the readers.
 export { seedSections, seedSite };
@@ -72,6 +72,7 @@ export function rowToSite(row: SiteSettingsRow): Site {  return {
     marqueeItems: row.marquee_items ?? [],
     tahunBerdiri: row.tahun_berdiri || "1996",
     periodeKepengurusan: row.periode_kepengurusan || "2025–2026",
+    copy: { ...seedCopy, ...(row.copy ?? {}) },
   };
 }
 

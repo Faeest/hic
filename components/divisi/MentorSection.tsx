@@ -5,7 +5,7 @@ import { Reveal } from "@/components/ui/Reveal";
 import { divisiVars } from "@/lib/utils";
 import type { Divisi } from "@/lib/types";
 
-export function MentorSection({ d }: { d: Divisi }) {
+export function MentorSection({ d, heading }: { d: Divisi; heading: string }) {
   return (
     <section className="relative overflow-hidden bg-cream py-24 sm:py-32" style={divisiVars(d)}>
       <div className="relative mx-auto max-w-7xl px-5 sm:px-8">
@@ -14,7 +14,7 @@ export function MentorSection({ d }: { d: Divisi }) {
             Mentor
           </p>
           <h2 className="mt-3 max-w-[16ch] font-display text-4xl font-semibold tracking-tight text-ink sm:text-5xl">
-            Diajar kakak tingkat yang tahun lalu duduk di kelas yang sama.
+            {heading}
           </h2>
         </Reveal>
 

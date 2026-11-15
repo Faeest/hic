@@ -54,12 +54,12 @@ export default async function DivisiPage({
       <Navbar site={site} divisi={all} />
       <main>
         <DivisiHero d={d} />
-        <Kurikulum d={d} />
-        <DivisiPj d={d} pj={pj} />
-        <MentorSection d={d} />
-        <DivisiProker d={d} items={proker} />
+        <Kurikulum d={d} heading={site.copy.kurikulumHeading} />
+        <DivisiPj d={d} pj={pj} note={site.copy.pjNote} />
+        <MentorSection d={d} heading={site.copy.mentorHeading} />
+        <DivisiProker d={d} items={proker} heading={site.copy.prokerHeading} />
         <DivisiNav current={d} all={all} />
-        <DivisiGabung d={d} />
+        <DivisiGabung d={d} body={site.copy.gabungBody} />
       </main>
       <Footer site={site} divisi={all} />
     </>

@@ -3,6 +3,8 @@
 import { assertAdmin } from "@/lib/auth/dal";
 import { createClient } from "@/lib/supabase/server";
 import { revalidatePublic } from "@/lib/actions/revalidate";
+import { friendlyDbError } from "@/lib/admin/errors";
+import { seedCopy } from "@/lib/content/seed";
 import type { PilarMisi, Sosial, Statistik, Testimoni } from "@/lib/types";
 
 export type ActionResult = { ok: true } | { ok: false; error: string };
@@ -65,6 +67,34 @@ export async function updateSite(formData: FormData): Promise<ActionResult> {
     testimoni_items: jsonArray<Testimoni>(formData.get("testimoniItems")),
     marquee_items: jsonArray<string>(formData.get("marqueeItems")),
     tahun_berdiri: str(formData, "tahunBerdiri"),
+    copy: {
+      mentorHeading:
+        str(formData, "copyMentorHeading") || seedCopy.mentorHeading,
+      kurikulumHeading:
+        str(formData, "copyKurikulumHeading") || seedCopy.kurikulumHeading,
+      prokerHeading:
+        str(formData, "copyProkerHeading") || seedCopy.prokerHeading,
+      pjNote: str(formData, "copyPjNote") || seedCopy.pjNote,
+      gabungBody: str(formData, "copyGabungBody") || seedCopy.gabungBody,
+      blogH1: str(formData, "copyBlogH1") || seedCopy.blogH1,
+      blogLabel: str(formData, "copyBlogLabel") || seedCopy.blogLabel,
+      navLinks:
+        jsonArray<{ label: string; href: string }>(
+          formData.get("copyNavLinks")
+        ).length > 0
+          ? jsonArray<{ label: string; href: string }>(
+              formData.get("copyNavLinks")
+            )
+          : seedCopy.navLinks,
+      footerNav:
+        jsonArray<{ label: string; href: string }>(
+          formData.get("copyFooterNav")
+        ).length > 0
+          ? jsonArray<{ label: string; href: string }>(
+              formData.get("copyFooterNav")
+            )
+          : seedCopy.footerNav,
+    },
   };
 
   const supabase = await createClient();
@@ -72,7 +102,7 @@ export async function updateSite(formData: FormData): Promise<ActionResult> {
     .from("site_settings")
     .upsert(payload, { onConflict: "id" });
 
-  if (error) return { ok: false, error: error.message };
+  if (error) return { ok: false, error: friendlyDbError(error) };
 
   revalidatePublic();
   return { ok: true };

@@ -45,27 +45,15 @@ under 400 KB are left alone. The server still enforces the 10 MB bucket limit.
 
 ### Keeping Supabase awake
 
-Free Supabase projects pause after ~7 days without activity. Three layers, in
-order of reliability:
+Free Supabase projects pause after ~7 days without activity. Two layers:
 
 1. **GitHub Actions (primary)** — `.github/workflows/keepalive.yml` runs daily on
-   GitHub's infrastructure, so it keeps working when the VPS is down. It needs two
-   repository secrets: `SUPABASE_URL` and `SUPABASE_ANON_KEY` (Settings → Secrets
-   and variables → Actions). Trigger it once from the Actions tab to confirm.
+   GitHub's infrastructure. It needs two repository secrets: `SUPABASE_URL` and
+   `SUPABASE_ANON_KEY` (Settings → Secrets and variables → Actions). Trigger it
+   once from the Actions tab to confirm.
    Note: GitHub disables scheduled workflows after ~60 days without repo activity.
-2. **systemd user timer on the VPS (fallback)** — `deploy/keepalive.sh` calls the
-   Supabase REST API directly, so it does not depend on the app being up. The box
-   has no `crontab` (fish shell, systemd only; `hic.service` is a user unit):
-
-   ```bash
-   cp deploy/hic-keepalive.{service,timer} ~/.config/systemd/user/
-   systemctl --user daemon-reload
-   systemctl --user enable --now hic-keepalive.timer
-   systemctl --user list-timers hic-keepalive.timer
-   ```
-
-3. **`GET /api/keepalive`** — the in-app endpoint (one trivial query, optional
-   `KEEPALIVE_TOKEN`). Useful for uptime checks; the cron layers do not need it.
+2. **`GET /api/keepalive`** — the in-app endpoint (one trivial query, optional
+   `KEEPALIVE_TOKEN`). Useful for uptime checks; the cron layer does not need it.
 
 ### Media library
 
@@ -138,14 +126,12 @@ network fails, so a paused project never leaves the site unbranded. A genuine
 missing object still returns 404.
 
 **Backup.** The bucket has no versioning — an in-place replace or a delete is
-unrecoverable. `scripts/snapshot-media.mjs` copies every object to disk and keeps
-the last 7 days. It runs from `deploy/keepalive.sh` (the daily systemd timer) and
-skips cleanly when `SUPABASE_SECRET_KEY` is absent, so it never breaks the
-keepalive. Add the secret key to `/home/lerraf/hic.env` to enable it:
+unrecoverable. `.github/workflows/backup.yml` runs nightly and uploads every
+content table (JSON) plus the whole `media` bucket as a 90-day artifact. Run it
+manually from the Actions tab, or locally:
 
 ```bash
-HIC_MEDIA_SNAPSHOT_DIR=/home/lerraf/media-snapshots   # default: ./media-snapshots
-HIC_MEDIA_SNAPSHOT_KEEP=7
+node --env-file=.env.local scripts/backup-data.mjs backups/$(date +%F)
 ```
 
-Restore = copy the file back from `<snapshot>/<date>/<bucket-key>`.
+Restore steps: `docs/OPERATIONS.md`.

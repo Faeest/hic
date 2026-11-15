@@ -84,16 +84,7 @@ export function Footer({ site, divisi }: { site: Site; divisi: Divisi[] }) {
             <div>
               <h3 className="text-sm font-medium text-ink-faint">Navigasi</h3>
               <ul className="mt-4 space-y-3">
-                {[
-                  { href: "/#beranda", label: "Beranda" },
-                  { href: "/#tentang", label: "Tentang" },
-                  { href: "/#divisi", label: "Divisi" },
-                  { href: "/#pengurus", label: "Pengurus" },
-                  { href: "/#proker", label: "Program" },
-                  { href: "/#galeri", label: "Galeri" },
-                  { href: "/#faq", label: "FAQ" },
-                  { href: "/blog", label: "Blog" },
-                ].map((l) => (
+                {site.copy.footerNav.map((l) => (
                   <li key={l.label}>
                     <Link
                       href={l.href}

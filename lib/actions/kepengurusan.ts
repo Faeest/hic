@@ -68,7 +68,23 @@ async function setupGroups(
   return { map, error: null };
 }
 
-/** Copy every pengurus row of `sourceId` into `targetId`, remapping its group. */
+/** Bucket key behind a stored image URL, or null for non-media paths. */
+function mediaKey(url: string): string | null {
+  if (!url) return null;
+  const route = url.indexOf("/media/");
+  if (route >= 0) {
+    return decodeURIComponent(url.slice(route + "/media/".length).split("?")[0]);
+  }
+  const direct = url.match(/\/storage\/v1\/object\/public\/media\/(.+)$/);
+  if (direct) return decodeURIComponent(direct[1].split("?")[0]);
+  return null;
+}
+
+/**
+ * Copy every pengurus row of `sourceId` into `targetId`, remapping its group
+ * and giving each photo its own storage key so the two boards never share an
+ * object (replaceMedia overwrites in place).
+ */
 async function copyRows(
   supabase: Awaited<ReturnType<typeof createClient>>,
   sourceId: string,
@@ -83,21 +99,52 @@ async function copyRows(
   if (error) return error.message;
   if (!data || data.length === 0) return null;
 
-  const copies = (data as PengurusRow[]).map((row) => ({
-    nama: row.nama,
-    jabatan: row.jabatan,
-    deskripsi: row.deskripsi,
-    inisial: row.inisial,
-    gradien: row.gradien,
-    nrp: row.nrp,
-    foto: row.foto ?? "",
-    unit: row.unit ?? "",
-    kategori: row.kategori,
-    grup_id: row.grup_id ? grupMap.get(row.grup_id) ?? null : null,
-    sort: row.sort,
-    published: row.published,
-    kepengurusan_id: targetId,
-  }));
+  const copied = new Map<string, string>();
+  const copies = [];
+
+  for (const row of data as PengurusRow[]) {
+    let foto = row.foto ?? "";
+
+    if (foto) {
+      const key = mediaKey(foto);
+      if (key) {
+        const cached = copied.get(key);
+        if (cached) {
+          foto = cached;
+        } else {
+          const base = key.split("/").pop() || "foto";
+          const target = `pengurus/${targetId}/${base}`;
+          const { error: copyError } = await supabase.storage
+            .from("media")
+            .copy(key, target);
+          if (copyError) {
+            return `Gagal menyalin foto ${key}: ${copyError.message}`;
+          }
+          const { data: pub } = supabase.storage
+            .from("media")
+            .getPublicUrl(target);
+          foto = pub.publicUrl;
+          copied.set(key, foto);
+        }
+      }
+    }
+
+    copies.push({
+      nama: row.nama,
+      jabatan: row.jabatan,
+      deskripsi: row.deskripsi,
+      inisial: row.inisial,
+      gradien: row.gradien,
+      nrp: row.nrp,
+      foto,
+      unit: row.unit ?? "",
+      kategori: row.kategori,
+      grup_id: row.grup_id ? grupMap.get(row.grup_id) ?? null : null,
+      sort: row.sort,
+      published: row.published,
+      kepengurusan_id: targetId,
+    });
+  }
 
   const { error: insertError } = await supabase.from("pengurus").insert(copies);
   return insertError ? insertError.message : null;
@@ -180,11 +227,25 @@ export async function updateKepengurusan(
   if (!periode) return { ok: false, error: "Periode wajib diisi." };
 
   const supabase = await createClient();
+  const { data: board } = await supabase
+    .from("kepengurusan")
+    .select("aktif")
+    .eq("id", id)
+    .maybeSingle();
+
   const { error } = await supabase
     .from("kepengurusan")
     .update({ nama, periode, catatan: str(fd, "catatan") })
     .eq("id", id);
   if (error) return { ok: false, error: error.message };
+
+  // The public header reads site_settings, not the board row.
+  if (board?.aktif) {
+    await supabase
+      .from("site_settings")
+      .update({ periode_kepengurusan: periode })
+      .eq("id", 1);
+  }
 
   revalidatePublic();
   return { ok: true };
@@ -211,8 +272,11 @@ export async function deleteKepengurusan(id: string): Promise<KepengurusanResult
     };
   }
 
-  // pengurus rows cascade via the FK.
-  const { error } = await supabase.from("kepengurusan").delete().eq("id", id);
+  // Soft delete: the rows stay recoverable. Hard deletes are SQL-only.
+  const { error } = await supabase
+    .from("kepengurusan")
+    .update({ deleted_at: new Date().toISOString(), aktif: false })
+    .eq("id", id);
   if (error) return { ok: false, error: error.message };
 
   revalidatePublic();
