@@ -21,6 +21,13 @@ const supabaseHost = supabaseHostname();
 
 const nextConfig: NextConfig = {
   cacheComponents: true,
+  experimental: {
+    serverActions: {
+      // Uploads go through a Server Action one file at a time. The bucket
+      // accepts 10 MB, so the default 1 MB action limit rejected normal photos.
+      bodySizeLimit: "12mb",
+    },
+  },
   images: {
     remotePatterns: [
       // Supabase Storage public URLs (uploaded media, and any older DB rows
