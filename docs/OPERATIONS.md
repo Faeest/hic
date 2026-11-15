@@ -14,6 +14,12 @@ Everything a new committee needs that is not obvious from the admin panel.
 - **Disable public signup** in Supabase → Authentication → Providers → Email
   (`Allow new users to sign up` = off). The allowlist already blocks strangers,
   but signup should stay closed.
+- **Auth URL configuration** (Supabase → Authentication → URL Configuration):
+  - Site URL: `https://hic.ubhinus.ac.id`
+  - Redirect URLs: `https://hic.ubhinus.ac.id/**` and `http://localhost:3000/**`
+  Without this, invite and reset e-mails fall back to the Site URL and can point
+  at `localhost`. `NEXT_PUBLIC_SITE_URL` in Vercel is the app-side half of the
+  same setting.
 - Removing an admin only removes the allowlist row; the auth account remains.
 
 ## Backups

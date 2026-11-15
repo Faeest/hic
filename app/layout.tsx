@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import localFont from "next/font/local";
 import { MotionProvider } from "@/components/ui/MotionProvider";
 import { SmoothScroll } from "@/components/ui/SmoothScroll";
+import { AuthHashRedirect } from "@/components/admin/AuthHashRedirect";
 import { Analytics } from "@vercel/analytics/next";
 import "./globals.css";
 
@@ -55,6 +56,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <MotionProvider>
           <SmoothScroll>{children}</SmoothScroll>
         </MotionProvider>
+        <AuthHashRedirect />
         <Analytics />
       </body>
     </html>
