@@ -52,32 +52,34 @@ export function AdminUsersManager({
 
       <form
         action={onInvite}
-        className="glass-panel flex flex-col gap-4 rounded-sm p-6 sm:flex-row sm:items-end sm:p-8"
+        className="glass-panel flex flex-col gap-3 rounded-sm p-6 sm:p-8"
       >
-        <div className="flex flex-1 flex-col gap-2">
-          <label htmlFor="email" className="text-sm font-medium text-ink-soft">
-            Email admin baru
-          </label>
-          <input
-            id="email"
-            name="email"
-            type="email"
-            required
-            placeholder="nama@stiki.ac.id"
-            className="rounded-sm border border-ink/15 bg-white px-4 py-2.5 text-base text-ink outline-none transition-colors focus:border-ember dark:border-white/15 dark:bg-white/[0.04]"
-          />
-          <p className="text-xs text-ink-faint">
-            Akun baru menerima email undangan untuk membuat kata sandi.
-          </p>
+        <div className="flex flex-col gap-4 sm:flex-row sm:items-end">
+          <div className="flex flex-1 flex-col gap-2">
+            <label htmlFor="email" className="text-sm font-medium text-ink-soft">
+              Email admin baru
+            </label>
+            <input
+              id="email"
+              name="email"
+              type="email"
+              required
+              placeholder="nama@stiki.ac.id"
+              className="h-[46px] rounded-sm border border-ink/15 bg-white px-4 text-base text-ink outline-none transition-colors focus:border-ember dark:border-white/15 dark:bg-white/[0.04]"
+            />
+          </div>
+          <button
+            type="submit"
+            disabled={busy}
+            className="inline-flex h-[46px] items-center justify-center gap-2 rounded-sm bg-ember px-5 text-sm font-medium text-white transition-colors hover:bg-flare disabled:opacity-60"
+          >
+            <Plus size={16} weight="bold" />
+            Tambah admin
+          </button>
         </div>
-        <button
-          type="submit"
-          disabled={busy}
-          className="inline-flex items-center justify-center gap-2 rounded-sm bg-ember px-5 py-2.5 text-sm font-medium text-white transition-colors hover:bg-flare disabled:opacity-60"
-        >
-          <Plus size={16} weight="bold" />
-          Tambah admin
-        </button>
+        <p className="text-xs text-ink-faint">
+          Akun baru menerima email undangan untuk membuat kata sandi.
+        </p>
       </form>
 
       <ul className="flex flex-col gap-3">
