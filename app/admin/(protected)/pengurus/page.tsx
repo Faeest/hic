@@ -36,7 +36,6 @@ export default async function AdminPengurusPage({
     : [[], []];
 
   const groupIndex = new Map(groups.map((g, i) => [g.id, i]));
-  const groupLabel = new Map(groups.map((g) => [g.id, g.label]));
 
   // Group order first, then the person's own sort. The public section renders
   // groups contiguously, so this keeps the admin list in the same order.
@@ -83,11 +82,9 @@ export default async function AdminPengurusPage({
             optionSets={{
               grup: groups.map((g) => ({ value: g.id, label: g.label })),
             }}
-            subtitleFor={(row) => {
-              const label = groupLabel.get(String(row.grup_id ?? ""));
-              const jabatan = String(row.jabatan ?? "");
-              return label ? `${jabatan} · ${label}` : jabatan;
-            }}
+            groupLabels={Object.fromEntries(
+              groups.map((g) => [g.id, g.label])
+            )}
           />
         </>
       ) : (

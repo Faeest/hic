@@ -41,7 +41,7 @@ export function ResourceManager({
   rows,
   fixedValues,
   optionSets,
-  subtitleFor,
+  groupLabels,
 }: {
   config: ResourceConfig;
   rows: Row[];
@@ -49,8 +49,8 @@ export function ResourceManager({
   fixedValues?: Record<string, string>;
   /** Dynamic option lists keyed by `FieldSpec.optionsFrom`. */
   optionSets?: Record<string, { value: string; label: string }[]>;
-  /** Overrides the list subtitle, e.g. to append the row's group name. */
-  subtitleFor?: (row: Row) => string | undefined;
+  /** Appends a label to the subtitle, keyed by the row's `grup_id`. */
+  groupLabels?: Record<string, string>;
 }) {
   const router = useRouter();
   const [editing, setEditing] = useState<Row | null>(null);
@@ -253,7 +253,11 @@ export function ResourceManager({
                 </p>
                 {config.subtitleKey && (
                   <p className="truncate text-sm text-ink-soft">
-                    {subtitleFor?.(row) ?? String(row[config.subtitleKey] ?? "")}
+                    {(() => {
+                      const base = String(row[config.subtitleKey] ?? "");
+                      const extra = groupLabels?.[String(row.grup_id ?? "")];
+                      return extra ? `${base} · ${extra}` : base;
+                    })()}
                   </p>
                 )}
               </div>
