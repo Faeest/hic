@@ -12,6 +12,7 @@ import {
   ArrowsClockwise,
 } from "@phosphor-icons/react";
 import { uploadImage, deleteMedia, replaceMedia } from "@/lib/actions/upload";
+import { ConfirmDialog } from "./ConfirmDialog";
 import { compressImage, compressKeepingType } from "@/lib/media/compress";
 import { MAX_UPLOAD_BYTES, tooLargeMessage } from "@/lib/media/limits";
 import { toast } from "sonner";
@@ -57,6 +58,7 @@ export function MediaLibrary({ items }: { items: MediaItem[] }) {
   const [error, setError] = useState<string | null>(null);
   const [copied, setCopied] = useState<string | null>(null);
   const [deleting, setDeleting] = useState<string | null>(null);
+  const [pendingDelete, setPendingDelete] = useState<MediaItem | null>(null);
   const [replacing, setReplacing] = useState<string | null>(null);
   /** Cache-bust key per path, bumped after an in-place replace. */
   const [bust, setBust] = useState<Record<string, number>>({});
@@ -168,15 +170,12 @@ export function MediaLibrary({ items }: { items: MediaItem[] }) {
   };
 
   const remove = async (item: MediaItem) => {
-    const ok = confirm(
-      `Hapus permanen "${item.name}"?\n\nKalau gambar ini masih dipakai di konten, gambarnya akan rusak.`
-    );
-    if (!ok) return;
     setError(null);
     setDeleting(item.path);
     const toastId = toast.loading(`Menghapus ${item.name}…`);
     const res = await deleteMedia(item.path);
     setDeleting(null);
+    setPendingDelete(null);
     if (res.error) {
       setError(res.error);
       toast.error(res.error, { id: toastId });
@@ -301,7 +300,7 @@ export function MediaLibrary({ items }: { items: MediaItem[] }) {
                 </button>
                 <button
                   type="button"
-                  onClick={() => remove(it)}
+                  onClick={() => setPendingDelete(it)}
                   disabled={deleting === it.path}
                   aria-label={`Hapus ${it.name}`}
                   className={cn(
@@ -320,6 +319,22 @@ export function MediaLibrary({ items }: { items: MediaItem[] }) {
           ))}
         </div>
       )}
+
+      <ConfirmDialog
+        open={pendingDelete !== null}
+        title="Hapus berkas ini?"
+        description={
+          pendingDelete
+            ? `"${pendingDelete.name}" akan dihapus permanen. Kalau gambar ini masih dipakai di konten, gambarnya akan rusak.`
+            : undefined
+        }
+        confirmLabel="Hapus permanen"
+        busy={deleting !== null}
+        onConfirm={() => {
+          if (pendingDelete) remove(pendingDelete);
+        }}
+        onCancel={() => setPendingDelete(null)}
+      />
     </div>
   );
 }
