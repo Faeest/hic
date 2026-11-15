@@ -180,8 +180,10 @@ reader that still wants a single URL). `lib/content/galeri.ts` maps the array to
 `Foto.images` and drops rows with no image at all.
 
 - Public: the grid shows the cover; a moment with more than one photo gets an
-  `N foto` pill and opens `components/home/GaleriLightbox.tsx` (arrows, counter,
-  Escape, dots).
+  `N foto` pill and opens `components/home/GaleriLightbox.tsx` (direction-aware
+  slide animation, drag/swipe, thumbnail strip, arrows, counter, Escape). The
+  scrim is a fixed near-black in both themes so the white chrome stays legible
+  in dark mode.
 - Admin: `galeriConfig` uses the `images` field kind → `ImagesField`, which
   submits a JSON array. The first thumbnail is the cover; arrows reorder.
 - `crud.ts` parses `images` and writes `image_url = images[0] ?? ""`, so the

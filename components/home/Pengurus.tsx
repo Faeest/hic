@@ -27,9 +27,11 @@ function Nrp({ p }: { p: PengurusItem }) {
 function Portrait({
   p,
   size = "lg",
+  zoom = false,
 }: {
   p: PengurusItem;
   size?: "sm" | "lg";
+  zoom?: boolean;
 }) {
   return (
     <div
@@ -44,7 +46,11 @@ function Portrait({
           alt={p.nama}
           fill
           sizes={size === "lg" ? "(min-width: 1024px) 33vw, 100vw" : "160px"}
-          className="object-cover"
+          className={cn(
+            "object-cover",
+            zoom &&
+              "transition-transform duration-500 ease-out group-hover:scale-[1.03] motion-reduce:transition-none motion-reduce:group-hover:scale-100"
+          )}
         />
       ) : (
         /* Initials are centred: a bottom-left mark reads as a broken layout. */
@@ -77,10 +83,10 @@ function PersonCard({
       <motion.div
         {...FADE}
         transition={{ duration: 0.4, ease: "easeOut", delay }}
-        className="flex items-start gap-4 border-t border-ink/12 pt-4"
+        className="group flex items-start gap-4 border-t border-ink/12 pt-4 transition-colors duration-300 hover:border-ink/30"
       >
         <div className="w-14 shrink-0">
-          <Portrait p={p} size="sm" />
+          <Portrait p={p} size="sm" zoom />
         </div>
         <div className="min-w-0">
           <h4 className="font-display text-base font-semibold leading-tight text-ink">
@@ -95,9 +101,13 @@ function PersonCard({
   }
 
   return (
-    <motion.div {...FADE} transition={{ duration: 0.5, ease: "easeOut", delay }}>
-      <div className="surface overflow-hidden bg-paper">
-        <Portrait p={p} />
+    <motion.div
+      {...FADE}
+      transition={{ duration: 0.5, ease: "easeOut", delay }}
+      className="group"
+    >
+      <div className="overflow-hidden border border-ink/13 bg-paper transition-colors duration-300 group-hover:border-ember/40">
+        <Portrait p={p} zoom />
         <div className="p-6">
           <div className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1">
             <h3 className="font-display text-lg font-semibold tracking-tight text-ink">
@@ -171,10 +181,10 @@ export function Pengurus({
         {pembina.length > 0 && (
           <div className="mt-16 flex flex-col gap-4">
             {pembina.map((p) => (
-              <motion.div {...FADE} key={p.nama}>
-                <div className="surface flex flex-col items-center gap-6 bg-cream p-8 sm:flex-row sm:p-10">
+              <motion.div {...FADE} key={p.nama} className="group">
+                <div className="flex flex-col items-center gap-6 border border-ink/13 bg-cream p-8 transition-colors duration-300 group-hover:border-ember/30 sm:flex-row sm:p-10">
                   <div className="w-28 shrink-0 sm:w-32">
-                    <Portrait p={p} size="sm" />
+                    <Portrait p={p} size="sm" zoom />
                   </div>
                   <div className="flex-1 text-center sm:text-left">
                     <span className="border border-ember/25 px-2.5 py-1 text-xs font-medium text-ember">
