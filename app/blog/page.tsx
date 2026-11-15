@@ -11,6 +11,7 @@ import { getAllDivisi } from "@/lib/content/divisi";
 export const metadata: Metadata = {
   title: "Blog — HIC",
   description: "Catatan, tutorial, dan cerita dari Hardware Interactive Club.",
+  alternates: { canonical: "/blog" },
 };
 
 function fmt(date: string | null) {

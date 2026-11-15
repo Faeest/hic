@@ -9,6 +9,9 @@ import { getAllDivisi } from "@/lib/content/divisi";
 import { Markdown } from "@/components/blog/Markdown";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
+import { JsonLd } from "@/components/seo/JsonLd";
+import { absoluteUrl, siteUrl } from "@/lib/seo";
+import { toSiteMediaUrl } from "@/lib/media/url";
 
 export async function generateStaticParams() {
   const slugs = await getPostSlugs();
@@ -26,10 +29,12 @@ export async function generateMetadata({
   return {
     title: `${post.title} — HIC`,
     description: post.excerpt || undefined,
+    alternates: { canonical: `/blog/${post.slug}` },
     openGraph: {
       title: post.title,
       description: post.excerpt || undefined,
       type: "article",
+      url: `/blog/${post.slug}`,
       images: post.coverUrl ? [post.coverUrl] : undefined,
     },
   };
@@ -63,6 +68,51 @@ export default async function BlogPostPage({
 
   return (
     <>
+      <JsonLd
+        data={{
+          "@context": "https://schema.org",
+          "@type": "BlogPosting",
+          headline: post.title,
+          description: post.excerpt || undefined,
+          image: post.coverUrl
+            ? absoluteUrl(toSiteMediaUrl(post.coverUrl))
+            : undefined,
+          datePublished: post.publishedAt || undefined,
+          dateModified: post.updatedAt || post.publishedAt || undefined,
+          inLanguage: "id-ID",
+          mainEntityOfPage: absoluteUrl(`/blog/${post.slug}`),
+          author: { "@type": "Organization", name: site.namaLengkap },
+          publisher: {
+            "@type": "Organization",
+            name: site.namaLengkap,
+            logo: {
+              "@type": "ImageObject",
+              url: absoluteUrl(site.logoLightUrl),
+            },
+          },
+        }}
+      />
+      <JsonLd
+        data={{
+          "@context": "https://schema.org",
+          "@type": "BreadcrumbList",
+          itemListElement: [
+            { "@type": "ListItem", position: 1, name: "Beranda", item: siteUrl() },
+            {
+              "@type": "ListItem",
+              position: 2,
+              name: "Blog",
+              item: absoluteUrl("/blog"),
+            },
+            {
+              "@type": "ListItem",
+              position: 3,
+              name: post.title,
+              item: absoluteUrl(`/blog/${post.slug}`),
+            },
+          ],
+        }}
+      />
       <Navbar site={site} divisi={divisi} />
       <main className="bg-paper">
         <article className="mx-auto max-w-4xl px-5 pb-16 pt-28 sm:px-8 sm:pb-20 sm:pt-32">

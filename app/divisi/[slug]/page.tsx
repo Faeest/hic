@@ -13,6 +13,8 @@ import { DivisiNav } from "@/components/divisi/DivisiNav";
 import { DivisiGabung } from "@/components/divisi/DivisiGabung";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
+import { JsonLd } from "@/components/seo/JsonLd";
+import { absoluteUrl, siteUrl } from "@/lib/seo";
 
 export async function generateStaticParams() {
   const divisi = await getAllDivisi();
@@ -30,6 +32,7 @@ export async function generateMetadata({
   return {
     title: `${d.nama} — ${site.namaPanjang}`,
     description: d.deskripsi,
+    alternates: { canonical: `/divisi/${d.slug}` },
   };
 }
 
@@ -51,6 +54,26 @@ export default async function DivisiPage({
 
   return (
     <>
+      <JsonLd
+        data={{
+          "@context": "https://schema.org",
+          "@type": "BreadcrumbList",
+          itemListElement: [
+            {
+              "@type": "ListItem",
+              position: 1,
+              name: "Beranda",
+              item: siteUrl(),
+            },
+            {
+              "@type": "ListItem",
+              position: 2,
+              name: d.nama,
+              item: absoluteUrl(`/divisi/${d.slug}`),
+            },
+          ],
+        }}
+      />
       <Navbar site={site} divisi={all} />
       <main>
         <DivisiHero d={d} />

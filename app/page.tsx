@@ -15,6 +15,13 @@ import { getPengurus } from "@/lib/content/pengurus";
 import { getProker } from "@/lib/content/proker";
 import { getGaleri } from "@/lib/content/galeri";
 import { getFaq } from "@/lib/content/faq";
+import { JsonLd } from "@/components/seo/JsonLd";
+import { absoluteUrl, siteUrl } from "@/lib/seo";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  alternates: { canonical: "/" },
+};
 
 export default async function Home() {
   const [site, sections, divisi, pengurus, proker, galeri, faq] = await Promise.all([
@@ -27,8 +34,37 @@ export default async function Home() {
     getFaq(),
   ]);
 
+  const base = siteUrl();
+  const organization = {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    name: site.namaLengkap,
+    alternateName: site.namaPanjang,
+    url: base,
+    logo: absoluteUrl(site.logoLightUrl),
+    email: site.kontak.email,
+    sameAs: site.sosial.map((s) => s.url).filter(Boolean),
+    address: {
+      "@type": "PostalAddress",
+      streetAddress: site.kontak.lokasi,
+      addressLocality: "Malang",
+      addressCountry: "ID",
+    },
+  };
+  const website = {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    name: site.namaLengkap,
+    alternateName: site.namaPanjang,
+    url: base,
+    inLanguage: "id-ID",
+    publisher: { "@type": "Organization", name: site.namaLengkap },
+  };
+
   return (
     <>
+      <JsonLd data={organization} />
+      <JsonLd data={website} />
       <Navbar site={site} divisi={divisi} />
       <main>
         <Hero id="beranda" site={site} />
