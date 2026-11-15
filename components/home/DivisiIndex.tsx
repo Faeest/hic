@@ -123,7 +123,7 @@ export function DivisiIndex({
   section: Section;
 }) {
   const [open, setOpen] = useState<number | null>(0);
-  if (!section.visible) return null;
+  if (!section.visible || divisi.length === 0) return null;
 
   return (
     <section id={id} className="relative scroll-mt-24 overflow-hidden bg-cream py-14 sm:py-16">

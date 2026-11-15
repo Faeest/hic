@@ -153,6 +153,10 @@ export function Pengurus({
 
   const { pembina, inti, grup } = pengurus;
 
+  if (pembina.length === 0 && inti.anggota.length === 0 && grup.length === 0) {
+    return null;
+  }
+
   return (
     <section id={id} className="relative scroll-mt-24 bg-paper py-24 sm:py-32">
       <div className="mx-auto max-w-7xl px-5 sm:px-8">

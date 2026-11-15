@@ -80,20 +80,19 @@ Founded 26 August 1996, based at Jl. Raya Tidar 100, Malang.
 - Indonesian (Bahasa) copy throughout
 - REST full keyboard, accessible, no emojis in code/UI
 
-## Deployment, data and cache (verified 2026-11-14)
+## Deployment, data and cache (verified 2026-11-15)
 
-### Two deployments, one database
+### Primary deployment
 
 | Domain | Host | Updated by |
 | --- | --- | --- |
 | `hic.ubhinus.ac.id` | **Vercel** (project `hic`) | push to GitHub `Faeest/hic` master → auto-build |
-| `hic.faeest.my.id` | VPS `103.169.186.163:25567` (user `lerraf`) | `bash deploy.sh` (git archive HEAD → tar → `npm ci` + `npm run build` + `systemctl --user restart hic.service`) |
+| `hic.faeest.my.id` | VPS `103.169.186.163:25567` — **legacy, SSH unreachable** | `bash deploy.sh` (do not use) |
 
 - Vercel project id `prj_elmuJQauKOAJNFYGIvZPhBDa2gtN`, team `team_GaiIJssCOqxbyusdBGczIBvm`.
-- VPS app dir `/home/lerraf/hic`, env `/home/lerraf/hic.env`, app port `3100`.
 - **Both point at the same Supabase project** `zluqwvumzzrursptfrod.supabase.co`.
 - `deploy.sh` does NOT update `hic.ubhinus.ac.id`. Editing the VPS is not enough.
-- The VPS checkout is a tar extract, not a git repo (`git log` fails there).
+- Operations (admin access, backups, yearly handover): `docs/OPERATIONS.md`.
 
 ### Content is baked at build time
 

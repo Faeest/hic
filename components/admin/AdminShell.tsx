@@ -18,6 +18,7 @@ import {
   List,
   X,
   Spinner,
+  ShieldCheck,
 } from "@phosphor-icons/react";
 import type { Icon as PhosphorIcon } from "@phosphor-icons/react";
 import { cn } from "@/lib/utils";
@@ -35,6 +36,7 @@ const NAV = [
   { href: "/admin/faq", label: "FAQ", icon: Question },
   { href: "/admin/posts", label: "Blog", icon: Article },
   { href: "/admin/media", label: "Media", icon: FolderOpen },
+  { href: "/admin/users", label: "Admin", icon: ShieldCheck },
 ];
 
 /**

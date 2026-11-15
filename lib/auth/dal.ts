@@ -17,6 +17,18 @@ export const getAdminSession = cache(async () => {
   const supabase = await createClient();
   const { data, error } = await supabase.auth.getClaims();
   if (error || !data?.claims) return null;
+
+  // A valid Supabase session is not enough: the user must be on the allowlist.
+  // RLS enforces the same rule, this keeps the UI honest.
+  const userId = data.claims.sub;
+  if (!userId) return null;
+  const { data: admin, error: adminError } = await supabase
+    .from("admin_users")
+    .select("user_id")
+    .eq("user_id", userId)
+    .maybeSingle();
+  if (adminError || !admin) return null;
+
   return data.claims;
 });
 

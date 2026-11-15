@@ -93,7 +93,7 @@ export function Galeri({
     null
   );
 
-  if (!section.visible) return null;
+  if (!section.visible || galeri.length === 0) return null;
 
   const totalPhotos = galeri.reduce((sum, f) => sum + photoCount(f), 0);
 

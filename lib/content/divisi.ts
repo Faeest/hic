@@ -54,8 +54,9 @@ function assemble(
 }
 
 /**
- * All published divisi, with kurikulum + mentor. Falls back to seed data on
- * error or when the table is empty.
+ * All published divisi, with kurikulum + mentor. An empty table means the
+ * admin removed them — return nothing rather than resurrecting seed content.
+ * Seed data is only used when Supabase is unreachable.
  */
 export async function getAllDivisi(): Promise<Divisi[]> {
   "use cache";
@@ -67,7 +68,7 @@ export async function getAllDivisi(): Promise<Divisi[]> {
       .select("*")
       .order("sort", { ascending: true });
     if (error) throw error;
-    if (!rows || rows.length === 0) return seedDivisiList;
+    if (!rows || rows.length === 0) return [];
 
     const ids = rows.map((r) => r.id);
     const [{ data: kur }, { data: men }] = await Promise.all([
@@ -88,7 +89,7 @@ export async function getAllDivisi(): Promise<Divisi[]> {
   }
 }
 
-/** Single divisi by slug. Falls back to the matching seed entry. */
+/** Single divisi by slug. Missing row means it was removed, not "use seed". */
 export async function getDivisi(slug: string): Promise<Divisi | undefined> {
   "use cache";
   cacheTag(CONTENT_TAGS.divisi);
@@ -100,7 +101,7 @@ export async function getDivisi(slug: string): Promise<Divisi | undefined> {
       .eq("slug", slug)
       .maybeSingle();
     if (error) throw error;
-    if (!row) return seedDivisiList.find((d) => d.slug === slug);
+    if (!row) return undefined;
 
     const [{ data: kur }, { data: men }] = await Promise.all([
       publicDb.from("kurikulum").select("*").eq("divisi_id", row.id),

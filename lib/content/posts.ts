@@ -44,10 +44,7 @@ export async function getPosts(): Promise<Post[]> {
       .order("published_at", { ascending: false });
     if (error) throw error;
     const rows = (data as PostRow[]) ?? [];
-    if (rows.length === 0) {
-      warnFallback("posts", "no published rows");
-      return seedPostList;
-    }
+    if (rows.length === 0) return [];
     return rows.map(toApp);
   } catch (error) {
     warnFallback("posts", error);

@@ -55,6 +55,13 @@ export function LoginForm() {
       >
         {pending ? "Memproses…" : "Masuk"}
       </button>
+
+      <a
+        href="/admin/forgot"
+        className="text-center text-sm text-ink-faint underline-offset-4 transition-colors hover:text-ember hover:underline"
+      >
+        Lupa kata sandi?
+      </a>
     </form>
   );
 }

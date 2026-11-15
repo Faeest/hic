@@ -47,9 +47,12 @@ export async function proxy(request: NextRequest) {
 
   const { pathname } = request.nextUrl;
   const isAdminArea = pathname.startsWith("/admin");
-  const isLoginPage = pathname === "/admin/login";
+  const isPublicAuthPage =
+    pathname === "/admin/login" ||
+    pathname === "/admin/forgot" ||
+    pathname === "/admin/reset";
 
-  if (isAdminArea && !isLoginPage && !isAuthed) {
+  if (isAdminArea && !isPublicAuthPage && !isAuthed) {
     const url = request.nextUrl.clone();
     url.pathname = "/admin/login";
     url.searchParams.set("next", pathname);
@@ -57,7 +60,7 @@ export async function proxy(request: NextRequest) {
   }
 
   // Already signed in? Skip the login page.
-  if (isLoginPage && isAuthed) {
+  if (pathname === "/admin/login" && isAuthed) {
     const url = request.nextUrl.clone();
     url.pathname = "/admin";
     url.search = "";

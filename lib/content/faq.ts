@@ -24,7 +24,7 @@ export async function getFaq(): Promise<FaqItem[]> {
       .select("*")
       .order("sort", { ascending: true });
     if (error) throw error;
-    if (!data || data.length === 0) return seedFaqList;
+    if (!data || data.length === 0) return [];
     return bySort(data as FaqRow[]).map(toApp);
   } catch (error) {
     warnFallback("faq", error);

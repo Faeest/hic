@@ -331,6 +331,13 @@ export type PengurusGrupRow = PengurusGrup & {
   updated_at: string;
 };
 
+/** Allowlist row: only these Supabase users may write the CMS. */
+export type AdminUserRow = {
+  user_id: string;
+  email: string;
+  created_at: string;
+};
+
 export type KepengurusanRow = Kepengurusan & {
   updated_at: string;
 };
@@ -404,6 +411,7 @@ export type Database = {
       mentor: Table<MentorRow>;
       pengurus: Table<PengurusRow>;
       pengurus_grup: Table<PengurusGrupRow>;
+      admin_users: Table<AdminUserRow>;
       kepengurusan: Table<KepengurusanRow>;
       proker: Table<ProkerRow>;
       galeri: Table<GaleriRow>;

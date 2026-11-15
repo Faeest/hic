@@ -18,7 +18,7 @@ export function Faq({
 }) {
   const [open, setOpen] = useState<number | null>(0);
 
-  if (!section.visible) return null;
+  if (!section.visible || faq.length === 0) return null;
 
   return (
     <section id={id} className="relative scroll-mt-24 bg-paper py-16 sm:py-20">

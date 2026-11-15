@@ -95,8 +95,20 @@ export async function getPengurus(): Promise<PengurusGroups> {
 
     const groups = bySort((grupRes.data ?? []) as PengurusGrupRow[]);
     const rows = bySort((rowRes.data ?? []) as PengurusRow[]);
-    if (groups.length === 0) return seedPengurus;
-    if (rows.length === 0) return seedPengurus;
+    if (groups.length === 0 || rows.length === 0) {
+      // Empty means the admin cleared this board — do not resurrect seed names.
+      return {
+        pembina: [],
+        inti: {
+          slug: "inti",
+          label: "Badan Pengurus Harian",
+          deskripsi: "",
+          sort: 10,
+          anggota: [],
+        },
+        grup: [],
+      };
+    }
 
     const bySlug = new Map(groups.map((g) => [g.slug, g]));
     const byId = new Map(groups.map((g) => [g.id, g]));

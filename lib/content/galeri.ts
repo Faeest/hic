@@ -33,7 +33,7 @@ export async function getGaleri(): Promise<Foto[]> {
       .select("*")
       .order("sort", { ascending: true });
     if (error) throw error;
-    if (!data || data.length === 0) return seedGaleriList;
+    if (!data || data.length === 0) return [];
     return bySort(data as GaleriRow[])
       .map(toApp)
       .filter((f) => f.src !== "");

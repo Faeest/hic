@@ -1,0 +1,45 @@
+name: Backup
+
+# Nightly off-site backup: every content table as JSON + the media bucket.
+# Artifacts are kept 90 days. This is the only restore point — Supabase's free
+# plan has no automated database backups.
+#
+# Required repository secrets:
+#   SUPABASE_URL         https://<ref>.supabase.co
+#   SUPABASE_SECRET_KEY  service-role key (bypasses RLS)
+
+on:
+  schedule:
+    - cron: "40 3 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  backup:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - run: npm ci --no-audit --no-fund
+
+      - name: Dump tables and media
+        env:
+          NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SECRET_KEY: ${{ secrets.SUPABASE_SECRET_KEY }}
+        run: node scripts/backup-data.mjs "backups/$(date -u +%F)"
+
+      - name: Upload backup
+        uses: actions/upload-artifact@v4
+        with:
+          name: hic-backup-${{ github.run_id }}
+          path: backups/
+          retention-days: 90
+          if-no-files-found: error

@@ -1,0 +1,66 @@
+# Operations — HIC
+
+Everything a new committee needs that is not obvious from the admin panel.
+
+## Admin access
+
+- Only users listed in `public.admin_users` can read unpublished rows or write
+  anything. A Supabase account alone is not enough.
+- `/admin/users` (nav: **Admin**) adds or removes admins.
+  - Existing account → allowlisted immediately.
+  - New email → Supabase sends an invite; the link lands on `/admin/reset` to
+    set a password.
+- `/admin/forgot` sends a password-reset link. No developer needed.
+- **Disable public signup** in Supabase → Authentication → Providers → Email
+  (`Allow new users to sign up` = off). The allowlist already blocks strangers,
+  but signup should stay closed.
+- Removing an admin only removes the allowlist row; the auth account remains.
+
+## Backups
+
+Supabase's free plan has no automated database backups. Two layers:
+
+1. **GitHub Actions `Backup`** (`.github/workflows/backup.yml`) runs daily at
+   03:40 UTC and on demand. It dumps every content table to JSON and downloads
+   the whole `media` bucket, then uploads the bundle as a workflow artifact
+   kept **90 days**.
+   - Secrets: `SUPABASE_URL`, `SUPABASE_SECRET_KEY`.
+   - Run manually: Actions → Backup → Run workflow.
+2. **Local run** (same script):
+   ```bash
+   node --env-file=.env.local scripts/backup-data.mjs backups/$(date +%F)
+   ```
+
+### Restore
+
+1. Create a fresh Supabase project.
+2. Run `supabase/migrations/*.sql` in numeric order.
+3. Upload `media/<key>` back into the `media` bucket (keep the same keys).
+4. Insert `tables/<table>.json` with the service role, parents first:
+   `site_settings`, `sections`, `divisi`, `kurikulum`, `mentor`,
+   `kepengurusan`, `pengurus_grup`, `pengurus`, `proker`, `galeri`, `faq`,
+   `posts`, `admin_users`.
+5. Re-add the admin user to `admin_users` (or sign in and use `/admin/users`).
+6. Update `NEXT_PUBLIC_SUPABASE_URL` / `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` /
+   `SUPABASE_SECRET_KEY` in Vercel and redeploy.
+
+## Yearly handover
+
+1. `/admin/kepengurusan` → **Duplikat** last year's board (copies groups and
+   remaps every member).
+2. Edit pengurus, groups (`/admin/pengurus/kategori`), divisi, proker, gallery,
+   FAQ, blog.
+3. **Aktifkan** the new board. The old one stays as an archive.
+4. `/admin/users` → add the new officers, remove the ones who left.
+5. Do not delete an old board unless you have a backup — deletion is permanent.
+
+## Deploy
+
+Push to `master` on `Faeest/hic`; Vercel builds and promotes automatically.
+`deploy.sh` and the VPS are legacy and currently unreachable.
+
+## Content cache
+
+Public pages are cached with `cacheLife("max")` (30 days) and invalidated by
+every admin write. Editing rows directly in the Supabase table editor does **not**
+invalidate the cache — use the admin panel, or redeploy.

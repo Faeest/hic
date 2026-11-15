@@ -32,7 +32,7 @@ export async function getProker(): Promise<Proker[]> {
       .select("*")
       .order("sort", { ascending: true });
     if (error) throw error;
-    if (!data || data.length === 0) return seedProkerList;
+    if (!data || data.length === 0) return [];
     return bySort(data as ProkerRow[]).map(toApp);
   } catch (error) {
     warnFallback("proker", error);
