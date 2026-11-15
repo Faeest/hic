@@ -37,6 +37,9 @@ export const metadata: Metadata = {
   description:
     "UKM keilmuan STIKI tempat mahasiswa saling mengajar: Web, UI/UX, dan Robotics. Belajar, berkarya, dan tumbuh bareng.",
   keywords: ["HIC", "UKM", "Hardware Interactive Club", "web", "uiux", "robotics", "STIKI"],
+  verification: process.env.GOOGLE_SITE_VERIFICATION
+    ? { google: process.env.GOOGLE_SITE_VERIFICATION }
+    : undefined,
   openGraph: {
     title: "HIC — Hardware Interactive Club",
     description:
