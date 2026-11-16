@@ -2,7 +2,7 @@
 
 import { useRef, useState } from "react";
 import Image from "next/image";
-import { motion, useScroll, useTransform } from "framer-motion";
+import { AnimatePresence, motion, useScroll, useTransform } from "framer-motion";
 import { Images } from "@phosphor-icons/react";
 import { SectionHead } from "@/components/ui/SectionHead";
 import { GaleriLightbox } from "./GaleriLightbox";
@@ -53,19 +53,22 @@ function GaleriFigure({
           alt={f.judul}
           fill
           sizes="(min-width: 1024px) 25vw, (min-width: 640px) 33vw, 50vw"
-          className="object-cover"
+          className="object-cover transition-transform duration-700 ease-out group-hover:scale-[1.06] motion-reduce:scale-100 motion-reduce:transition-none"
         />
       </motion.div>
-      <div className="absolute inset-0 bg-[linear-gradient(180deg,transparent_50%,rgba(0,0,0,0.55)_100%)]" aria-hidden />
+      <div
+        className="absolute inset-0 bg-[linear-gradient(180deg,transparent_50%,rgba(0,0,0,0.55)_100%)] transition-opacity duration-500 group-hover:opacity-90"
+        aria-hidden
+      />
 
       {count > 1 && (
-        <span className="absolute right-3 top-3 z-10 inline-flex items-center gap-1.5 rounded-full bg-[#0b0908]/60 px-2.5 py-1 text-[11px] font-medium text-white backdrop-blur-sm">
+        <span className="absolute right-3 top-3 z-10 inline-flex items-center gap-1.5 rounded-full bg-[#0b0908]/60 px-2.5 py-1 text-[11px] font-medium text-white backdrop-blur-sm transition-colors duration-300 group-hover:bg-[#0b0908]/80">
           <Images size={13} weight="bold" />
           {count} foto
         </span>
       )}
 
-      <figcaption className="pointer-events-none absolute inset-x-0 bottom-0 z-10 p-6">
+      <figcaption className="pointer-events-none absolute inset-x-0 bottom-0 z-10 p-6 transition-transform duration-500 ease-out group-hover:-translate-y-1.5">
         <p className="font-display text-xl font-semibold text-white">{f.judul}</p>
         <p className="mt-1 text-sm leading-snug text-white/80">{f.keterangan}</p>
       </figcaption>
@@ -126,14 +129,16 @@ export function Galeri({
         </p>
       </div>
 
-      {viewer && (
-        <GaleriLightbox
-          item={viewer.item}
-          index={viewer.index}
-          onIndex={(index) => setViewer({ item: viewer.item, index })}
-          onClose={() => setViewer(null)}
-        />
-      )}
+      <AnimatePresence>
+        {viewer && (
+          <GaleriLightbox
+            item={viewer.item}
+            index={viewer.index}
+            onIndex={(index) => setViewer({ item: viewer.item, index })}
+            onClose={() => setViewer(null)}
+          />
+        )}
+      </AnimatePresence>
     </section>
   );
 }

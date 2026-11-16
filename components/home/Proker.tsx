@@ -52,13 +52,17 @@ export function Proker({
             className="group relative block overflow-hidden rounded-sm lg:col-span-2 lg:row-span-2"
           >
             <div
-              className="relative flex aspect-[4/3] flex-col justify-end overflow-hidden p-8 sm:aspect-[16/10] sm:p-10 lg:aspect-auto lg:h-full"
+              className="relative flex aspect-[4/3] flex-col justify-end overflow-hidden p-8 ring-1 ring-inset ring-white/0 transition-[box-shadow,filter] duration-300 group-hover:ring-white/40 group-hover:brightness-110 sm:aspect-[16/10] sm:p-10 lg:aspect-auto lg:h-full"
               style={{ background: featured.warna }}
             >
               <div
                 aria-hidden
                 className="absolute inset-0"
                 style={{ backgroundImage: dots, backgroundSize: "20px 20px" }}
+              />
+              <div
+                aria-hidden
+                className="absolute inset-0 bg-white/0 transition-colors duration-300 group-hover:bg-white/[0.10]"
               />
               <div className="relative z-10 flex items-start justify-between gap-4">
                 <div className="flex flex-col gap-2">
@@ -93,13 +97,17 @@ export function Proker({
               className="group relative block overflow-hidden rounded-sm"
             >
               <div
-                className="relative flex aspect-[4/3] flex-col justify-end overflow-hidden p-7 sm:p-8"
+                className="relative flex aspect-[4/3] flex-col justify-end overflow-hidden p-7 ring-1 ring-inset ring-white/0 transition-[box-shadow,filter] duration-300 group-hover:ring-white/40 group-hover:brightness-110 sm:p-8"
                 style={{ background: p.warna }}
               >
                 <div
                   aria-hidden
                   className="absolute inset-0"
                   style={{ backgroundImage: dots, backgroundSize: "20px 20px" }}
+                />
+                <div
+                  aria-hidden
+                  className="absolute inset-0 bg-white/0 transition-colors duration-300 group-hover:bg-white/[0.10]"
                 />
                 <div className="relative z-10">
                   <span className="text-xs text-white/85">
