@@ -46,10 +46,19 @@ export function Faq({
                   type="button"
                   onClick={() => setOpen(active ? null : i)}
                   aria-expanded={active}
-                  className="flex w-full items-center justify-between gap-6 py-6 text-left"
+                  className="group relative flex w-full items-center justify-between gap-6 py-6 text-left"
                 >
-                  <span className="flex items-baseline gap-4">
-                    <span className="font-mono text-sm text-ink-faint">
+                  <span
+                    aria-hidden
+                    className="pointer-events-none absolute inset-x-[-1.25rem] inset-y-1 opacity-0 transition-opacity duration-300 bg-ink/[0.03] group-hover:opacity-100 dark:bg-white/[0.04]"
+                  />
+                  <span className="relative flex items-baseline gap-4">
+                    <span
+                      className={cn(
+                        "font-mono text-sm text-ink-faint transition-colors duration-300 group-hover:text-ember",
+                        active && "text-ember"
+                      )}
+                    >
                       {String(i + 1).padStart(2, "0")}
                     </span>
                     <span
@@ -64,7 +73,10 @@ export function Faq({
                   <motion.span
                     animate={{ rotate: active ? 45 : 0 }}
                     transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
-                    className="grid h-9 w-9 shrink-0 place-items-center rounded-full border border-ink/15 text-ink"
+                    className={cn(
+                      "relative grid h-9 w-9 shrink-0 place-items-center rounded-full border border-ink/15 text-ink transition-colors duration-300 group-hover:border-ember/50 group-hover:text-ember",
+                      active && "border-ember/50 text-ember"
+                    )}
                   >
                     <Plus size={16} weight="bold" />
                   </motion.span>

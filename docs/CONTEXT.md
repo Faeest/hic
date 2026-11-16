@@ -181,9 +181,10 @@ reader that still wants a single URL). `lib/content/galeri.ts` maps the array to
 
 - Public: the grid shows the cover; a moment with more than one photo gets an
   `N foto` pill and opens `components/home/GaleriLightbox.tsx` (direction-aware
-  slide animation, drag/swipe, thumbnail strip, arrows, counter, Escape). The
-  scrim is a fixed near-black in both themes so the white chrome stays legible
-  in dark mode.
+  slide animation, drag/swipe, thumbnail strip, arrows, counter, filename,
+  Escape). Clicking the photo zooms to 2.2× and pans; clicking it again, or the
+  black around it, backs out or closes. The scrim is a fixed near-black in both
+  themes so the white chrome stays legible in dark mode.
 - Admin: `galeriConfig` uses the `images` field kind → `ImagesField`, which
   submits a JSON array. The first thumbnail is the cover; arrows reorder.
 - `crud.ts` parses `images` and writes `image_url = images[0] ?? ""`, so the

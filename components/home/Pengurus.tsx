@@ -36,7 +36,7 @@ function Portrait({
   return (
     <div
       className={cn(
-        "relative w-full overflow-hidden rounded-sm border border-ink/10 bg-cream dark:bg-white/[0.03]",
+        "relative w-full overflow-hidden border border-ink/10 bg-cream dark:bg-white/[0.03]",
         size === "sm" ? "aspect-square" : "aspect-[4/3]"
       )}
     >
@@ -49,7 +49,7 @@ function Portrait({
           className={cn(
             "object-cover",
             zoom &&
-              "transition-transform duration-500 ease-out group-hover:scale-[1.03] motion-reduce:transition-none motion-reduce:group-hover:scale-100"
+              "transition-transform duration-500 ease-out group-hover:scale-[1.03] motion-reduce:scale-100 motion-reduce:transition-none"
           )}
         />
       ) : (
