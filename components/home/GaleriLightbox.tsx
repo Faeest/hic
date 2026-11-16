@@ -2,13 +2,20 @@
 
 import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
-import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
+import {
+  AnimatePresence,
+  animate,
+  motion,
+  useMotionValue,
+  useReducedMotion,
+} from "framer-motion";
 import { useLenis } from "lenis/react";
 import { X, CaretLeft, CaretRight, CornersOut } from "@phosphor-icons/react";
 import type { Foto } from "@/lib/types";
 import { cn } from "@/lib/utils";
 
 const ZOOM = 2.2;
+const EASE: [number, number, number, number] = [0.22, 1, 0.36, 1];
 
 /** `gamedev_pertemuan_3-1794720759259.webp` out of a bucket or proxy URL. */
 const fileName = (url: string) => {
@@ -19,6 +26,59 @@ const fileName = (url: string) => {
     return last;
   }
 };
+
+/**
+ * One photo's zoom + pan layer. The pan lives in its own motion values so that
+ * backing out can return them to 0 alongside the scale — otherwise the image
+ * stays offset inside the frame and reads as cropped.
+ */
+function ZoomPane({
+  zoom,
+  reduce,
+  src,
+  alt,
+}: {
+  zoom: boolean;
+  reduce: boolean;
+  src: string;
+  alt: string;
+}) {
+  const x = useMotionValue(0);
+  const y = useMotionValue(0);
+
+  useEffect(() => {
+    if (zoom) return;
+    const opts = { duration: reduce ? 0 : 0.4, ease: EASE };
+    animate(x, 0, opts);
+    animate(y, 0, opts);
+  }, [zoom, reduce, x, y]);
+
+  return (
+    <motion.div
+      initial={false}
+      animate={{ scale: zoom ? ZOOM : 1 }}
+      style={{ x, y }}
+      transition={reduce ? { duration: 0 } : { duration: 0.45, ease: EASE }}
+      drag={zoom}
+      dragMomentum={false}
+      dragElastic={0.06}
+      className={cn(
+        "relative h-full w-full",
+        zoom ? "cursor-zoom-out" : "cursor-zoom-in"
+      )}
+    >
+      <Image
+        src={src}
+        alt={alt}
+        fill
+        sizes="100vw"
+        className="pointer-events-none object-contain"
+        draggable={false}
+        priority
+      />
+    </motion.div>
+  );
+}
 
 /**
  * Full-screen viewer for one gallery moment. Arrow keys, the on-screen buttons,
@@ -50,8 +110,7 @@ export function GaleriLightbox({
   const [zoom, setZoom] = useState(false);
 
   const stageRef = useRef<HTMLDivElement>(null);
-  const imgRef = useRef<HTMLImageElement>(null);
-  const dragged = useRef(false);
+  const pointer = useRef<{ x: number; y: number } | null>(null);
 
   const go = (next: number) => {
     if (next === safeIndex) return;
@@ -95,8 +154,13 @@ export function GaleriLightbox({
    * rectangle the image actually paints inside the stage.
    */
   const onStageClick = (e: React.MouseEvent) => {
-    if (dragged.current) {
-      dragged.current = false;
+    // A drag that ends on the photo also fires a click. Anything that moved
+    // more than a few pixels since pointerdown was a drag, not a tap.
+    const start = pointer.current;
+    if (
+      start &&
+      Math.hypot(e.clientX - start.x, e.clientY - start.y) > 8
+    ) {
       return;
     }
     if (zoom) {
@@ -104,7 +168,9 @@ export function GaleriLightbox({
       return;
     }
     const stage = stageRef.current;
-    const img = imgRef.current;
+    // Not a shared ref: during the slide transition two photos are mounted and
+    // the exiting one nulls a shared ref on unmount. Ask the clicked slide.
+    const img = (e.currentTarget as HTMLElement).querySelector("img");
     if (!stage || !img) return;
     const box = stage.getBoundingClientRect();
     const nw = img.naturalWidth;
@@ -211,47 +277,22 @@ export function GaleriLightbox({
               drag={!zoom && total > 1 && !reduce ? "x" : false}
               dragConstraints={{ left: 0, right: 0 }}
               dragElastic={0.12}
-              onDragStart={() => {
-                dragged.current = false;
-              }}
-              onDrag={(_, info) => {
-                if (Math.abs(info.offset.x) > 8 || Math.abs(info.offset.y) > 8) {
-                  dragged.current = true;
-                }
-              }}
               onDragEnd={(_, info) => {
                 if (info.offset.x < -60) go((safeIndex + 1) % total);
                 else if (info.offset.x > 60) go((safeIndex - 1 + total) % total);
               }}
+              onPointerDown={(e) => {
+                pointer.current = { x: e.clientX, y: e.clientY };
+              }}
               onClick={onStageClick}
               className="absolute inset-0"
             >
-              <motion.div
-                animate={{ scale: zoom ? ZOOM : 1 }}
-                transition={
-                  reduce
-                    ? { duration: 0 }
-                    : { duration: 0.45, ease: [0.22, 1, 0.36, 1] }
-                }
-                drag={zoom ? true : false}
-                dragMomentum={false}
-                dragElastic={0.06}
-                className={cn(
-                  "relative h-full w-full",
-                  zoom ? "cursor-zoom-out" : "cursor-zoom-in"
-                )}
-              >
-                <Image
-                  ref={imgRef}
-                  src={current}
-                  alt={`${item.judul} — foto ${safeIndex + 1}`}
-                  fill
-                  sizes="100vw"
-                  className="pointer-events-none object-contain"
-                  draggable={false}
-                  priority
-                />
-              </motion.div>
+              <ZoomPane
+                zoom={zoom}
+                reduce={!!reduce}
+                src={current}
+                alt={`${item.judul} — foto ${safeIndex + 1}`}
+              />
             </motion.div>
           </AnimatePresence>
         </div>
