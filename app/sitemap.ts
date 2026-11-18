@@ -1,13 +1,13 @@
 import type { MetadataRoute } from "next";
 import { getAllDivisi } from "@/lib/content/divisi";
-import { getPosts } from "@/lib/content/posts";
+import { getPostIndex } from "@/lib/content/posts";
 
 const base = (
   process.env.NEXT_PUBLIC_SITE_URL ?? "https://hic.ubhinus.ac.id"
 ).replace(/\/+$/, "");
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const [divisi, posts] = await Promise.all([getAllDivisi(), getPosts()]);
+  const [divisi, posts] = await Promise.all([getAllDivisi(), getPostIndex()]);
   const now = new Date();
 
   return [

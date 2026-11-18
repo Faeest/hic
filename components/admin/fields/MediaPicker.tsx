@@ -16,7 +16,11 @@ import { listMediaAction, uploadImage } from "@/lib/actions/upload";
 import { compressImage } from "@/lib/media/compress";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
+import { Pager } from "@/components/admin/Pager";
 import type { MediaItem } from "@/lib/types";
+
+/** Thumbnails per page. Five columns, so this fills the dialog without scrolling. */
+const PER_PAGE = 24;
 
 const fmtSize = (bytes: number) =>
   bytes >= 1024 * 1024
@@ -48,13 +52,16 @@ export function MediaPicker({
   selected?: string[];
 }) {
   const [items, setItems] = useState<MediaItem[]>([]);
+  const [truncated, setTruncated] = useState(false);
   const [loaded, setLoaded] = useState(false);
   const [query, setQuery] = useState("");
   const [activeFolder, setActiveFolder] = useState<string>("");
+  const [page, setPage] = useState(1);
   const [picked, setPicked] = useState<string[]>(selected);
   const [loading, startLoading] = useTransition();
   const [uploading, setUploading] = useState(false);
   const fileRef = useRef<HTMLInputElement>(null);
+  const gridRef = useRef<HTMLDivElement>(null);
 
   // Reset the working selection only when the dialog transitions to open, so a
   // parent re-render cannot clobber what the user is picking.
@@ -64,6 +71,7 @@ export function MediaPicker({
       setPicked(selected);
       setQuery("");
       setActiveFolder("");
+      setPage(1);
     }
     wasOpen.current = open;
   }, [open, selected]);
@@ -72,8 +80,9 @@ export function MediaPicker({
   useEffect(() => {
     if (!open || loaded) return;
     startLoading(async () => {
-      const list = await listMediaAction();
-      setItems(list);
+      const listing = await listMediaAction();
+      setItems(listing.items);
+      setTruncated(listing.truncated);
       setLoaded(true);
     });
   }, [open, loaded]);
@@ -113,6 +122,17 @@ export function MediaPicker({
       );
     });
   }, [items, query, activeFolder]);
+
+  const pages = Math.max(1, Math.ceil(visible.length / PER_PAGE));
+  const current = Math.min(page, pages);
+  const pageItems = visible.slice((current - 1) * PER_PAGE, current * PER_PAGE);
+  const first = visible.length === 0 ? 0 : (current - 1) * PER_PAGE + 1;
+  const last = Math.min(current * PER_PAGE, visible.length);
+
+  const goPage = (next: number) => {
+    setPage(next);
+    gridRef.current?.scrollTo({ top: 0 });
+  };
 
   const toggle = (url: string) => {
     if (!multiple) {
@@ -225,7 +245,10 @@ export function MediaPicker({
             <input
               type="search"
               value={query}
-              onChange={(e) => setQuery(e.target.value)}
+              onChange={(e) => {
+                setQuery(e.target.value);
+                setPage(1);
+              }}
               placeholder="Cari nama berkas…"
               className="w-full rounded-sm border border-ink/15 bg-white py-2 pl-9 pr-3 text-sm text-ink outline-none transition-colors focus:border-ember dark:border-white/15 dark:bg-white/[0.04]"
             />
@@ -257,7 +280,10 @@ export function MediaPicker({
           <div className="flex flex-wrap gap-1.5 border-b border-ink/10 px-5 py-2.5 dark:border-white/10">
             <button
               type="button"
-              onClick={() => setActiveFolder("")}
+              onClick={() => {
+                setActiveFolder("");
+                setPage(1);
+              }}
               className={cn(
                 "rounded-sm px-2.5 py-1 text-xs transition-colors",
                 activeFolder === ""
@@ -271,7 +297,10 @@ export function MediaPicker({
               <button
                 key={f}
                 type="button"
-                onClick={() => setActiveFolder(f)}
+                onClick={() => {
+                  setActiveFolder(f);
+                  setPage(1);
+                }}
                 className={cn(
                   "rounded-sm px-2.5 py-1 text-xs transition-colors",
                   activeFolder === f
@@ -285,7 +314,7 @@ export function MediaPicker({
           </div>
         )}
 
-        <div className="min-h-48 flex-1 overflow-y-auto p-4">
+        <div ref={gridRef} className="min-h-48 flex-1 overflow-y-auto p-4">
           {loading && !loaded ? (
             <div className="grid place-items-center py-16 text-ink-faint">
               <Spinner size={24} className="animate-spin" />
@@ -299,7 +328,7 @@ export function MediaPicker({
             </div>
           ) : (
             <ul className="grid grid-cols-3 gap-2 sm:grid-cols-4 md:grid-cols-5">
-              {visible.map((item) => {
+              {pageItems.map((item) => {
                 const isPicked = picked.includes(item.url);
                 return (
                   <li key={item.path}>
@@ -341,6 +370,21 @@ export function MediaPicker({
             </ul>
           )}
         </div>
+
+        {visible.length > 0 && (
+          <div className="flex flex-wrap items-center justify-between gap-3 border-t border-ink/10 px-5 py-2.5 dark:border-white/10">
+            <p className="text-xs text-ink-faint">
+              {first}–{last} dari {visible.length} berkas
+              {truncated && " · daftar dipotong"}
+            </p>
+            <Pager
+              page={current}
+              pages={pages}
+              onPage={goPage}
+              label="Halaman media"
+            />
+          </div>
+        )}
 
         <div className="flex items-center justify-between gap-3 border-t border-ink/10 px-5 py-3 dark:border-white/10">
           <p className="text-xs text-ink-faint">

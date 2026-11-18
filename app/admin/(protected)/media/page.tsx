@@ -8,7 +8,7 @@ export const metadata: Metadata = {
 };
 
 export default async function AdminMediaPage() {
-  const items = await listMedia();
+  const { items, truncated } = await listMedia();
 
   return (
     <div className="flex flex-col gap-6">
@@ -21,7 +21,7 @@ export default async function AdminMediaPage() {
           hapus yang sudah tidak dipakai.
         </p>
       </div>
-      <MediaLibrary items={items} />
+      <MediaLibrary items={items} truncated={truncated} />
     </div>
   );
 }

@@ -13,11 +13,15 @@ import {
 } from "@phosphor-icons/react";
 import { uploadImage, deleteMedia, replaceMedia } from "@/lib/actions/upload";
 import { ConfirmDialog } from "./ConfirmDialog";
+import { Pager } from "./Pager";
 import { compressImage, compressKeepingType } from "@/lib/media/compress";
 import { MAX_UPLOAD_BYTES, tooLargeMessage } from "@/lib/media/limits";
 import { toast } from "sonner";
 import type { MediaItem } from "@/lib/admin/media";
 import { cn } from "@/lib/utils";
+
+/** Cards per page. Three columns, so eight rows. */
+const PER_PAGE = 24;
 
 const fmtSize = (bytes: number) =>
   bytes >= 1024 * 1024
@@ -53,8 +57,16 @@ const mediaUrl = (origin: string, item: MediaItem) => {
   return `${origin}/media/${path}`;
 };
 
-export function MediaLibrary({ items }: { items: MediaItem[] }) {
+export function MediaLibrary({
+  items,
+  truncated = false,
+}: {
+  items: MediaItem[];
+  /** true when the bucket holds more objects than the listing read. */
+  truncated?: boolean;
+}) {
   const router = useRouter();
+  const [page, setPage] = useState(1);
   const [error, setError] = useState<string | null>(null);
   const [copied, setCopied] = useState<string | null>(null);
   const [deleting, setDeleting] = useState<string | null>(null);
@@ -185,6 +197,10 @@ export function MediaLibrary({ items }: { items: MediaItem[] }) {
     }
   };
 
+  const pages = Math.max(1, Math.ceil(items.length / PER_PAGE));
+  const current = Math.min(page, pages);
+  const pageItems = items.slice((current - 1) * PER_PAGE, current * PER_PAGE);
+
   return (
     <div className="flex flex-col gap-6">
       <div
@@ -236,7 +252,10 @@ export function MediaLibrary({ items }: { items: MediaItem[] }) {
       )}
 
       <div className="flex items-baseline justify-between gap-4 border-t border-ink/12 pt-4">
-        <p className="text-sm text-ink-faint">{items.length} berkas di bucket media</p>
+        <p className="text-sm text-ink-faint">
+          {items.length} berkas di bucket media
+          {truncated && " · daftar dipotong"}
+        </p>
         <p className="text-xs text-ink-faint">Terbaru di atas</p>
       </div>
 
@@ -246,7 +265,7 @@ export function MediaLibrary({ items }: { items: MediaItem[] }) {
         </p>
       ) : (
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {items.map((it) => (
+          {pageItems.map((it) => (
             <div key={it.path} className="surface flex flex-col gap-3 bg-paper p-3">
               <div className="relative aspect-[4/3] overflow-hidden rounded-xs bg-cream dark:bg-white/5">
                 <Image
@@ -317,6 +336,21 @@ export function MediaLibrary({ items }: { items: MediaItem[] }) {
               </div>
             </div>
           ))}
+        </div>
+      )}
+
+      {items.length > PER_PAGE && (
+        <div className="flex flex-wrap items-center justify-between gap-3 border-t border-ink/12 pt-4">
+          <p className="text-xs text-ink-faint">
+            {(current - 1) * PER_PAGE + 1}–
+            {Math.min(current * PER_PAGE, items.length)} dari {items.length} berkas
+          </p>
+          <Pager
+            page={current}
+            pages={pages}
+            onPage={setPage}
+            label="Halaman media"
+          />
         </div>
       )}
 

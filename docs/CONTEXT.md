@@ -212,6 +212,29 @@ article page, so the crop is applied at render time (`lib/media/focus.ts`)
 instead of being baked in. Edited with **Atur fokus** in the post editor
 (`FocusField` with `editorAspect="aspect-[16/9]"` and previews for both frames).
 
+### Pagination
+
+Policy, by surface:
+
+| Surface | How | Why |
+| --- | --- | --- |
+| `/blog` | server, `?page=N`, 9 per page | grows; URL-driven and cacheable |
+| Media picker + `/admin/media` | client window, 24 per page | the bucket is listed in full once; storage `list()` is prefix-scoped and has no cross-folder search |
+| Admin CRUD lists | none | `Reorder` needs the full ordered set, and N is small |
+| Public galeri | none | a handful of moments in a masonry |
+
+- `lib/pagination.ts` holds `parsePageParam`, `clampPage`, `pageRange`,
+  `pageCount` and `pageWindow` — shared by the server pager and the admin one.
+- `/blog` reads `searchParams` inside a `<Suspense>` (`PostGrid`), so the header
+  and footer stay in the static shell. `getPostPage()` is `"use cache"` keyed on
+  the page number and counts first, so `?page=999` clamps to the last page
+  instead of rendering an empty grid.
+- `components/blog/Pagination.tsx` is a server component of links (ships no JS);
+  `components/admin/Pager.tsx` is the client button version.
+- `listMedia()` pages storage `list()` 100 at a time up to 2000 objects and
+  reports `truncated`. The old code stopped at 200 per folder and hid the rest
+  without saying so.
+
 ### Reordering is deferred
 
 `ResourceManager` keeps the list order in local state. Dragging the grip handle

@@ -13,22 +13,26 @@ function str(fd: FormData, key: string): string {
   return typeof v === "string" ? v.trim() : "";
 }
 
+/** Supabase's admin API pages at 200; walk until the last page. */
+const USERS_PER_PAGE = 200;
+const MAX_USER_PAGES = 50;
+
 /** Find an existing auth user by email (admin API has no direct lookup). */
 async function findUserIdByEmail(
   admin: ReturnType<typeof createAdminClient>,
   email: string
 ): Promise<string | null> {
-  for (let page = 1; page <= 5; page += 1) {
+  for (let page = 1; page <= MAX_USER_PAGES; page += 1) {
     const { data, error } = await admin.auth.admin.listUsers({
       page,
-      perPage: 200,
+      perPage: USERS_PER_PAGE,
     });
     if (error) throw new Error(error.message);
     const found = data.users.find(
       (u) => (u.email ?? "").toLowerCase() === email
     );
     if (found) return found.id;
-    if (data.users.length < 200) break;
+    if (data.users.length < USERS_PER_PAGE) break;
   }
   return null;
 }

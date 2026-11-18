@@ -242,6 +242,30 @@ export type Post = {
   updatedAt: string;
 };
 
+/**
+ * What the blog index needs, without `bodyMd`. The index never renders the body,
+ * so selecting it would ship a full Markdown article per card.
+ */
+export type PostSummary = Pick<
+  Post,
+  | "id"
+  | "slug"
+  | "title"
+  | "excerpt"
+  | "coverUrl"
+  | "coverCrop"
+  | "tags"
+  | "publishedAt"
+>;
+
+/** One page of the blog index. */
+export type PostPage = {
+  items: PostSummary[];
+  total: number;
+  page: number;
+  pages: number;
+};
+
 /* ------------------------------------------------------------------ */
 /* Row types (Postgres / PostgREST snake_case)                         */
 /* ------------------------------------------------------------------ */
