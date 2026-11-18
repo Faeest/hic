@@ -7,6 +7,7 @@ import { getSite } from "@/lib/content/site";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 import { getAllDivisi } from "@/lib/content/divisi";
+import { cropStyle } from "@/lib/media/focus";
 
 export const metadata: Metadata = {
   title: "Blog — HIC",
@@ -68,6 +69,7 @@ export default async function BlogPage() {
                           alt={p.title}
                           fill
                           sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
+                          style={cropStyle(p.coverCrop)}
                           className="object-cover"
                           unoptimized={!p.coverUrl.startsWith("/")}
                         />

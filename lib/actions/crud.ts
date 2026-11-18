@@ -5,6 +5,7 @@ import { createClient } from "@/lib/supabase/server";
 import { revalidatePublic } from "@/lib/actions/revalidate";
 import { isAllowedTable, type CrudTable } from "@/lib/admin/tables";
 import { friendlyDbError } from "@/lib/admin/errors";
+import { DEFAULT_CROP, parseCrop } from "@/lib/media/focus";
 import type { SupabaseClient } from "@supabase/supabase-js";
 
 export type CrudResult = { ok: true } | { ok: false; error: string };
@@ -123,6 +124,13 @@ function buildPayload(table: CrudTable, fd: FormData): Record<string, unknown> {
   if (table === "galeri" && fd.has("span")) {
     const span = str(fd, "span");
     payload.span = span === "wide" || span === "tall" ? span : null;
+  }
+
+  // pengurus.foto_crop is the focal point of the portrait, submitted as JSON by
+  // the focus field. A cleared portrait resets it to the centred crop.
+  if (table === "pengurus" && fd.has("foto_crop")) {
+    const foto = str(fd, "foto");
+    payload.foto_crop = foto ? parseCrop(fd.get("foto_crop")) : { ...DEFAULT_CROP };
   }
 
   // galeri.images is the ordered list; image_url mirrors the cover.

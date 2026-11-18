@@ -121,13 +121,19 @@ touching individual pengurus rows.
 one active board.
 
 `pengurus`: `id uuid pk`, `nama`, `jabatan`, `deskripsi`, `inisial`, `gradien`,
-`nrp`, `kategori` (`pembina|inti|biro|koordinator`), `unit`, `foto`, `sort`,
-`published`, `kepengurusan_id` (FK, `on delete cascade`), `updated_at`.
+`nrp`, `kategori` (`pembina|inti|biro|koordinator`), `unit`, `foto`, `foto_crop`,
+`sort`, `published`, `kepengurusan_id` (FK, `on delete cascade`), `updated_at`.
 
 - `unit` = divisi slug for a PJ (`web`/`uiux`/`robotics`), free label for a biro
   (`humas`, `3d`, `keilmuan`, `program-acara`, `website`, `inventaris`).
 - `nrp` is a real column now (migration 0007 promoted it out of `deskripsi`).
   Empty for the dosen pembina and the external PJs.
+- `foto_crop` is the portrait's focal point: `{ x, y, zoom }` — percentages for
+  CSS `object-position`, `zoom` 1–3. One file serves three frames (4:3 BPH card,
+  square compact card, 56px PJ row), so the crop is applied at render time
+  (`lib/media/focus.ts`) instead of being baked into the file. Edited with
+  **Atur fokus** in `/admin/pengurus` (`components/admin/fields/FocusField.tsx`);
+  the default `{50,50,1}` is the old centred crop.
 - `pengurus.periode` still exists but is **deprecated** — nothing reads or writes
   it. It was kept so the build that was live during the 0007 rollout kept working.
   A later migration can drop it.
@@ -197,6 +203,14 @@ dialog: bucket listing via `listMediaAction()`, search, folder chips, multi-sele
 and an **Unggah** button that uploads into the field's folder and selects the new
 files immediately. `ImageField` (single) and `ImagesField` (multi) both use it, so
 every image field can pick an existing file instead of only uploading.
+
+### Blog covers
+
+`posts.cover_crop` is the cover's focal point, the same `{ x, y, zoom }` shape
+as `pengurus.foto_crop`. One file is rendered 16/10 in `/blog` and 16/9 on the
+article page, so the crop is applied at render time (`lib/media/focus.ts`)
+instead of being baked in. Edited with **Atur fokus** in the post editor
+(`FocusField` with `editorAspect="aspect-[16/9]"` and previews for both frames).
 
 ### Reordering is deferred
 

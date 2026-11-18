@@ -69,6 +69,17 @@ export type Divisi = {
   mentor: Mentor[];
 };
 
+/**
+ * Where a portrait sits inside its frame. `x`/`y` are percentages for CSS
+ * `object-position` (0 = left/top edge, 100 = right/bottom edge); `zoom`
+ * scales the image about that point (1 = the full cover crop).
+ */
+export type FotoCrop = {
+  x: number;
+  y: number;
+  zoom: number;
+};
+
 export type Pengurus = {
   nama: string;
   jabatan: string;
@@ -77,6 +88,8 @@ export type Pengurus = {
   gradien: string;
   /** Real portrait, when we have one. Missing → typographic treatment. */
   foto?: string;
+  /** Crop applied to `foto` in every frame it appears in. */
+  fotoCrop?: FotoCrop;
   /** Link key: divisi slug for a PJ, free label for a biro. */
   unit?: string;
   /** NRP / student id. Empty for the dosen pembina and external PJs. */
@@ -219,6 +232,8 @@ export type Post = {
   title: string;
   excerpt: string;
   coverUrl: string;
+  /** Crop applied to `coverUrl` in the index and article frames. */
+  coverCrop?: FotoCrop;
   bodyMd: string;
   tags: string[];
   published: boolean;
@@ -329,6 +344,8 @@ export type PengurusRow = {
   gradien: string;
   nrp: string;
   foto?: string | null;
+  /** JSONB crop: x, y, zoom. */
+  foto_crop?: FotoCrop | null;
   unit?: string | null;
   kepengurusan_id: string;
   /** Group this person belongs to. Null only for rows written by an old build. */
@@ -396,6 +413,8 @@ export type PostRow = {
   title: string;
   excerpt: string;
   cover_url: string;
+  /** JSONB crop: x, y, zoom. */
+  cover_crop?: FotoCrop | null;
   body_md: string;
   tags: string[];
   published: boolean;

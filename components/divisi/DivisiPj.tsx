@@ -1,5 +1,6 @@
 import Image from "next/image";
 import { divisiVars } from "@/lib/utils";
+import { cropStyle } from "@/lib/media/focus";
 import type { Divisi, Pengurus } from "@/lib/types";
 
 /**
@@ -29,6 +30,7 @@ export function DivisiPj({
                 alt={pj.nama}
                 fill
                 sizes="56px"
+                style={cropStyle(pj.fotoCrop)}
                 className="object-cover"
               />
             ) : (

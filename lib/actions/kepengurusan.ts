@@ -4,6 +4,7 @@ import { assertAdmin } from "@/lib/auth/dal";
 import { createClient } from "@/lib/supabase/server";
 import { revalidatePublic } from "@/lib/actions/revalidate";
 import { DEFAULT_GRUP } from "@/lib/pengurus-grup";
+import { DEFAULT_CROP } from "@/lib/media/focus";
 import type { PengurusGrupRow, PengurusRow } from "@/lib/types";
 
 export type KepengurusanResult = { ok: true } | { ok: false; error: string };
@@ -137,6 +138,8 @@ async function copyRows(
       gradien: row.gradien,
       nrp: row.nrp,
       foto,
+      // The copied file is the same image, so the chosen framing still applies.
+      foto_crop: row.foto_crop ?? { ...DEFAULT_CROP },
       unit: row.unit ?? "",
       kategori: row.kategori,
       grup_id: row.grup_id ? grupMap.get(row.grup_id) ?? null : null,

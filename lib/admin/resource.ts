@@ -8,6 +8,18 @@ export type FieldSpec =
   | { kind: "bool"; name: string; label: string; hint?: string }
   | { kind: "select"; name: string; label: string; options?: { value: string; label: string }[]; optionsFrom?: string; required?: boolean; hint?: string; placeholder?: string }
   | { kind: "image"; name: string; label: string; folder?: string; hint?: string }
+  | {
+      /**
+       * An image plus a focal-point editor. The URL lands in `name`; the crop
+       * JSON lands in `cropName` (a separate jsonb column).
+       */
+      kind: "focus";
+      name: string;
+      label: string;
+      cropName: string;
+      folder?: string;
+      hint?: string;
+    }
   | { kind: "images"; name: string; label: string; folder?: string; hint?: string }
   | { kind: "color"; name: string; label: string; hint?: string }
   | { kind: "repeater"; name: string; label: string; fields?: RepeaterFieldSpec[]; itemLabel?: string; hint?: string }

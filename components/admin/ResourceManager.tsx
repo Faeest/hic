@@ -20,6 +20,7 @@ import { SelectField } from "./fields/SelectField";
 import { ToggleField } from "./fields/ToggleField";
 import { ImageField } from "./fields/ImageField";
 import { ImagesField } from "./fields/ImagesField";
+import { FocusField } from "./fields/FocusField";
 import { ColorField } from "./fields/ColorField";
 import { RepeaterField } from "./fields/RepeaterField";
 import { SubmitButton } from "./fields/SubmitButton";
@@ -463,6 +464,18 @@ function FieldRenderer({
           label={field.label}
           name={field.name}
           defaultValue={strVal}
+          folder={field.folder}
+          hint={field.hint}
+        />
+      );
+    case "focus":
+      return (
+        <FocusField
+          label={field.label}
+          name={field.name}
+          cropName={field.cropName}
+          defaultValue={strVal}
+          defaultCrop={row?.[field.cropName]}
           folder={field.folder}
           hint={field.hint}
         />

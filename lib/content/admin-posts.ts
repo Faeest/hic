@@ -1,6 +1,7 @@
 import "server-only";
 
 import { createClient } from "@/lib/supabase/server";
+import { parseCrop } from "@/lib/media/focus";
 import type { Post, PostRow } from "@/lib/types";
 
 function toApp(row: PostRow): Post {
@@ -10,6 +11,7 @@ function toApp(row: PostRow): Post {
     title: row.title,
     excerpt: row.excerpt,
     coverUrl: row.cover_url,
+    coverCrop: row.cover_crop ? parseCrop(row.cover_crop) : undefined,
     bodyMd: row.body_md,
     tags: row.tags ?? [],
     published: row.published,

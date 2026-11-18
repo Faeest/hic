@@ -12,6 +12,7 @@ import { Footer } from "@/components/layout/Footer";
 import { JsonLd } from "@/components/seo/JsonLd";
 import { absoluteUrl, siteUrl } from "@/lib/seo";
 import { toSiteMediaUrl } from "@/lib/media/url";
+import { cropStyle } from "@/lib/media/focus";
 
 export async function generateStaticParams() {
   const slugs = await getPostSlugs();
@@ -156,6 +157,7 @@ export default async function BlogPostPage({
                 alt={post.title}
                 fill
                 sizes="(min-width: 768px) 768px, 100vw"
+                style={cropStyle(post.coverCrop)}
                 className="object-cover"
                 priority
                 unoptimized={!post.coverUrl.startsWith("/")}

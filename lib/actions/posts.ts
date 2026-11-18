@@ -5,6 +5,7 @@ import { assertAdmin } from "@/lib/auth/dal";
 import { createClient } from "@/lib/supabase/server";
 import { revalidatePublic } from "@/lib/actions/revalidate";
 import { friendlyDbError } from "@/lib/admin/errors";
+import { DEFAULT_CROP, parseCrop } from "@/lib/media/focus";
 
 export type PostResult = { ok: true; id?: string } | { ok: false; error: string };
 
@@ -47,15 +48,27 @@ function buildPayload(fd: FormData, existingSlug?: string) {
   const slugInput = str(fd, "slug");
   const slug = slugify(slugInput || title) || existingSlug || `post-${Date.now()}`;
   const published = fd.get("published") === "on" || fd.get("published") === "true";
+  const coverUrl = str(fd, "coverUrl");
+
+  // The focal point only exists while there is a cover; clearing the cover
+  // resets it so a later upload starts centred.
+  const coverCrop = fd.has("cover_crop")
+    ? {
+        cover_crop: coverUrl
+          ? parseCrop(fd.get("cover_crop"))
+          : { ...DEFAULT_CROP },
+      }
+    : {};
 
   return {
     slug,
     title,
     excerpt: str(fd, "excerpt"),
-    cover_url: str(fd, "coverUrl"),
+    cover_url: coverUrl,
     body_md: String(fd.get("bodyMd") ?? ""),
     tags: parseTags(fd),
     published,
+    ...coverCrop,
   };
 }
 

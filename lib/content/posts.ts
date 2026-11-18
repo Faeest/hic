@@ -5,6 +5,7 @@ import { publicDb } from "@/lib/supabase/public";
 import { CONTENT_TAGS } from "@/lib/cache/tags";
 import type { Post, PostRow } from "@/lib/types";
 import { posts as seedPosts } from "@/data/posts";
+import { parseCrop } from "@/lib/media/focus";
 import { warnFallback } from "./util";
 
 /**
@@ -22,6 +23,7 @@ function toApp(row: PostRow): Post {
     title: row.title,
     excerpt: row.excerpt,
     coverUrl: row.cover_url,
+    coverCrop: row.cover_crop ? parseCrop(row.cover_crop) : undefined,
     bodyMd: row.body_md,
     tags: row.tags ?? [],
     published: row.published,

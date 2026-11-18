@@ -21,7 +21,7 @@ import {
 } from "@phosphor-icons/react";
 import { TextField } from "./fields/TextField";
 import { TextArea } from "./fields/TextArea";
-import { ImageField } from "./fields/ImageField";
+import { FocusField } from "./fields/FocusField";
 import { ToggleField } from "./fields/ToggleField";
 import { SubmitButton } from "./fields/SubmitButton";
 import { MediaPicker } from "./fields/MediaPicker";
@@ -139,11 +139,19 @@ export function PostEditor({ post }: { post: Post | null }) {
           rows={2}
           hint="Muncul di daftar blog dan pratinjau tautan."
         />
-        <ImageField
+        <FocusField
           label="Gambar sampul"
           name="coverUrl"
+          cropName="cover_crop"
           defaultValue={post?.coverUrl ?? ""}
+          defaultCrop={post?.coverCrop}
           folder="posts"
+          hint="Tampil 16/10 di daftar blog dan 16/9 di halaman artikel. Atur fokus agar bagian penting tidak terpotong."
+          editorAspect="aspect-[16/9]"
+          frames={[
+            { className: "aspect-[16/10] w-40", caption: "Daftar blog" },
+            { className: "aspect-[16/9] w-40", caption: "Halaman artikel" },
+          ]}
         />
         <div className="flex flex-col gap-2">
           <label htmlFor="tags-input" className="text-sm font-medium text-ink-soft">

@@ -6,6 +6,7 @@ import { Reveal } from "@/components/ui/Reveal";
 import { SectionHead } from "@/components/ui/SectionHead";
 import type { PengurusGroups } from "@/lib/content/pengurus";
 import type { Pengurus as PengurusItem, Section, Site } from "@/lib/types";
+import { cropStyle } from "@/lib/media/focus";
 import { cn } from "@/lib/utils";
 
 const FADE = {
@@ -46,6 +47,7 @@ function Portrait({
           alt={p.nama}
           fill
           sizes={size === "lg" ? "(min-width: 1024px) 33vw, 100vw" : "160px"}
+          style={cropStyle(p.fotoCrop)}
           className={cn(
             "object-cover",
             zoom &&

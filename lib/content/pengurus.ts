@@ -13,6 +13,7 @@ import {
 } from "@/data/pengurus";
 import { bySort, warnFallback } from "./util";
 import { RESERVED_GRUP_SLUGS } from "@/lib/pengurus-grup";
+import { parseCrop } from "@/lib/media/focus";
 
 export type PengurusGroup = PengurusGrup & { anggota: Pengurus[] };
 
@@ -50,6 +51,7 @@ function toApp(row: PengurusRow, periode: string): Pengurus {
     inisial: row.inisial,
     gradien: row.gradien,
     foto: row.foto || undefined,
+    fotoCrop: row.foto_crop ? parseCrop(row.foto_crop) : undefined,
     unit: row.unit || undefined,
     nrp: row.nrp || undefined,
     periode: periode || undefined,

@@ -26,12 +26,15 @@ export function ImageField({
   defaultValue,
   folder = "site",
   hint,
+  onChange,
 }: {
   label: string;
   name: string;
   defaultValue?: string | null;
   folder?: string;
   hint?: string;
+  /** Notified whenever the resolved URL changes (upload, pick, paste, clear). */
+  onChange?: (url: string) => void;
 }) {
   const [url, setUrl] = useState<string>(defaultValue ?? "");
   const [error, setError] = useState<string | null>(null);
@@ -39,6 +42,11 @@ export function ImageField({
   const [pickerOpen, setPickerOpen] = useState(false);
   const [pending, startTransition] = useTransition();
   const fileRef = useRef<HTMLInputElement>(null);
+
+  const update = (next: string) => {
+    setUrl(next);
+    onChange?.(next);
+  };
 
   const onPick = (file: File | undefined) => {
     if (!file) return;
@@ -66,7 +74,7 @@ export function ImageField({
           setError(res.error);
           toast.error(res.error, { id: toastId });
         } else if (res.url) {
-          setUrl(res.url);
+          update(res.url);
           toast.success("Gambar diunggah dan dipilih.", { id: toastId });
         }
       } catch (error) {
@@ -106,7 +114,7 @@ export function ImageField({
           <input
             type="text"
             value={url}
-            onChange={(e) => setUrl(e.target.value)}
+            onChange={(e) => update(e.target.value)}
             placeholder="/gambar.png atau https://…"
             className={cn(inputClass, "text-sm")}
           />
@@ -135,7 +143,7 @@ export function ImageField({
             {url && (
               <button
                 type="button"
-                onClick={() => setUrl("")}
+                onClick={() => update("")}
                 className="inline-flex items-center gap-2 rounded-sm border border-ink/15 px-4 py-2 text-sm font-medium text-ink-soft transition-colors hover:text-red-500 dark:border-white/15"
               >
                 <Trash size={16} weight="bold" />
@@ -163,7 +171,7 @@ export function ImageField({
         open={pickerOpen}
         onClose={() => setPickerOpen(false)}
         onSelect={(urls) => {
-          if (urls[0]) setUrl(urls[0]);
+          if (urls[0]) update(urls[0]);
         }}
         folder={folder}
         title={`Pilih ${label.toLowerCase()}`}
